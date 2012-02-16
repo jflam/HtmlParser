@@ -1,0 +1,3 @@
+*.suo
+HtmlParser/bin/**
+HtmlParser/obj/**
