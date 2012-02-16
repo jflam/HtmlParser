@@ -46,6 +46,7 @@
     <Compile Include="Common\TokenHandler.cs" />
     <Compile Include="Common\TransitionHandler.cs" />
     <Compile Include="Common\XmlViolationPolicy.cs" />
+    <Compile Include="Impl\AttributeName.cs" />
     <Compile Include="Impl\ElementName.cs" />
     <Compile Include="Impl\HtmlAttributes.cs" />
     <Compile Include="Impl\LocatorImpl.cs" />
