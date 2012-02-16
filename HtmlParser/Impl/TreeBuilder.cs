@@ -36,224 +36,224 @@
 using System;
 using System.Diagnostics;
 
-public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
-    
+public abstract class TreeBuilderBase
+{
+    // Start dispatch groups
+
+    internal const int OTHER = 0;
+
+    internal const int A = 1;
+
+    internal const int BASE = 2;
+
+    internal const int BODY = 3;
+
+    internal const int BR = 4;
+
+    internal const int BUTTON = 5;
+
+    internal const int CAPTION = 6;
+
+    internal const int COL = 7;
+
+    internal const int COLGROUP = 8;
+
+    internal const int FORM = 9;
+
+    internal const int FRAME = 10;
+
+    internal const int FRAMESET = 11;
+
+    internal const int IMAGE = 12;
+
+    internal const int INPUT = 13;
+
+    internal const int ISINDEX = 14;
+
+    internal const int LI = 15;
+
+    internal const int LINK_OR_BASEFONT_OR_BGSOUND = 16;
+
+    internal const int MATH = 17;
+
+    internal const int META = 18;
+
+    internal const int SVG = 19;
+
+    internal const int HEAD = 20;
+
+    internal const int HR = 22;
+
+    internal const int HTML = 23;
+
+    internal const int NOBR = 24;
+
+    internal const int NOFRAMES = 25;
+
+    internal const int NOSCRIPT = 26;
+
+    internal const int OPTGROUP = 27;
+
+    internal const int OPTION = 28;
+
+    internal const int P = 29;
+
+    internal const int PLAINTEXT = 30;
+
+    internal const int SCRIPT = 31;
+
+    internal const int SELECT = 32;
+
+    internal const int STYLE = 33;
+
+    internal const int TABLE = 34;
+
+    internal const int TEXTAREA = 35;
+
+    internal const int TITLE = 36;
+
+    internal const int TR = 37;
+
+    internal const int XMP = 38;
+
+    internal const int TBODY_OR_THEAD_OR_TFOOT = 39;
+
+    internal const int TD_OR_TH = 40;
+
+    internal const int DD_OR_DT = 41;
+
+    internal const int H1_OR_H2_OR_H3_OR_H4_OR_H5_OR_H6 = 42;
+
+    internal const int MARQUEE_OR_APPLET = 43;
+
+    internal const int PRE_OR_LISTING = 44;
+
+    internal const int B_OR_BIG_OR_CODE_OR_EM_OR_I_OR_S_OR_SMALL_OR_STRIKE_OR_STRONG_OR_TT_OR_U = 45;
+
+    internal const int UL_OR_OL_OR_DL = 46;
+
+    internal const int IFRAME = 47;
+
+    internal const int EMBED_OR_IMG = 48;
+
+    internal const int AREA_OR_WBR = 49;
+
+    internal const int DIV_OR_BLOCKQUOTE_OR_CENTER_OR_MENU = 50;
+
+    internal const int ADDRESS_OR_ARTICLE_OR_ASIDE_OR_DETAILS_OR_DIR_OR_FIGCAPTION_OR_FIGURE_OR_FOOTER_OR_HEADER_OR_HGROUP_OR_NAV_OR_SECTION_OR_SUMMARY = 51;
+
+    internal const int RUBY_OR_SPAN_OR_SUB_OR_SUP_OR_VAR = 52;
+
+    internal const int RT_OR_RP = 53;
+
+    internal const int COMMAND = 54;
+
+    internal const int PARAM_OR_SOURCE_OR_TRACK = 55;
+
+    internal const int MGLYPH_OR_MALIGNMARK = 56;
+
+    internal const int MI_MO_MN_MS_MTEXT = 57;
+
+    internal const int ANNOTATION_XML = 58;
+
+    internal const int FOREIGNOBJECT_OR_DESC = 59;
+
+    internal const int NOEMBED = 60;
+
+    internal const int FIELDSET = 61;
+
+    internal const int OUTPUT_OR_LABEL = 62;
+
+    internal const int OBJECT = 63;
+
+    internal const int FONT = 64;
+
+    internal const int KEYGEN = 65;
+
+    internal const int MENUITEM = 66;
+
     /**
      * Array version of U+FFFD.
      */
-    private readonly char[] REPLACEMENT_CHARACTER = { '\uFFFD' };
+    internal static readonly char[] REPLACEMENT_CHARACTER = { '\uFFFD' };
     
-    // Start dispatch groups
-
-    const int OTHER = 0;
-
-    const int A = 1;
-
-    const int BASE = 2;
-
-    const int BODY = 3;
-
-    const int BR = 4;
-
-    const int BUTTON = 5;
-
-    const int CAPTION = 6;
-
-    const int COL = 7;
-
-    const int COLGROUP = 8;
-
-    const int FORM = 9;
-
-    const int FRAME = 10;
-
-    const int FRAMESET = 11;
-
-    const int IMAGE = 12;
-
-    const int INPUT = 13;
-
-    const int ISINDEX = 14;
-
-    const int LI = 15;
-
-    const int LINK_OR_BASEFONT_OR_BGSOUND = 16;
-
-    const int MATH = 17;
-
-    const int META = 18;
-
-    const int SVG = 19;
-
-    const int HEAD = 20;
-
-    const int HR = 22;
-
-    const int HTML = 23;
-
-    const int NOBR = 24;
-
-    const int NOFRAMES = 25;
-
-    const int NOSCRIPT = 26;
-
-    const int OPTGROUP = 27;
-
-    const int OPTION = 28;
-
-    const int P = 29;
-
-    const int PLAINTEXT = 30;
-
-    const int SCRIPT = 31;
-
-    const int SELECT = 32;
-
-    const int STYLE = 33;
-
-    const int TABLE = 34;
-
-    const int TEXTAREA = 35;
-
-    const int TITLE = 36;
-
-    const int TR = 37;
-
-    const int XMP = 38;
-
-    const int TBODY_OR_THEAD_OR_TFOOT = 39;
-
-    const int TD_OR_TH = 40;
-
-    const int DD_OR_DT = 41;
-
-    const int H1_OR_H2_OR_H3_OR_H4_OR_H5_OR_H6 = 42;
-
-    const int MARQUEE_OR_APPLET = 43;
-
-    const int PRE_OR_LISTING = 44;
-
-    const int B_OR_BIG_OR_CODE_OR_EM_OR_I_OR_S_OR_SMALL_OR_STRIKE_OR_STRONG_OR_TT_OR_U = 45;
-
-    const int UL_OR_OL_OR_DL = 46;
-
-    const int IFRAME = 47;
-
-    const int EMBED_OR_IMG = 48;
-
-    const int AREA_OR_WBR = 49;
-
-    const int DIV_OR_BLOCKQUOTE_OR_CENTER_OR_MENU = 50;
-
-    const int ADDRESS_OR_ARTICLE_OR_ASIDE_OR_DETAILS_OR_DIR_OR_FIGCAPTION_OR_FIGURE_OR_FOOTER_OR_HEADER_OR_HGROUP_OR_NAV_OR_SECTION_OR_SUMMARY = 51;
-
-    const int RUBY_OR_SPAN_OR_SUB_OR_SUP_OR_VAR = 52;
-
-    const int RT_OR_RP = 53;
-
-    const int COMMAND = 54;
-
-    const int PARAM_OR_SOURCE_OR_TRACK = 55;
-
-    const int MGLYPH_OR_MALIGNMARK = 56;
-
-    const int MI_MO_MN_MS_MTEXT = 57;
-
-    const int ANNOTATION_XML = 58;
-
-    const int FOREIGNOBJECT_OR_DESC = 59;
-
-    const int NOEMBED = 60;
-
-    const int FIELDSET = 61;
-
-    const int OUTPUT_OR_LABEL = 62;
-
-    const int OBJECT = 63;
-
-    const int FONT = 64;
-
-    const int KEYGEN = 65;
-
-    const int MENUITEM = 66;
-
     // start insertion modes
 
-    private const int INITIAL = 0;
+    internal const int INITIAL = 0;
 
-    private const int BEFORE_HTML = 1;
+    internal const int BEFORE_HTML = 1;
 
-    private const int BEFORE_HEAD = 2;
+    internal const int BEFORE_HEAD = 2;
 
-    private const int IN_HEAD = 3;
+    internal const int IN_HEAD = 3;
 
-    private const int IN_HEAD_NOSCRIPT = 4;
+    internal const int IN_HEAD_NOSCRIPT = 4;
 
-    private const int AFTER_HEAD = 5;
+    internal const int AFTER_HEAD = 5;
 
-    private const int IN_BODY = 6;
+    internal const int IN_BODY = 6;
 
-    private const int IN_TABLE = 7;
+    internal const int IN_TABLE = 7;
 
-    private const int IN_CAPTION = 8;
+    internal const int IN_CAPTION = 8;
 
-    private const int IN_COLUMN_GROUP = 9;
+    internal const int IN_COLUMN_GROUP = 9;
 
-    private const int IN_TABLE_BODY = 10;
+    internal const int IN_TABLE_BODY = 10;
 
-    private const int IN_ROW = 11;
+    internal const int IN_ROW = 11;
 
-    private const int IN_CELL = 12;
+    internal const int IN_CELL = 12;
 
-    private const int IN_SELECT = 13;
+    internal const int IN_SELECT = 13;
 
-    private const int IN_SELECT_IN_TABLE = 14;
+    internal const int IN_SELECT_IN_TABLE = 14;
 
-    private const int AFTER_BODY = 15;
+    internal const int AFTER_BODY = 15;
 
-    private const int IN_FRAMESET = 16;
+    internal const int IN_FRAMESET = 16;
 
-    private const int AFTER_FRAMESET = 17;
+    internal const int AFTER_FRAMESET = 17;
 
-    private const int AFTER_AFTER_BODY = 18;
+    internal const int AFTER_AFTER_BODY = 18;
 
-    private const int AFTER_AFTER_FRAMESET = 19;
+    internal const int AFTER_AFTER_FRAMESET = 19;
 
-    private const int TEXT = 20;
+    internal const int TEXT = 20;
 
-    private const int FRAMESET_OK = 21;
+    internal const int FRAMESET_OK = 21;
 
     // start charset states
 
-    private const int CHARSET_INITIAL = 0;
+    internal const int CHARSET_INITIAL = 0;
 
-    private const int CHARSET_C = 1;
+    internal const int CHARSET_C = 1;
 
-    private const int CHARSET_H = 2;
+    internal const int CHARSET_H = 2;
 
-    private const int CHARSET_A = 3;
+    internal const int CHARSET_A = 3;
 
-    private const int CHARSET_R = 4;
+    internal const int CHARSET_R = 4;
 
-    private const int CHARSET_S = 5;
+    internal const int CHARSET_S = 5;
 
-    private const int CHARSET_E = 6;
+    internal const int CHARSET_E = 6;
 
-    private const int CHARSET_T = 7;
+    internal const int CHARSET_T = 7;
 
-    private const int CHARSET_EQUALS = 8;
+    internal const int CHARSET_EQUALS = 8;
 
-    private const int CHARSET_SINGLE_QUOTED = 9;
+    internal const int CHARSET_SINGLE_QUOTED = 9;
 
-    private const int CHARSET_DOUBLE_QUOTED = 10;
+    internal const int CHARSET_DOUBLE_QUOTED = 10;
 
-    private const int CHARSET_UNQUOTED = 11;
+    internal const int CHARSET_UNQUOTED = 11;
 
     // end pseudo enums
 
     // [NOCPP[
 
-    private readonly String[] HTML4_PUBLIC_IDS = {
+    internal static readonly String[] HTML4_PUBLIC_IDS = {
             "-//W3C//DTD HTML 4.0 Frameset//EN",
             "-//W3C//DTD HTML 4.0 Transitional//EN",
             "-//W3C//DTD HTML 4.0//EN", "-//W3C//DTD HTML 4.01 Frameset//EN",
@@ -262,7 +262,7 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
 
     // ]NOCPP]
 
-    private readonly String[] QUIRKY_PUBLIC_IDS = {
+    internal static readonly String[] QUIRKY_PUBLIC_IDS = {
             "+//silmaril//dtd html pro v0r11 19970101//",
             "-//advasoft ltd//dtd html 3.0 aswedit + extensions//",
             "-//as//dtd html 3.0 aswedit + extensions//",
@@ -314,13 +314,17 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
             "-//w3o//dtd w3 html 3.0//", "-//webtechs//dtd mozilla html 2.0//",
             "-//webtechs//dtd mozilla html//" };
 
-    private const int NOT_FOUND_ON_STACK = Int32.MaxValue;
+    internal const int NOT_FOUND_ON_STACK = Int32.MaxValue;
 
     // [NOCPP[
 
-    private const String HTML_LOCAL = "html";
+    internal const String HTML_LOCAL = "html";
     
     // ]NOCPP]
+}
+
+public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, TokenHandler {
+    
 
     private int mode = INITIAL;
 
@@ -605,7 +609,7 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                         // [NOCPP[
                     }
                     switch (doctypeExpectation) {
-                        case HTML:
+                        case DoctypeExpectation.HTML:
                             // ]NOCPP]
                             if (isQuirky(name, publicIdentifier,
                                     systemIdentifier, forceQuirks)) {
@@ -665,7 +669,7 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                             }
                             // [NOCPP[
                             break;
-                        case HTML401_STRICT:
+                        case DoctypeExpectation.HTML401_STRICT:
                             html4 = true;
                             tokenizer.turnOnAdditionalHtml4Errors();
                             if (isQuirky(name, publicIdentifier,
@@ -688,8 +692,8 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                                 if (firstCommentLocation != null) {
                                     warn("Comments seen before doctype. Internet Explorer will go into the quirks mode.", firstCommentLocation);
                                 }
-                                if ("-//W3C//DTD HTML 4.01//EN".equals(publicIdentifier)) {
-                                    if (!"http://www.w3.org/TR/html4/strict.dtd".equals(systemIdentifier)) {
+                                if ("-//W3C//DTD HTML 4.01//EN".Equals(publicIdentifier)) {
+                                    if (!"http://www.w3.org/TR/html4/strict.dtd".Equals(systemIdentifier)) {
                                         warn("The doctype did not contain the system identifier prescribed by the HTML 4.01 specification. Expected \u201C<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\u201D.");
                                     }
                                 } else {
@@ -701,7 +705,7 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                                         true);
                             }
                             break;
-                        case HTML401_TRANSITIONAL:
+                        case DoctypeExpectation.HTML401_TRANSITIONAL:
                             html4 = true;
                             tokenizer.turnOnAdditionalHtml4Errors();
                             if (isQuirky(name, publicIdentifier,
@@ -715,9 +719,9 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                                 if (firstCommentLocation != null) {
                                     warn("Comments seen before doctype. Internet Explorer will go into the quirks mode.", firstCommentLocation);
                                 }
-                                if ("-//W3C//DTD HTML 4.01 Transitional//EN".equals(publicIdentifier)
+                                if ("-//W3C//DTD HTML 4.01 Transitional//EN".Equals(publicIdentifier)
                                         && systemIdentifier != null) {
-                                    if (!"http://www.w3.org/TR/html4/loose.dtd".equals(systemIdentifier)) {
+                                    if (!"http://www.w3.org/TR/html4/loose.dtd".Equals(systemIdentifier)) {
                                         warn("The doctype did not contain the system identifier prescribed by the HTML 4.01 specification. Expected \u201C<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\u201D.");
                                     }
                                 } else {
@@ -738,7 +742,7 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                                         true);
                             }
                             break;
-                        case AUTO:
+                        case DoctypeExpectation.AUTO:
                             html4 = isHtml4Doctype(publicIdentifier);
                             if (html4) {
                                 tokenizer.turnOnAdditionalHtml4Errors();
@@ -769,8 +773,8 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                                 if (firstCommentLocation != null) {
                                     warn("Comments seen before doctype. Internet Explorer will go into the quirks mode.", firstCommentLocation);
                                 }
-                                if ("-//W3C//DTD HTML 4.01//EN".equals(publicIdentifier)) {
-                                    if (!"http://www.w3.org/TR/html4/strict.dtd".equals(systemIdentifier)) {
+                                if ("-//W3C//DTD HTML 4.01//EN".Equals(publicIdentifier)) {
+                                    if (!"http://www.w3.org/TR/html4/strict.dtd".Equals(systemIdentifier)) {
                                         warn("The doctype did not contain the system identifier prescribed by the HTML 4.01 specification. Expected \u201C<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\u201D.");
                                     }
                                 } else {
@@ -784,7 +788,7 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                                         html4);
                             }
                             break;
-                        case NO_DOCTYPE_ERRORS:
+                        case DoctypeExpectation.NO_DOCTYPE_ERRORS:
                             if (isQuirky(name, publicIdentifier,
                                     systemIdentifier, forceQuirks)) {
                                 documentModeInternal(DocumentMode.QUIRKS_MODE,
@@ -831,7 +835,7 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
 
     private bool isHtml4Doctype(String publicIdentifier) {
         if (publicIdentifier != null
-                && (Array.BinarySearch(TreeBuilder.HTML4_PUBLIC_IDS,
+                && (Array.BinarySearch(TreeBuilderBase.HTML4_PUBLIC_IDS,
                         publicIdentifier) > -1)) {
             return true;
         }
@@ -915,6 +919,7 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                 if (!isInForeignButNotHtmlIntegrationPoint()) {
                     reconstructTheActiveFormattingElements();
                 }
+                goto case TEXT;
                 // fall through
             case TEXT:
                 accumulateCharacters(buf, start, length);
@@ -999,7 +1004,7 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                                     }
                                     /*
                                      * Reconstruct the active formatting
-                                     * elements, if any.
+                                     * elements, if any. 
                                      */
                                     flushCharacters();
                                     reconstructTheActiveFormattingElements();
@@ -1009,7 +1014,11 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                                      */
                                     continue;
                             }
+                            // fall through 
+                            // TODO: figure out how to solve the case of goto default in nested switch statements
+                            goto case explicit_label;
                         default:
+                        explicit_label:
                             /*
                              * A character token that is not one of one of
                              * U+0009 CHARACTER TABULATION, U+000A LINE FEED
@@ -1022,20 +1031,21 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                                      */
                                     // [NOCPP[
                                     switch (doctypeExpectation) {
-                                        case AUTO:
+                                        case DoctypeExpectation.AUTO:
                                             err("Non-space characters found without seeing a doctype first. Expected e.g. \u201C<!DOCTYPE html>\u201D.");
                                             break;
-                                        case HTML:
+                                        case DoctypeExpectation.HTML:
                                             // XXX figure out a way to report this in the Gecko View Source case
                                             err("Non-space characters found without seeing a doctype first. Expected \u201C<!DOCTYPE html>\u201D.");
                                             break;
-                                        case HTML401_STRICT:
+                                        case DoctypeExpectation.HTML401_STRICT:
                                             err("Non-space characters found without seeing a doctype first. Expected \u201C<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\u201D.");
                                             break;
-                                        case HTML401_TRANSITIONAL:
+                                        case DoctypeExpectation.HTML401_TRANSITIONAL:
                                             err("Non-space characters found without seeing a doctype first. Expected \u201C<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\u201D.");
                                             break;
-                                        case NO_DOCTYPE_ERRORS:
+                                        case DoctypeExpectation.NO_DOCTYPE_ERRORS:
+                                            break;
                                     }
                                     // ]NOCPP]
                                     /*
@@ -1311,19 +1321,19 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                      */
                     // [NOCPP[
                     switch (doctypeExpectation) {
-                        case AUTO:
+                        case DoctypeExpectation.AUTO:
                             err("End of file seen without seeing a doctype first. Expected e.g. \u201C<!DOCTYPE html>\u201D.");
                             break;
-                        case HTML:
+                        case DoctypeExpectation.HTML:
                             err("End of file seen without seeing a doctype first. Expected \u201C<!DOCTYPE html>\u201D.");
                             break;
-                        case HTML401_STRICT:
+                        case DoctypeExpectation.HTML401_STRICT:
                             err("End of file seen without seeing a doctype first. Expected \u201C<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\u201D.");
                             break;
-                        case HTML401_TRANSITIONAL:
+                        case DoctypeExpectation.HTML401_TRANSITIONAL:
                             err("End of file seen without seeing a doctype first. Expected \u201C<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\u201D.");
                             break;
-                        case NO_DOCTYPE_ERRORS:
+                        case DoctypeExpectation.NO_DOCTYPE_ERRORS:
                     }
                     // ]NOCPP]
                     /*
@@ -1639,7 +1649,7 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                         case COLGROUP:
                         case TBODY_OR_THEAD_OR_TFOOT:
                         case TR:
-                            eltPos = findLastOrRoot(TreeBuilder.TR);
+                            eltPos = findLastOrRoot(TreeBuilderBase.TR);
                             if (eltPos == 0) {
                                 Debug.Assert(fragment);
                                 errNoTableRowToClose();
@@ -1656,7 +1666,7 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                     intableloop: for (;;) {
                         switch (group) {
                             case CAPTION:
-                                clearStackBackTo(findLastOrRoot(TreeBuilder.TABLE));
+                                clearStackBackTo(findLastOrRoot(TreeBuilderBase.TABLE));
                                 insertMarker();
                                 appendToCurrentNodeAndPushElement(
                                         elementName,
@@ -1665,7 +1675,7 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                                 attributes = null; // CPP
                                 goto starttagloop;
                             case COLGROUP:
-                                clearStackBackTo(findLastOrRoot(TreeBuilder.TABLE));
+                                clearStackBackTo(findLastOrRoot(TreeBuilderBase.TABLE));
                                 appendToCurrentNodeAndPushElement(
                                         elementName,
                                         attributes);
@@ -1673,14 +1683,14 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                                 attributes = null; // CPP
                                 goto starttagloop;
                             case COL:
-                                clearStackBackTo(findLastOrRoot(TreeBuilder.TABLE));
+                                clearStackBackTo(findLastOrRoot(TreeBuilderBase.TABLE));
                                 appendToCurrentNodeAndPushElement(
                                         ElementName.COLGROUP,
                                         HtmlAttributes.EMPTY_ATTRIBUTES);
                                 mode = IN_COLUMN_GROUP;
                                 continue starttagloop;
                             case TBODY_OR_THEAD_OR_TFOOT:
-                                clearStackBackTo(findLastOrRoot(TreeBuilder.TABLE));
+                                clearStackBackTo(findLastOrRoot(TreeBuilderBase.TABLE));
                                 appendToCurrentNodeAndPushElement(
                                         elementName,
                                         attributes);
@@ -1689,7 +1699,7 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                                 goto starttagloop;
                             case TR:
                             case TD_OR_TH:
-                                clearStackBackTo(findLastOrRoot(TreeBuilder.TABLE));
+                                clearStackBackTo(findLastOrRoot(TreeBuilderBase.TABLE));
                                 appendToCurrentNodeAndPushElement(
                                         ElementName.TBODY,
                                         HtmlAttributes.EMPTY_ATTRIBUTES);
@@ -1774,7 +1784,7 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                         case TD_OR_TH:
                             errStrayStartTag(name);
                             eltPos = findLastInTableScope("caption");
-                            if (eltPos == TreeBuilder.NOT_FOUND_ON_STACK) {
+                            if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 goto starttagloop;
                             }
                             generateImpliedEndTags();
@@ -2119,7 +2129,7 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                                 if (actionIndex > -1) {
                                     formAttrs.addAttribute(
                                             AttributeName.ACTION,
-                                            attributes.getValue(actionIndex)
+                                            attributes.getValue(actionIndex) 
                                             // [NOCPP[
                                             , XmlViolationPolicy.ALLOW
                                     // ]NOCPP]
@@ -2136,7 +2146,7 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                                 if (promptIndex > -1) {
                                     char[] prompt = Portability.newCharArrayFromString(attributes.getValue(promptIndex));
                                     appendCharacters(stack[currentPtr].node,
-                                            prompt, 0, prompt.length);
+                                            prompt, 0, prompt.Length);
                                 } else {
                                     appendIsindexPrompt(stack[currentPtr].node);
                                 }
@@ -2660,21 +2670,22 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                      */
                     // [NOCPP[
                     switch (doctypeExpectation) {
-                        case AUTO:
+                        case DoctypeExpectation.AUTO:
                             err("Start tag seen without seeing a doctype first. Expected e.g. \u201C<!DOCTYPE html>\u201D.");
                             break;
-                        case HTML:
+                        case DoctypeExpectation.HTML:
                             // ]NOCPP]
                             errStartTagWithoutDoctype();
                             // [NOCPP[
                             break;
-                        case HTML401_STRICT:
+                        case DoctypeExpectation.HTML401_STRICT:
                             err("Start tag seen without seeing a doctype first. Expected \u201C<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\u201D.");
                             break;
-                        case HTML401_TRANSITIONAL:
+                        case DoctypeExpectation.HTML401_TRANSITIONAL:
                             err("Start tag seen without seeing a doctype first. Expected \u201C<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\u201D.");
                             break;
-                        case NO_DOCTYPE_ERRORS:
+                        case DoctypeExpectation.NO_DOCTYPE_ERRORS:
+                            break;
                     }
                     // ]NOCPP]
                     /*
@@ -3729,21 +3740,22 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                      */
                     // [NOCPP[
                     switch (doctypeExpectation) {
-                        case AUTO:
+                        case DoctypeExpectation.AUTO:
                             err("End tag seen without seeing a doctype first. Expected e.g. \u201C<!DOCTYPE html>\u201D.");
                             break;
-                        case HTML:
+                        case DoctypeExpectation.HTML:
                             // ]NOCPP]
                             errEndTagSeenWithoutDoctype();
                             // [NOCPP[
                             break;
-                        case HTML401_STRICT:
+                        case DoctypeExpectation.HTML401_STRICT:
                             err("End tag seen without seeing a doctype first. Expected \u201C<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\u201D.");
                             break;
-                        case HTML401_TRANSITIONAL:
+                        case DoctypeExpectation.HTML401_TRANSITIONAL:
                             err("End tag seen without seeing a doctype first. Expected \u201C<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\u201D.");
                             break;
-                        case NO_DOCTYPE_ERRORS:
+                        case DoctypeExpectation.NO_DOCTYPE_ERRORS:
+                            break;
                     }
                     // ]NOCPP]
                     /*
@@ -4686,17 +4698,17 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                 } else if (ns != "http://www.w3.org/1999/xhtml"
                         && name == AttributeName.XMLNS_XLINK) {
                     String xmlns = attributes.getXmlnsValue(i);
-                    if (!"http://www.w3.org/1999/xlink".equals(xmlns)) {
+                    if (!"http://www.w3.org/1999/xlink".Equals(xmlns)) {
                         err("Bad value \u201C"
                                 + xmlns
                                 + "\u201D for the attribute \u201Cxmlns:link\u201D (only \u201Chttp://www.w3.org/1999/xlink\u201D permitted here).");
                         switch (namePolicy) {
-                            case ALTER_INFOSET:
+                            case XmlViolationPolicy.ALTER_INFOSET:
                                 // fall through
-                            case ALLOW:
+                            case XmlViolationPolicy.ALLOW:
                                 warn("Attribute \u201Cxmlns:xlink\u201D with a value other than \u201Chttp://www.w3.org/1999/xlink\u201D is not serializable as XML 1.0 without changing document semantics.");
                                 break;
-                            case FATAL:
+                            case XmlViolationPolicy.FATAL:
                                 fatal("Attribute \u201Cxmlns:xlink\u201D with a value other than \u201Chttp://www.w3.org/1999/xlink\u201D is not serializable as XML 1.0 without changing document semantics.");
                                 break;
                         }
@@ -4705,14 +4717,14 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
                     err("Attribute \u201C" + attributes.getXmlnsLocalName(i)
                             + "\u201D not allowed here.");
                     switch (namePolicy) {
-                        case ALTER_INFOSET:
+                        case XmlViolationPolicy.ALTER_INFOSET:
                             // fall through
-                        case ALLOW:
+                        case XmlViolationPolicy.ALLOW:
                             warn("Attribute with the local name \u201C"
                                     + attributes.getXmlnsLocalName(i)
                                     + "\u201D is not serializable as XML 1.0.");
                             break;
-                        case FATAL:
+                        case XmlViolationPolicy.FATAL:
                             fatal("Attribute with the local name \u201C"
                                     + attributes.getXmlnsLocalName(i)
                                     + "\u201D is not serializable as XML 1.0.");
@@ -4729,15 +4741,15 @@ public abstract class TreeBuilder<T> : TreeBuilderState<T>, TokenHandler {
             return name;
         } else {
             switch (namePolicy) {
-                case ALLOW:
+                case XmlViolationPolicy.ALLOW:
                     warn("Element name \u201C" + name
                             + "\u201D cannot be represented as XML 1.0.");
                     return name;
-                case ALTER_INFOSET:
+                case XmlViolationPolicy.ALTER_INFOSET:
                     warn("Element name \u201C" + name
                             + "\u201D cannot be represented as XML 1.0.");
                     return NCName.escapeName(name);
-                case FATAL:
+                case XmlViolationPolicy.FATAL:
                     fatal("Element name \u201C" + name
                             + "\u201D cannot be represented as XML 1.0.");
             }

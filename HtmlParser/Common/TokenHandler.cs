@@ -41,7 +41,7 @@ public interface TokenHandler {
      * @throws SAXException
      *             if something went wrong
      */
-    void StartTokenization(Tokenizer self);
+    void startTokenization(Tokenizer self);
 
     /**
      * If this handler implementation cares about comments, return
@@ -51,7 +51,7 @@ public interface TokenHandler {
      * @throws SAXException
      *             if something went wrong
      */
-    bool WantsComments();
+    bool wantsComments();
 
     /**
      * Receive a doctype token.
@@ -67,7 +67,7 @@ public interface TokenHandler {
      * @throws SAXException
      *             if something went wrong
      */
-    void Doctype(string name, string publicIdentifier, string systemIdentifier, bool forceQuirks);
+    void doctype(string name, string publicIdentifier, string systemIdentifier, bool forceQuirks);
 
     /**
      * Receive a start tag token.
@@ -81,7 +81,7 @@ public interface TokenHandler {
      * @throws SAXException
      *             if something went wrong
      */
-    void StartTag(ElementName eltName, HtmlAttributes attributes, bool selfClosing);
+    void startTag(ElementName eltName, HtmlAttributes attributes, bool selfClosing);
 
     /**
      * Receive an end tag token.
@@ -91,7 +91,7 @@ public interface TokenHandler {
      * @throws SAXException
      *             if something went wrong
      */
-    void EndTag(ElementName eltName);
+    void endTag(ElementName eltName);
 
     /**
      * Receive a comment token. The data is junk if the
@@ -105,7 +105,7 @@ public interface TokenHandler {
      * @throws SAXException
      *             if something went wrong
      */
-    void Comment(char[] buf, int start, int length);
+    void comment(char[] buf, int start, int length);
 
     /**
      * Receive character tokens. This method has the same semantics as the SAX
@@ -121,7 +121,7 @@ public interface TokenHandler {
      *             if something went wrong
      * @see org.xml.sax.ContentHandler#characters(char[], int, int)
      */
-    void Characters(char[] buf, int start, int length);
+    void characters(char[] buf, int start, int length);
 
     /**
      * Reports a U+0000 that's being turned into a U+FFFD.
@@ -129,7 +129,7 @@ public interface TokenHandler {
      * @throws SAXException
      *             if something went wrong
      */
-    void ZeroOriginatingReplacementCharacter();
+    void zeroOriginatingReplacementCharacter();
     
     /**
      * The end-of-file token.
@@ -137,7 +137,7 @@ public interface TokenHandler {
      * @throws SAXException
      *             if something went wrong
      */
-    void Eof();
+    void eof();
 
     /**
      * The perform final cleanup.
@@ -145,7 +145,7 @@ public interface TokenHandler {
      * @throws SAXException
      *             if something went wrong
      */
-    void EndTokenization();
+    void endTokenization();
 
     /**
      * Checks if the CDATA sections are allowed.
@@ -154,5 +154,5 @@ public interface TokenHandler {
      * @throws SAXException
      *             if something went wrong
      */
-    bool CDataSectionAllowed();
+    bool cdataSectionAllowed();
 }

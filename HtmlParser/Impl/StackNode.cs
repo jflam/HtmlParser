@@ -24,19 +24,19 @@
 using System;
 using System.Diagnostics;
 
-class StackNode<T> {
-    readonly int flags;
+public class StackNode<T> {
+    public readonly int flags;
 
-    readonly String name;
+    public readonly String name;
 
-    readonly String popName;
+    public readonly String popName;
 
-    readonly String ns;
+    public readonly String ns;
 
-    readonly T node;
+    public readonly T node;
 
     // Only used on the list of formatting elements
-    HtmlAttributes attributes;
+    public HtmlAttributes attributes;
 
     private int refcount = 1;
 
@@ -94,7 +94,7 @@ class StackNode<T> {
      * @param popName
      * @param attributes
      */
-    StackNode(int flags, String ns, String name, T node, String popName, HtmlAttributes attributes, TaintableLocatorImpl locator) {
+    public StackNode(int flags, String ns, String name, T node, String popName, HtmlAttributes attributes, TaintableLocatorImpl locator) {
         this.flags = flags;
         this.name = name;
         this.popName = popName;
@@ -113,7 +113,7 @@ class StackNode<T> {
      * @param elementName
      * @param node
      */
-    StackNode(ElementName elementName, T node, TaintableLocatorImpl locator) {
+    public StackNode(ElementName elementName, T node, TaintableLocatorImpl locator) {
         this.flags = elementName.getFlags();
         this.name = elementName.name;
         this.popName = elementName.name;
@@ -134,7 +134,7 @@ class StackNode<T> {
      * @param node
      * @param attributes
      */
-    StackNode(ElementName elementName, T node, HtmlAttributes attributes, TaintableLocatorImpl locator) {
+    public StackNode(ElementName elementName, T node, HtmlAttributes attributes, TaintableLocatorImpl locator) {
         this.flags = elementName.getFlags();
         this.name = elementName.name;
         this.popName = elementName.name;
@@ -155,7 +155,7 @@ class StackNode<T> {
      * @param node
      * @param popName
      */
-    StackNode(ElementName elementName, T node, String popName, TaintableLocatorImpl locator) {
+    public StackNode(ElementName elementName, T node, String popName, TaintableLocatorImpl locator) {
         this.flags = elementName.getFlags();
         this.name = elementName.name;
         this.popName = popName;
@@ -178,7 +178,7 @@ class StackNode<T> {
      * @param popName
      * @param node
      */
-    StackNode(ElementName elementName, String popName, T node, TaintableLocatorImpl locator) {
+    public StackNode(ElementName elementName, String popName, T node, TaintableLocatorImpl locator) {
         this.flags = prepareSvgFlags(elementName.getFlags());
         this.name = elementName.name;
         this.popName = popName;
@@ -199,7 +199,7 @@ class StackNode<T> {
      * @param popName
      * @param markAsIntegrationPoint
      */
-    StackNode(ElementName elementName, T node, String popName, bool markAsIntegrationPoint, TaintableLocatorImpl locator) {
+    public StackNode(ElementName elementName, T node, String popName, bool markAsIntegrationPoint, TaintableLocatorImpl locator) {
         this.flags = prepareMathFlags(elementName.getFlags(), markAsIntegrationPoint);
         this.name = elementName.name;
         this.popName = popName;

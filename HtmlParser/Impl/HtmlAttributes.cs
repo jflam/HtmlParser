@@ -102,7 +102,7 @@ public sealed class HtmlAttributes : Attributes {
     }
     */
 
-    void destructor() {
+    public void destructor() {
         clear(0);
     }
     
@@ -125,7 +125,7 @@ public sealed class HtmlAttributes : Attributes {
     
     public int getIndex(String qName) {
         for (int i = 0; i < length; i++) {
-            if (names[i].getQName(mode).equals(qName)) {
+            if (names[i].getQName(mode).Equals(qName)) {
                 return i;
             }
         }
@@ -134,8 +134,8 @@ public sealed class HtmlAttributes : Attributes {
     
     public int getIndex(String uri, String localName) {
         for (int i = 0; i < length; i++) {
-            if (names[i].getLocal(mode).equals(localName)
-                    && names[i].getUri(mode).equals(uri)) {
+            if (names[i].getLocal(mode).Equals(localName)
+                    && names[i].getUri(mode).Equals(uri)) {
                 return i;
             }
         }
@@ -320,7 +320,7 @@ public sealed class HtmlAttributes : Attributes {
 
     // ]NOCPP]
 
-    void addAttribute(AttributeName name, String value, XmlViolationPolicy xmlnsPolicy) {
+    public void addAttribute(AttributeName name, String value, XmlViolationPolicy xmlnsPolicy) {
         if (name == AttributeName.ID) {
             idValue = value;
         }
@@ -367,7 +367,7 @@ public sealed class HtmlAttributes : Attributes {
         length++;
     }
 
-    void clear(int m) {
+    public void clear(int m) {
         for (int i = 0; i < length; i++) {
             names[i].release();
             names[i] = null;
@@ -390,7 +390,7 @@ public sealed class HtmlAttributes : Attributes {
      * This is used in C++ to release special <code>isindex</code>
      * attribute values whose ownership is not transferred.
      */
-    void releaseValue(int i) {
+    public void releaseValue(int i) {
         Portability.releaseString(values[i]);        
     }
     
@@ -398,7 +398,7 @@ public sealed class HtmlAttributes : Attributes {
      * This is only used for <code>AttributeName</code> ownership transfer
      * in the isindex case to avoid freeing custom names twice in C++.
      */
-    void clearWithoutReleasingContents() {
+    public void clearWithoutReleasingContents() {
         for (int i = 0; i < length; i++) {
             names[i] = null;
             values[i] = null;
@@ -406,7 +406,7 @@ public sealed class HtmlAttributes : Attributes {
         length = 0;
     }
 
-    bool contains(AttributeName name) {
+    public bool contains(AttributeName name) {
         for (int i = 0; i < length; i++) {
             if (name.equalsAnother(names[i])) {
                 return true;
@@ -478,8 +478,7 @@ public sealed class HtmlAttributes : Attributes {
     
     // [NOCPP[
     
-    // TODO: what is a TreeBuilder<?> mean in Java?
-    void processNonNcNames(TreeBuilder treeBuilder, XmlViolationPolicy namePolicy) {
+    public void processNonNcNames<T>(TreeBuilder<T> treeBuilder, XmlViolationPolicy namePolicy) {
         for (int i = 0; i < length; i++) {
             AttributeName attName = names[i];
             if (!attName.isNcName(mode)) {
