@@ -148,7 +148,7 @@ public sealed class AttributeName
             if (prefix[i] == null) {
                 arr[i] = local[i];
             } else {
-                arr[i] = String.Intern(prefix[i] + ':' + local[i]); 
+                arr[i] = String.Intern(prefix[i] + ':' + local[i]);  
             }
         }
         return arr;
@@ -415,7 +415,7 @@ public sealed class AttributeName
     /**
      * Deletes runtime-allocated instances in C++.
      */
-     void release() {
+     public void release() {
         // No-op in Java.
         // Implement as |delete this;| in subclass.
     }
@@ -447,7 +447,7 @@ public sealed class AttributeName
      * @param name
      *            the name of the attribute to create
      */
-    static AttributeName create( String name) {
+    public static AttributeName create( String name) {
         return new AttributeName(AttributeName.ALL_NO_NS,
                 AttributeName.SAME_LOCAL(name), ALL_NO_PREFIX,
                 NCNAME_HTML | NCNAME_FOREIGN | NCNAME_LANG);
@@ -505,7 +505,7 @@ public sealed class AttributeName
         return prefix[mode];
     }
 
-    bool equalsAnother(AttributeName another) {
+    public bool equalsAnother(AttributeName another) {
         return this.getLocal(AttributeName.HTML) == another.getLocal(AttributeName.HTML);
     }
 

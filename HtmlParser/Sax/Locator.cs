@@ -13,7 +13,7 @@ public interface Locator {
        *         null if none is available.
        * @see #getSystemId
        */
-      public abstract String getPublicId ();
+      String getPublicId();
       
       
       /**
@@ -32,7 +32,7 @@ public interface Locator {
        *         if none is available.
        * @see #getPublicId
        */
-      public abstract String getSystemId ();
+      String getSystemId();
       
       
       /**
@@ -59,7 +59,7 @@ public interface Locator {
       * @return The line number, or -1 if none is available.
       * @see #getColumnNumber
       */
-     public abstract int getLineNumber ();
+      int getLineNumber();
      
      
      /**
@@ -86,5 +86,5 @@ public interface Locator {
       * @return The column number, or -1 if none is available.
       * @see #getLineNumber
       */
-    public abstract int getColumnNumber ();
+      int getColumnNumber();
 }

@@ -321,6 +321,174 @@ public abstract class TreeBuilderBase
     internal const String HTML_LOCAL = "html";
     
     // ]NOCPP]
+
+    // TODO: see if we need to move all static methods to this base class as well
+    /**
+     * 
+     * <p>
+     * C++ memory note: The return value must be released.
+     * 
+     * @return
+     * @throws SAXException
+     * @throws StopSniffingException
+     */
+    public static String extractCharsetFromContent(String attributeValue) {
+        // This is a bit ugly. Converting the string to char array in order to
+        // make the portability layer smaller.
+        int charsetState = CHARSET_INITIAL;
+        int start = -1;
+        int end = -1;
+        char[] buffer = Portability.newCharArrayFromString(attributeValue);
+
+        charsetloop: for (int i = 0; i < buffer.Length; i++) {
+            char c = buffer[i];
+            switch (charsetState) {
+                case CHARSET_INITIAL:
+                    switch (c) {
+                        case 'c':
+                        case 'C':
+                            charsetState = CHARSET_C;
+                            continue;
+                        default:
+                            continue;
+                    }
+                case CHARSET_C:
+                    switch (c) {
+                        case 'h':
+                        case 'H':
+                            charsetState = CHARSET_H;
+                            continue;
+                        default:
+                            charsetState = CHARSET_INITIAL;
+                            continue;
+                    }
+                case CHARSET_H:
+                    switch (c) {
+                        case 'a':
+                        case 'A':
+                            charsetState = CHARSET_A;
+                            continue;
+                        default:
+                            charsetState = CHARSET_INITIAL;
+                            continue;
+                    }
+                case CHARSET_A:
+                    switch (c) {
+                        case 'r':
+                        case 'R':
+                            charsetState = CHARSET_R;
+                            continue;
+                        default:
+                            charsetState = CHARSET_INITIAL;
+                            continue;
+                    }
+                case CHARSET_R:
+                    switch (c) {
+                        case 's':
+                        case 'S':
+                            charsetState = CHARSET_S;
+                            continue;
+                        default:
+                            charsetState = CHARSET_INITIAL;
+                            continue;
+                    }
+                case CHARSET_S:
+                    switch (c) {
+                        case 'e':
+                        case 'E':
+                            charsetState = CHARSET_E;
+                            continue;
+                        default:
+                            charsetState = CHARSET_INITIAL;
+                            continue;
+                    }
+                case CHARSET_E:
+                    switch (c) {
+                        case 't':
+                        case 'T':
+                            charsetState = CHARSET_T;
+                            continue;
+                        default:
+                            charsetState = CHARSET_INITIAL;
+                            continue;
+                    }
+                case CHARSET_T:
+                    switch (c) {
+                        case '\t':
+                        case '\n':
+                        case '\u000C':
+                        case '\r':
+                        case ' ':
+                            continue;
+                        case '=':
+                            charsetState = CHARSET_EQUALS;
+                            continue;
+                        default:
+                            return null;
+                    }
+                case CHARSET_EQUALS:
+                    switch (c) {
+                        case '\t':
+                        case '\n':
+                        case '\u000C':
+                        case '\r':
+                        case ' ':
+                            continue;
+                        case '\'':
+                            start = i + 1;
+                            charsetState = CHARSET_SINGLE_QUOTED;
+                            continue;
+                        case '\"':
+                            start = i + 1;
+                            charsetState = CHARSET_DOUBLE_QUOTED;
+                            continue;
+                        default:
+                            start = i;
+                            charsetState = CHARSET_UNQUOTED;
+                            continue;
+                    }
+                case CHARSET_SINGLE_QUOTED:
+                    switch (c) {
+                        case '\'':
+                            end = i;
+                            goto charsetloop;
+                        default:
+                            continue;
+                    }
+                case CHARSET_DOUBLE_QUOTED:
+                    switch (c) {
+                        case '\"':
+                            end = i;
+                            goto charsetloop;
+                        default:
+                            continue;
+                    }
+                case CHARSET_UNQUOTED:
+                    switch (c) {
+                        case '\t':
+                        case '\n':
+                        case '\u000C':
+                        case '\r':
+                        case ' ':
+                        case ';':
+                            end = i;
+                            goto charsetloop;
+                        default:
+                            continue;
+                    }
+            }
+        }
+        String charset = null;
+        if (start != -1) {
+            if (end == -1) {
+                end = buffer.Length;
+            }
+            charset = Portability.newStringFromBuffer(buffer, start, end
+                    - start);
+        }
+        return charset;
+    }
+     
 }
 
 public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, TokenHandler {
@@ -1394,7 +1562,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                     continue;
                 case IN_COLUMN_GROUP:
                     if (currentPtr == 0) {
-                        assert fragment;
+                        Debug.Assert(fragment);
                         goto eofloop;
                     } else {
                         popOnEof();
@@ -1455,13 +1623,6 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                 case AFTER_AFTER_BODY:
                 case AFTER_AFTER_FRAMESET:
                 default:
-                    // [NOCPP[
-                    if (currentPtr == 0) { // This silliness is here to poison
-                        // buggy compiler optimizations in
-                        // GWT
-                        System.currentTimeMillis();
-                    }
-                    // ]NOCPP]
                     goto eofloop;
             }
         }
@@ -1636,7 +1797,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                 case IN_ROW:
                     switch (group) {
                         case TD_OR_TH:
-                            clearStackBackTo(findLastOrRoot(TreeBuilder.TR));
+                            clearStackBackTo(findLastOrRoot(TreeBuilderBase.TR));
                             appendToCurrentNodeAndPushElement(
                                     elementName,
                                     attributes);
@@ -1708,8 +1869,8 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             case TABLE:
                                 errTableSeenWhileTableOpen();
                                 eltPos = findLastInTableScope(name);
-                                if (eltPos == TreeBuilder.NOT_FOUND_ON_STACK) {
-                                    assert fragment;
+                                if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
+                                    Debug.Assert(fragment);
                                     goto starttagloop;
                                 }
                                 generateImpliedEndTags();
@@ -1809,7 +1970,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                         case TR:
                         case TD_OR_TH:
                             eltPos = findLastInTableScopeTdTh();
-                            if (eltPos == TreeBuilder.NOT_FOUND_ON_STACK) {
+                            if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 errNoCellToClose();
                                 goto starttagloop;
                             } else {
@@ -1895,7 +2056,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             case BODY:
                                 if (currentPtr == 0
                                         || stack[1].getGroup() != BODY) {
-                                    assert fragment;
+                                    Debug.Assert(fragment);
                                     errStrayStartTag(name);
                                     goto starttagloop;
                                 }
@@ -2025,7 +2186,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 goto starttagloop;
                             case NOBR:
                                 reconstructTheActiveFormattingElements();
-                                if (TreeBuilder.NOT_FOUND_ON_STACK != findLastInScope("nobr")) {
+                                if (TreeBuilderBase.NOT_FOUND_ON_STACK != findLastInScope("nobr")) {
                                     errFooSeenWhenFooOpen(name);
                                     adoptionAgencyEndTag("nobr");
                                     reconstructTheActiveFormattingElements();
@@ -2037,7 +2198,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 goto starttagloop;
                             case BUTTON:
                                 eltPos = findLastInScope(name);
-                                if (eltPos != TreeBuilder.NOT_FOUND_ON_STACK) {
+                                if (eltPos != TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                     errFooSeenWhenFooOpen(name);
                                     generateImpliedEndTags();
                                     if (errorHandler != null
@@ -2504,7 +2665,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             goto starttagloop;
                         default:
                             if (currentPtr == 0) {
-                                assert fragment;
+                                Debug.Assert(fragment);
                                 errGarbageInColgroup();
                                 goto starttagloop;
                             }
@@ -2521,8 +2682,8 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                         case TABLE:
                             errStartTagWithSelectOpen(name);
                             eltPos = findLastInTableScope("select");
-                            if (eltPos == TreeBuilder.NOT_FOUND_ON_STACK) {
-                                assert fragment;
+                            if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
+                                Debug.Assert(fragment);
                                 goto starttagloop; // http://www.w3.org/Bugs/Public/show_bug.cgi?id=8375
                             }
                             while (currentPtr >= eltPos) {
@@ -2566,8 +2727,8 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                         case SELECT:
                             errStartSelectWhereEndSelectExpected();
                             eltPos = findLastInTableScope(name);
-                            if (eltPos == TreeBuilder.NOT_FOUND_ON_STACK) {
-                                assert fragment;
+                            if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
+                                Debug.Assert(fragment);
                                 errNoSelectInTableScope();
                                 goto starttagloop;
                             } else {
@@ -2582,8 +2743,8 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                         case KEYGEN:
                             errStartTagWithSelectOpen(name);
                             eltPos = findLastInTableScope("select");
-                            if (eltPos == TreeBuilder.NOT_FOUND_ON_STACK) {
-                                assert fragment;
+                            if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
+                                Debug.Assert(fragment);
                                 goto starttagloop;
                             }
                             while (currentPtr >= eltPos) {
@@ -2947,172 +3108,6 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                 || (("http://www.w3.org/1998/Math/MathML" == ns) && (stackNode.getGroup() == MI_MO_MN_MS_MTEXT));
     }
 
-    /**
-     * 
-     * <p>
-     * C++ memory note: The return value must be released.
-     * 
-     * @return
-     * @throws SAXException
-     * @throws StopSniffingException
-     */
-    public static String extractCharsetFromContent(String attributeValue) {
-        // This is a bit ugly. Converting the string to char array in order to
-        // make the portability layer smaller.
-        int charsetState = CHARSET_INITIAL;
-        int start = -1;
-        int end = -1;
-        char[] buffer = Portability.newCharArrayFromString(attributeValue);
-
-        charsetloop: for (int i = 0; i < buffer.length; i++) {
-            char c = buffer[i];
-            switch (charsetState) {
-                case CHARSET_INITIAL:
-                    switch (c) {
-                        case 'c':
-                        case 'C':
-                            charsetState = CHARSET_C;
-                            continue;
-                        default:
-                            continue;
-                    }
-                case CHARSET_C:
-                    switch (c) {
-                        case 'h':
-                        case 'H':
-                            charsetState = CHARSET_H;
-                            continue;
-                        default:
-                            charsetState = CHARSET_INITIAL;
-                            continue;
-                    }
-                case CHARSET_H:
-                    switch (c) {
-                        case 'a':
-                        case 'A':
-                            charsetState = CHARSET_A;
-                            continue;
-                        default:
-                            charsetState = CHARSET_INITIAL;
-                            continue;
-                    }
-                case CHARSET_A:
-                    switch (c) {
-                        case 'r':
-                        case 'R':
-                            charsetState = CHARSET_R;
-                            continue;
-                        default:
-                            charsetState = CHARSET_INITIAL;
-                            continue;
-                    }
-                case CHARSET_R:
-                    switch (c) {
-                        case 's':
-                        case 'S':
-                            charsetState = CHARSET_S;
-                            continue;
-                        default:
-                            charsetState = CHARSET_INITIAL;
-                            continue;
-                    }
-                case CHARSET_S:
-                    switch (c) {
-                        case 'e':
-                        case 'E':
-                            charsetState = CHARSET_E;
-                            continue;
-                        default:
-                            charsetState = CHARSET_INITIAL;
-                            continue;
-                    }
-                case CHARSET_E:
-                    switch (c) {
-                        case 't':
-                        case 'T':
-                            charsetState = CHARSET_T;
-                            continue;
-                        default:
-                            charsetState = CHARSET_INITIAL;
-                            continue;
-                    }
-                case CHARSET_T:
-                    switch (c) {
-                        case '\t':
-                        case '\n':
-                        case '\u000C':
-                        case '\r':
-                        case ' ':
-                            continue;
-                        case '=':
-                            charsetState = CHARSET_EQUALS;
-                            continue;
-                        default:
-                            return null;
-                    }
-                case CHARSET_EQUALS:
-                    switch (c) {
-                        case '\t':
-                        case '\n':
-                        case '\u000C':
-                        case '\r':
-                        case ' ':
-                            continue;
-                        case '\'':
-                            start = i + 1;
-                            charsetState = CHARSET_SINGLE_QUOTED;
-                            continue;
-                        case '\"':
-                            start = i + 1;
-                            charsetState = CHARSET_DOUBLE_QUOTED;
-                            continue;
-                        default:
-                            start = i;
-                            charsetState = CHARSET_UNQUOTED;
-                            continue;
-                    }
-                case CHARSET_SINGLE_QUOTED:
-                    switch (c) {
-                        case '\'':
-                            end = i;
-                            goto charsetloop;
-                        default:
-                            continue;
-                    }
-                case CHARSET_DOUBLE_QUOTED:
-                    switch (c) {
-                        case '\"':
-                            end = i;
-                            goto charsetloop;
-                        default:
-                            continue;
-                    }
-                case CHARSET_UNQUOTED:
-                    switch (c) {
-                        case '\t':
-                        case '\n':
-                        case '\u000C':
-                        case '\r':
-                        case ' ':
-                        case ';':
-                            end = i;
-                            goto charsetloop;
-                        default:
-                            continue;
-                    }
-            }
-        }
-        String charset = null;
-        if (start != -1) {
-            if (end == -1) {
-                end = buffer.length;
-            }
-            charset = Portability.newStringFromBuffer(buffer, start, end
-                    - start);
-        }
-        return charset;
-    }
-
     private void checkMetaCharset(HtmlAttributes attributes) {
         String charset = attributes.getValue(AttributeName.CHARSET);
         if (charset != null) {
@@ -3129,7 +3124,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
         }
         String content = attributes.getValue(AttributeName.CONTENT);
         if (content != null) {
-            String extract = TreeBuilder.extractCharsetFromContent(content);
+            String extract = TreeBuilderBase.extractCharsetFromContent(content);
             // remember not to return early without releasing the string
             if (extract != null) {
                 if (tokenizer.internalEncodingDeclaration(extract)) {
@@ -3168,9 +3163,9 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                 case IN_ROW:
                     switch (group) {
                         case TR:
-                            eltPos = findLastOrRoot(TreeBuilder.TR);
+                            eltPos = findLastOrRoot(TreeBuilderBase.TR);
                             if (eltPos == 0) {
-                                assert fragment;
+                                Debug.Assert(fragment);
                                 errNoTableRowToClose();
                                 goto endtagloop;
                             }
@@ -3190,11 +3185,11 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             mode = IN_TABLE_BODY;
                             continue;
                         case TBODY_OR_THEAD_OR_TFOOT:
-                            if (findLastInTableScope(name) == TreeBuilder.NOT_FOUND_ON_STACK) {
+                            if (findLastInTableScope(name) == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 errStrayEndTag(name);
                                 goto endtagloop;
                             }
-                            eltPos = findLastOrRoot(TreeBuilder.TR);
+                            eltPos = findLastOrRoot(TreeBuilderBase.TR);
                             if (eltPos == 0) {
                                 assert fragment;
                                 errNoTableRowToClose();
@@ -3230,7 +3225,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                         case TABLE:
                             eltPos = findLastInTableScopeOrRootTbodyTheadTfoot();
                             if (eltPos == 0) {
-                                assert fragment;
+                                Debug.Assert(fragment);
                                 errStrayEndTag(name);
                                 goto endtagloop;
                             }
@@ -3254,8 +3249,8 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                     switch (group) {
                         case TABLE:
                             eltPos = findLast("table");
-                            if (eltPos == TreeBuilder.NOT_FOUND_ON_STACK) {
-                                assert fragment;
+                            if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
+                                Debug.Assert(fragment);
                                 errStrayEndTag(name);
                                 goto endtagloop;
                             }
@@ -3282,7 +3277,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                     switch (group) {
                         case CAPTION:
                             eltPos = findLastInTableScope("caption");
-                            if (eltPos == TreeBuilder.NOT_FOUND_ON_STACK) {
+                            if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 goto endtagloop;
                             }
                             generateImpliedEndTags();
@@ -3327,7 +3322,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                     switch (group) {
                         case TD_OR_TH:
                             eltPos = findLastInTableScope(name);
-                            if (eltPos == TreeBuilder.NOT_FOUND_ON_STACK) {
+                            if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 errStrayEndTag(name);
                                 goto endtagloop;
                             }
@@ -3365,7 +3360,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                     switch (group) {
                         case BODY:
                             if (!isSecondOnStackBody()) {
-                                assert fragment;
+                                Debug.Assert(fragment);
                                 errStrayEndTag(name);
                                 goto endtagloop;
                             }
@@ -3392,7 +3387,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             goto endtagloop;
                         case HTML:
                             if (!isSecondOnStackBody()) {
-                                assert fragment;
+                                Debug.Assert(fragment);
                                 errStrayEndTag(name);
                                 goto endtagloop;
                             }
@@ -3422,7 +3417,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                         case BUTTON:
                         case ADDRESS_OR_ARTICLE_OR_ASIDE_OR_DETAILS_OR_DIR_OR_FIGCAPTION_OR_FIGURE_OR_FOOTER_OR_HEADER_OR_HGROUP_OR_NAV_OR_SECTION_OR_SUMMARY:
                             eltPos = findLastInScope(name);
-                            if (eltPos == TreeBuilder.NOT_FOUND_ON_STACK) {
+                            if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 errStrayEndTag(name);
                             } else {
                                 generateImpliedEndTags();
@@ -3441,7 +3436,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             }
                             formPointer = null;
                             eltPos = findLastInScope(name);
-                            if (eltPos == TreeBuilder.NOT_FOUND_ON_STACK) {
+                            if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 errStrayEndTag(name);
                                 goto endtagloop;
                             }
@@ -3453,7 +3448,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             goto endtagloop;
                         case P:
                             eltPos = findLastInButtonScope("p");
-                            if (eltPos == TreeBuilder.NOT_FOUND_ON_STACK) {
+                            if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 errNoElementToCloseButEndTagSeen("p");
                                 // XXX Can the 'in foreign' case happen anymore?
                                 if (isInForeign()) {
@@ -3478,7 +3473,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             goto endtagloop;
                         case LI:
                             eltPos = findLastInListScope(name);
-                            if (eltPos == TreeBuilder.NOT_FOUND_ON_STACK) {
+                            if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 errNoElementToCloseButEndTagSeen(name);
                             } else {
                                 generateImpliedEndTagsExceptFor(name);
@@ -3493,7 +3488,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             goto endtagloop;
                         case DD_OR_DT:
                             eltPos = findLastInScope(name);
-                            if (eltPos == TreeBuilder.NOT_FOUND_ON_STACK) {
+                            if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 errNoElementToCloseButEndTagSeen(name);
                             } else {
                                 generateImpliedEndTagsExceptFor(name);
@@ -3508,7 +3503,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             goto endtagloop;
                         case H1_OR_H2_OR_H3_OR_H4_OR_H5_OR_H6:
                             eltPos = findLastInScopeHn();
-                            if (eltPos == TreeBuilder.NOT_FOUND_ON_STACK) {
+                            if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 errStrayEndTag(name);
                             } else {
                                 generateImpliedEndTags();
@@ -3523,7 +3518,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                         case OBJECT:
                         case MARQUEE_OR_APPLET:
                             eltPos = findLastInScope(name);
-                            if (eltPos == TreeBuilder.NOT_FOUND_ON_STACK) {
+                            if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 errStrayEndTag(name);
                             } else {
                                 generateImpliedEndTags();
@@ -3623,7 +3618,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             goto endtagloop;
                         default:
                             if (currentPtr == 0) {
-                                assert fragment;
+                                Debug.Assert(fragment);
                                 errGarbageInColgroup();
                                 goto endtagloop;
                             }
@@ -3639,10 +3634,10 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                         case TR:
                         case TD_OR_TH:
                             errEndTagSeenWithSelectOpen(name);
-                            if (findLastInTableScope(name) != TreeBuilder.NOT_FOUND_ON_STACK) {
+                            if (findLastInTableScope(name) != TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 eltPos = findLastInTableScope("select");
-                                if (eltPos == TreeBuilder.NOT_FOUND_ON_STACK) {
-                                    assert fragment;
+                                if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
+                                    Debug.Assert(fragment);
                                     goto endtagloop; // http://www.w3.org/Bugs/Public/show_bug.cgi?id=8375
                                 }
                                 while (currentPtr >= eltPos) {
@@ -3679,8 +3674,8 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             goto endtagloop;
                         case SELECT:
                             eltPos = findLastInTableScope("select");
-                            if (eltPos == TreeBuilder.NOT_FOUND_ON_STACK) {
-                                assert fragment;
+                            if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
+                                Debug.Assert(fragment);
                                 errStrayEndTag(name);
                                 goto endtagloop;
                             }
@@ -3873,7 +3868,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
 
     private int findLastInTableScopeOrRootTbodyTheadTfoot() {
         for (int i = currentPtr; i > 0; i--) {
-            if (stack[i].getGroup() == TreeBuilder.TBODY_OR_THEAD_OR_TFOOT) {
+            if (stack[i].getGroup() == TreeBuilderBase.TBODY_OR_THEAD_OR_TFOOT) {
                 return i;
             }
         }
@@ -3886,7 +3881,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                 return i;
             }
         }
-        return TreeBuilder.NOT_FOUND_ON_STACK;
+        return TreeBuilderBase.NOT_FOUND_ON_STACK;
     }
 
     private int findLastInTableScope(String name) {
@@ -3894,10 +3889,10 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
             if (stack[i].name == name) {
                 return i;
             } else if (stack[i].name == "table") {
-                return TreeBuilder.NOT_FOUND_ON_STACK;
+                return TreeBuilderBase.NOT_FOUND_ON_STACK;
             }
         }
-        return TreeBuilder.NOT_FOUND_ON_STACK;
+        return TreeBuilderBase.NOT_FOUND_ON_STACK;
     }
 
     private int findLastInButtonScope(String name) {
@@ -3905,10 +3900,10 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
             if (stack[i].name == name) {
                 return i;
             } else if (stack[i].isScoping() || stack[i].name == "button") {
-                return TreeBuilder.NOT_FOUND_ON_STACK;
+                return TreeBuilderBase.NOT_FOUND_ON_STACK;
             }
         }
-        return TreeBuilder.NOT_FOUND_ON_STACK;
+        return TreeBuilderBase.NOT_FOUND_ON_STACK;
     }
 
     private int findLastInScope(String name) {
@@ -3916,10 +3911,10 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
             if (stack[i].name == name) {
                 return i;
             } else if (stack[i].isScoping()) {
-                return TreeBuilder.NOT_FOUND_ON_STACK;
+                return TreeBuilderBase.NOT_FOUND_ON_STACK;
             }
         }
-        return TreeBuilder.NOT_FOUND_ON_STACK;
+        return TreeBuilderBase.NOT_FOUND_ON_STACK;
     }
 
     private int findLastInListScope(String name) {
@@ -3927,21 +3922,21 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
             if (stack[i].name == name) {
                 return i;
             } else if (stack[i].isScoping() || stack[i].name == "ul" || stack[i].name == "ol") {
-                return TreeBuilder.NOT_FOUND_ON_STACK;
+                return TreeBuilderBase.NOT_FOUND_ON_STACK;
             }
         }
-        return TreeBuilder.NOT_FOUND_ON_STACK;
+        return TreeBuilderBase.NOT_FOUND_ON_STACK;
     }
     
     private int findLastInScopeHn() {
         for (int i = currentPtr; i > 0; i--) {
-            if (stack[i].getGroup() == TreeBuilder.H1_OR_H2_OR_H3_OR_H4_OR_H5_OR_H6) {
+            if (stack[i].getGroup() == TreeBuilderBase.H1_OR_H2_OR_H3_OR_H4_OR_H5_OR_H6) {
                 return i;
             } else if (stack[i].isScoping()) {
-                return TreeBuilder.NOT_FOUND_ON_STACK;
+                return TreeBuilderBase.NOT_FOUND_ON_STACK;
             }
         }
-        return TreeBuilder.NOT_FOUND_ON_STACK;
+        return TreeBuilderBase.NOT_FOUND_ON_STACK;
     }
 
     private void generateImpliedEndTagsExceptFor(String name) {
@@ -3983,7 +3978,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
     }
 
     private bool isSecondOnStackBody() {
-        return currentPtr >= 1 && stack[1].getGroup() == TreeBuilder.BODY;
+        return currentPtr >= 1 && stack[1].getGroup() == TreeBuilderBase.BODY;
     }
 
     private void documentModeInternal(DocumentMode m, String publicIdentifier, String systemIdentifier, bool html4SpecificAdditionalErrorChecks) {
@@ -4033,9 +4028,9 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
             return true;
         }
         if (publicIdentifier != null) {
-            for (int i = 0; i < TreeBuilder.QUIRKY_PUBLIC_IDS.length; i++) {
+            for (int i = 0; i < TreeBuilderBase.QUIRKY_PUBLIC_IDS.length; i++) {
                 if (Portability.lowerCaseLiteralIsPrefixOfIgnoreAsciiCaseString(
-                        TreeBuilder.QUIRKY_PUBLIC_IDS[i], publicIdentifier)) {
+                        TreeBuilderBase.QUIRKY_PUBLIC_IDS[i], publicIdentifier)) {
                     return true;
                 }
             }
@@ -4084,10 +4079,10 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
             if ("td" == name || "th" == name) {
                 return i;
             } else if (name == "table") {
-                return TreeBuilder.NOT_FOUND_ON_STACK;
+                return TreeBuilderBase.NOT_FOUND_ON_STACK;
             }
         }
-        return TreeBuilder.NOT_FOUND_ON_STACK;
+        return TreeBuilderBase.NOT_FOUND_ON_STACK;
     }
 
     private void clearStackBackTo(int eltPos) {
@@ -4166,7 +4161,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
      */
     private void implicitlyCloseP() {
         int eltPos = findLastInButtonScope("p");
-        if (eltPos == TreeBuilder.NOT_FOUND_ON_STACK) {
+        if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
             return;
         }
         generateImpliedEndTagsExceptFor("p");
