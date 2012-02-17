@@ -40,7 +40,7 @@ public interface EncodingDeclarationHandler {
      * @throws SAXException
      *             if something went wrong
      */
-    bool InternalEncodingDeclaration(string charset);
+    bool internalEncodingDeclaration(string charset);
 
     /**
      * Queries the environment for the encoding in use (for error reporting).
@@ -49,5 +49,5 @@ public interface EncodingDeclarationHandler {
      * @throws SAXException
      *             if something went wrong
      */
-    string GetCharacterEncoding();
+    string getCharacterEncoding();
 }

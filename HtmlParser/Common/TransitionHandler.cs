@@ -44,5 +44,5 @@ public interface TransitionHandler {
      * @throws SAXException
      *             if something went wrong
      */
-    void Transition(int from, int to, bool reconsume, int pos);
+    void transition(int from, int to, bool reconsume, int pos);
 }

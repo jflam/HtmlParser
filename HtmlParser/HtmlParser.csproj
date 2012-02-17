@@ -33,6 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
+    <Compile Include="Impl\ErrorReportingTokenizer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\ByteReadable.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Impl\NamedCharactersAccel.cs" />
     <Compile Include="Impl\NCName.cs" />
     <Compile Include="Impl\Portability.cs" />
+    <Compile Include="Impl\PushedLocation.cs" />
     <Compile Include="Impl\StackNode.cs" />
     <Compile Include="Impl\StateSnapshot.cs" />
     <Compile Include="Impl\TaintableLocatorImpl.cs" />

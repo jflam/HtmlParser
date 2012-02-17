@@ -35,19 +35,19 @@ public interface CharacterHandler {
      * @param length the number of characters to process starting from <code>start</code>
      * @throws SAXException if things go wrong
      */
-    void Characters(char[] ch, int start, int length);
+    void characters(char[] ch, int start, int length);
 
     /**
      * Signals the end of the stream. Can be used for cleanup. Doesn't mean that the stream ended successfully.
      * 
      * @throws SAXException if things go wrong
      */
-    void End();
+    void end();
 
     /**
      * Signals the start of the stream. Can be used for setup.
      * 
      * @throws SAXException if things go wrong
      */
-    void Start();
+    void start();
 }

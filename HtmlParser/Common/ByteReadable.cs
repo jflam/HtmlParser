@@ -36,5 +36,5 @@ public interface ByteReadable {
      * @return integer from 0 to 0xFF or -1 on EOF
      * @throws IOException
      */
-    int ReadByte();
+    int readByte();
 }
