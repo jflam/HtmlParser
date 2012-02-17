@@ -255,7 +255,7 @@ public class AttributeName
      *            whether to check ncnameness
      * @return an <code>AttributeName</code> corresponding to the argument data
      */
-    static AttributeName nameByBuffer( char[] buf, int offset,
+    public static AttributeName nameByBuffer( char[] buf, int offset,
             int length
             // [NOCPP[
             , bool checkNcName
@@ -479,15 +479,15 @@ public class AttributeName
      * 
      * @return <code>true</code> if the value is case-folded
      */
-    bool isCaseFolded() {
+    public bool isCaseFolded() {
         return (flags & CASE_FOLDED) != 0;
     }
 
-    bool isbool() {
+    public bool isBoolean() {
         return (flags & BOOLEAN) != 0;
     }
 
-    public  String getQName(int mode) {
+    public String getQName(int mode) {
         return qName[mode];
     }
 

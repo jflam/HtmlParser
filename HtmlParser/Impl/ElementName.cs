@@ -102,7 +102,7 @@ public class ElementName
     
     // ]NOCPP]
 
-    static ElementName elementNameByBuffer(char[] buf, int offset, int length, Interner interner) {
+    public static ElementName elementNameByBuffer(char[] buf, int offset, int length, Interner interner) {
         int hash = ElementName.bufToHash(buf, length);
         int index = Array.BinarySearch(ElementName.ELEMENT_HASHES, hash);
         if (index < 0) {
@@ -151,7 +151,7 @@ public class ElementName
         this.flags = TreeBuilderBase.OTHER | CUSTOM;
     }
     
-    void release() {
+    public void release() {
         // No-op in Java. 
         // Implement as delete this in subclass.
         // Be sure to release the local name

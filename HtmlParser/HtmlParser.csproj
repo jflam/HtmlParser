@@ -54,8 +54,10 @@
     <Compile Include="Impl\Portability.cs" />
     <Compile Include="Impl\StackNode.cs" />
     <Compile Include="Impl\TaintableLocatorImpl.cs" />
+    <Compile Include="Impl\Tokenizer.cs" />
     <Compile Include="Impl\TreeBuilder.cs" />
     <Compile Include="Impl\TreeBuilderState.cs" />
+    <Compile Include="Impl\UTF16Buffer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sax\Attributes.cs" />
     <Compile Include="Sax\ErrorHandler.cs" />
