@@ -784,7 +784,7 @@ public class Tokenizer : Locator {
 
     // ]NOCPP]
 
-    HtmlAttributes emptyAttributes() {
+    public HtmlAttributes emptyAttributes() {
         // [NOCPP[
         if (newAttributesEachTime) {
             return new HtmlAttributes(mappingLangToXmlLang);
