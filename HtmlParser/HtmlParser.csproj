@@ -50,13 +50,17 @@
     <Compile Include="Impl\ElementName.cs" />
     <Compile Include="Impl\HtmlAttributes.cs" />
     <Compile Include="Impl\LocatorImpl.cs" />
+    <Compile Include="Impl\NCName.cs" />
     <Compile Include="Impl\Portability.cs" />
     <Compile Include="Impl\StackNode.cs" />
     <Compile Include="Impl\TaintableLocatorImpl.cs" />
     <Compile Include="Impl\TreeBuilder.cs" />
     <Compile Include="Impl\TreeBuilderState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sax\Attributes.cs" />
+    <Compile Include="Sax\ErrorHandler.cs" />
     <Compile Include="Sax\Locator.cs" />
+    <Compile Include="Sax\SAXException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

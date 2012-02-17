@@ -41,8 +41,8 @@ public interface TokenHandler {
      * @throws SAXException
      *             if something went wrong
      */
-    void startTokenization(Tokenizer self);
-
+    void startTokenization(Tokenizer self);  
+    
     /**
      * If this handler implementation cares about comments, return
      * <code>true</code>. If not, return <code>false</code>.
@@ -51,7 +51,7 @@ public interface TokenHandler {
      * @throws SAXException
      *             if something went wrong
      */
-    bool wantsComments();
+    bool wantsComments(); 
 
     /**
      * Receive a doctype token.

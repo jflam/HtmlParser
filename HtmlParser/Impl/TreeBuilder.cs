@@ -491,7 +491,7 @@ public abstract class TreeBuilderBase
      
 }
 
-public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, TokenHandler {
+public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, TokenHandler where T:class {
     
 
     private int mode = INITIAL;
@@ -587,7 +587,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
     // [NOCPP[
 
     protected void fatal(Exception e) {
-        SAXParseException spe = new SAXParseException(e.getMessage(),
+        SAXParseException spe = new SAXParseException(e.Message,
                 tokenizer, e);
         if (errorHandler != null) {
             errorHandler.fatalError(spe);
@@ -595,7 +595,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
         throw spe;
     }
 
-    void fatal(String s) {
+    public void fatal(String s) {
         SAXParseException spe = new SAXParseException(s, tokenizer);
         if (errorHandler != null) {
             errorHandler.fatalError(spe);
@@ -664,7 +664,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
      *            the message
      * @throws SAXException
      */
-    void warn(String message) {
+    public void warn(String message) {
         if (errorHandler == null) {
             return;
         }
@@ -679,7 +679,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
      *            the message
      * @throws SAXException
      */
-    void warn(String message, Locator locator) {
+    public void warn(String message, Locator locator) {
         if (errorHandler == null) {
             return;
         }
@@ -691,8 +691,8 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
     
     public void startTokenization(Tokenizer self) {
         tokenizer = self;
-        stack = new StackNode[64];
-        listOfActiveFormattingElements = new StackNode[64];
+        stack = new StackNode<T>[64];
+        listOfActiveFormattingElements = new StackNode<T>[64];
         needToDropLF = false;
         originalMode = INITIAL;
         currentPtr = -1;
@@ -1502,6 +1502,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             err("End of file seen without seeing a doctype first. Expected \u201C<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\u201D.");
                             break;
                         case DoctypeExpectation.NO_DOCTYPE_ERRORS:
+                            break;
                     }
                     // ]NOCPP]
                     /*
@@ -1985,7 +1986,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                         case FRAMESET:
                             if (mode == FRAMESET_OK) {
                                 if (currentPtr == 0 || stack[1].getGroup() != BODY) {
-                                    assert fragment;
+                                    Debug.Assert(fragment);
                                     errStrayStartTag(name);
                                     goto starttagloop;
                                 } else {
@@ -3174,9 +3175,9 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             mode = IN_TABLE_BODY;
                             goto endtagloop;
                         case TABLE:
-                            eltPos = findLastOrRoot(TreeBuilder.TR);
+                            eltPos = findLastOrRoot(TreeBuilderBase.TR);
                             if (eltPos == 0) {
-                                assert fragment;
+                                Debug.Assert(fragment);
                                 errNoTableRowToClose();
                                 goto endtagloop;
                             }
@@ -3191,7 +3192,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             }
                             eltPos = findLastOrRoot(TreeBuilderBase.TR);
                             if (eltPos == 0) {
-                                assert fragment;
+                                Debug.Assert(fragment);
                                 errNoTableRowToClose();
                                 goto endtagloop;
                             }
@@ -3293,7 +3294,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                         case TABLE:
                             errTableClosedWhileCaptionOpen();
                             eltPos = findLastInTableScope("caption");
-                            if (eltPos == TreeBuilder.NOT_FOUND_ON_STACK) {
+                            if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 goto endtagloop;
                             }
                             generateImpliedEndTags();
@@ -3339,7 +3340,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                         case TABLE:
                         case TBODY_OR_THEAD_OR_TFOOT:
                         case TR:
-                            if (findLastInTableScope(name) == TreeBuilder.NOT_FOUND_ON_STACK) {
+                            if (findLastInTableScope(name) == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 errStrayEndTag(name);
                                 goto endtagloop;
                             }
@@ -3463,7 +3464,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 goto endtagloop;
                             }
                             generateImpliedEndTagsExceptFor("p");
-                            Debug.Assert(eltPos != TreeBuilder.NOT_FOUND_ON_STACK);
+                            Debug.Assert(eltPos != TreeBuilderBase.NOT_FOUND_ON_STACK);
                             if (errorHandler != null && eltPos != currentPtr) {
                                 errUnclosedElements(eltPos, name);
                             }
@@ -3606,7 +3607,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                     switch (group) {
                         case COLGROUP:
                             if (currentPtr == 0) {
-                                assert fragment;
+                                Debug.Assert(fragment);
                                 errGarbageInColgroup();
                                 goto endtagloop;
                             }
@@ -3707,7 +3708,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                     switch (group) {
                         case FRAMESET:
                             if (currentPtr == 0) {
-                                assert fragment;
+                                Debug.Assert(fragment);
                                 errStrayEndTag(name);
                                 goto endtagloop;
                             }
@@ -4028,7 +4029,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
             return true;
         }
         if (publicIdentifier != null) {
-            for (int i = 0; i < TreeBuilderBase.QUIRKY_PUBLIC_IDS.length; i++) {
+            for (int i = 0; i < TreeBuilderBase.QUIRKY_PUBLIC_IDS.Length; i++) {
                 if (Portability.lowerCaseLiteralIsPrefixOfIgnoreAsciiCaseString(
                         TreeBuilderBase.QUIRKY_PUBLIC_IDS[i], publicIdentifier)) {
                     return true;
@@ -4185,9 +4186,9 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
 
     private void push(StackNode<T> node) {
         currentPtr++;
-        if (currentPtr == stack.length) {
-            StackNode<T>[] newStack = new StackNode[stack.length + 64];
-            System.arraycopy(stack, 0, newStack, 0, stack.length);
+        if (currentPtr == stack.Length) {
+            StackNode<T>[] newStack = new StackNode<T>[stack.Length + 64];
+            Array.Copy(stack, 0, newStack, 0, stack.Length);
             stack = newStack;
         }
         stack[currentPtr] = node;
@@ -4196,9 +4197,9 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
 
     private void silentPush(StackNode<T> node) {
         currentPtr++;
-        if (currentPtr == stack.length) {
-            StackNode<T>[] newStack = new StackNode[stack.length + 64];
-            System.arraycopy(stack, 0, newStack, 0, stack.length);
+        if (currentPtr == stack.Length) {
+            StackNode<T>[] newStack = new StackNode<T>[stack.Length + 64];
+            Array.Copy(stack, 0, newStack, 0, stack.Length);
             stack = newStack;
         }
         stack[currentPtr] = node;
@@ -4206,10 +4207,9 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
 
     private void append(StackNode<T> node) {
         listPtr++;
-        if (listPtr == listOfActiveFormattingElements.length) {
-            StackNode<T>[] newList = new StackNode[listOfActiveFormattingElements.length + 64];
-            System.arraycopy(listOfActiveFormattingElements, 0, newList, 0,
-                    listOfActiveFormattingElements.length);
+        if (listPtr == listOfActiveFormattingElements.Length) {
+            StackNode<T>[] newList = new StackNode<T>[listOfActiveFormattingElements.Length + 64];
+            Array.Copy(listOfActiveFormattingElements, 0, newList, 0, listOfActiveFormattingElements.Length);
             listOfActiveFormattingElements = newList;
         }
         listOfActiveFormattingElements[listPtr] = node;
@@ -4260,7 +4260,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
             }
             fatal();
             node.release();
-            System.arraycopy(stack, pos + 1, stack, pos, currentPtr - pos);
+            Array.Copy(stack, pos + 1, stack, pos, currentPtr - pos);
             currentPtr--;
         }
     }
@@ -4274,8 +4274,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
             return;
         }
         Debug.Assert(pos < listPtr);
-        System.arraycopy(listOfActiveFormattingElements, pos + 1,
-                listOfActiveFormattingElements, pos, listPtr - pos);
+        Array.Copy(listOfActiveFormattingElements, pos + 1, listOfActiveFormattingElements, pos, listPtr - pos);
         Debug.Assert(clearLastListSlot());
         listPtr--;
     }
@@ -4444,13 +4443,12 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
     }
 
     private void insertIntoStack(StackNode<T> node, int position) {
-        Debug.Assert(currentPtr + 1 < stack.length);
+        Debug.Assert(currentPtr + 1 < stack.Length);
         Debug.Assert(position <= currentPtr + 1);
         if (position == currentPtr + 1) {
             push(node);
         } else {
-            System.arraycopy(stack, position, stack, position + 1,
-                    (currentPtr - position) + 1);
+            Array.Copy(stack, position, stack, position + 1, (currentPtr - position) + 1);
             currentPtr++;
             stack[position] = node;
         }
@@ -4458,11 +4456,9 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
 
     private void insertIntoListOfActiveFormattingElements(StackNode<T> formattingClone, int bookmark) {
         formattingClone.retain();
-        Debug.Assert(listPtr + 1 < listOfActiveFormattingElements.length);
+        Debug.Assert(listPtr + 1 < listOfActiveFormattingElements.Length);
         if (bookmark <= listPtr) {
-            System.arraycopy(listOfActiveFormattingElements, bookmark,
-                    listOfActiveFormattingElements, bookmark + 1,
-                    (listPtr - bookmark) + 1);
+            Array.Copy(listOfActiveFormattingElements, bookmark, listOfActiveFormattingElements, bookmark + 1, (listPtr - bookmark) + 1);
         }
         listPtr++;
         listOfActiveFormattingElements[bookmark] = formattingClone;
@@ -4538,7 +4534,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
         // ]NOCPP]
         if (currentPtr >= 1) {
             StackNode<T> body = stack[1];
-            if (body.getGroup() == TreeBuilder.BODY) {
+            if (body.getGroup() == TreeBuilderBase.BODY) {
                 addAttributesToElement(body.node, attributes);
                 return true;
             }
@@ -4673,18 +4669,18 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                         err("Attribute \u201Cxmlns\u201D not allowed here. (HTML4-only error.)");
                     } else {
                         String xmlns = attributes.getXmlnsValue(i);
-                        if (!ns.equals(xmlns)) {
+                        if (!ns.Equals(xmlns)) {
                             err("Bad value \u201C"
                                     + xmlns
                                     + "\u201D for the attribute \u201Cxmlns\u201D (only \u201C"
                                     + ns + "\u201D permitted here).");
                             switch (namePolicy) {
-                                case ALTER_INFOSET:
+                                case XmlViolationPolicy.ALTER_INFOSET:
                                     // fall through
-                                case ALLOW:
+                                case XmlViolationPolicy.ALLOW:
                                     warn("Attribute \u201Cxmlns\u201D is not serializable as XML 1.0.");
                                     break;
-                                case FATAL:
+                                case XmlViolationPolicy.FATAL:
                                     fatal("Attribute \u201Cxmlns\u201D is not serializable as XML 1.0.");
                                     break;
                             }
@@ -5077,12 +5073,12 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
     
     private void accumulateCharactersForced(char[] buf, int start, int length) {
         int newLen = charBufferLen + length;
-        if (newLen > charBuffer.length) {
+        if (newLen > charBuffer.Length) {
             char[] newBuf = new char[newLen];
-            System.arraycopy(charBuffer, 0, newBuf, 0, charBufferLen);
+            Array.Copy(charBuffer, 0, newBuf, 0, charBufferLen);
             charBuffer = newBuf;
         }
-        System.arraycopy(buf, start, charBuffer, charBufferLen, length);
+        Array.Copy(buf, start, charBuffer, charBufferLen, length);
         charBufferLen = newLen;
     }
     
@@ -5312,7 +5308,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                     charBufferLen = 0;
                     return;
                 }
-                int eltPos = findLastOrRoot(TreeBuilder.TABLE);
+                int eltPos = findLastOrRoot(TreeBuilderBase.TABLE);
                 StackNode<T> node = stack[eltPos];
                 T elt = node.node;
                 if (eltPos == 0) {
@@ -5356,8 +5352,8 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
      * @throws SAXException
      */
     public TreeBuilderState<T> newSnapshot() {
-        StackNode<T>[] listCopy = new StackNode[listPtr + 1];
-        for (int i = 0; i < listCopy.length; i++) {
+        StackNode<T>[] listCopy = new StackNode<T>[listPtr + 1];
+        for (int i = 0; i < listCopy.Length; i++) {
             StackNode<T> node = listOfActiveFormattingElements[i];
             if (node != null) {
                 StackNode<T> newNode = new StackNode<T>(node.getFlags(), node.ns,
@@ -5372,8 +5368,8 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                 listCopy[i] = null;
             }
         }
-        StackNode<T>[] stackCopy = new StackNode[currentPtr + 1];
-        for (int i = 0; i < stackCopy.length; i++) {
+        StackNode<T>[] stackCopy = new StackNode<T>[currentPtr + 1];
+        for (int i = 0; i < stackCopy.Length; i++) {
             StackNode<T> node = stack[i];
             int listIndex = findInListOfActiveFormattingElements(node);
             if (listIndex == -1) {
@@ -5443,16 +5439,16 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                 listOfActiveFormattingElements[i].release();
             }
         }
-        if (listOfActiveFormattingElements.length < listLen) {
-            listOfActiveFormattingElements = new StackNode[listLen];
+        if (listOfActiveFormattingElements.Length < listLen) {
+            listOfActiveFormattingElements = new StackNode<T>[listLen];
         }
         listPtr = listLen - 1;
 
         for (int i = 0; i <= currentPtr; i++) {
             stack[i].release();
         }
-        if (stack.length < stackLen) {
-            stack = new StackNode[stackLen];
+        if (stack.Length < stackLen) {
+            stack = new StackNode<T>[stackLen];
         }
         currentPtr = stackLen - 1;
 

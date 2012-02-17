@@ -21,7 +21,7 @@
  */
 using System;
 
-public sealed class AttributeName
+public class AttributeName
 // Uncomment to regenerate
 // implements Comparable<AttributeName>
 {
