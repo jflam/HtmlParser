@@ -4240,7 +4240,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
         } else {
             fatal();
             stack[pos].release();
-            System.arraycopy(stack, pos + 1, stack, pos, currentPtr - pos);
+            Array.Copy(stack, pos + 1, stack, pos, currentPtr - pos);
             Debug.Assert(clearLastStackSlot());
             currentPtr--;
         }
@@ -4615,7 +4615,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
     }
 
     private void insertIntoFosterParent(T child) {
-        int eltPos = findLastOrRoot(TreeBuilder.TABLE);
+        int eltPos = findLastOrRoot(TreeBuilderBase.TABLE);
         StackNode<T> node = stack[eltPos];
         T elt = node.node;
         if (eltPos == 0) {

@@ -55,6 +55,7 @@
     <Compile Include="Impl\NCName.cs" />
     <Compile Include="Impl\Portability.cs" />
     <Compile Include="Impl\StackNode.cs" />
+    <Compile Include="Impl\StateSnapshot.cs" />
     <Compile Include="Impl\TaintableLocatorImpl.cs" />
     <Compile Include="Impl\Tokenizer.cs" />
     <Compile Include="Impl\TreeBuilder.cs" />

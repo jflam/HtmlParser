@@ -778,7 +778,7 @@ public class Tokenizer : Locator {
         metaBoundaryPassed = true;
     }
 
-    void turnOnAdditionalHtml4Errors() {
+    public void turnOnAdditionalHtml4Errors() {
         html4 = true;
     }
 
@@ -1850,7 +1850,7 @@ public class Tokenizer : Locator {
                                      * code point) to the current attribute's
                                      * name.
                                      */
-                                    c += 0x20;
+                                    c += (char)0x20;
                                 }
                                 /*
                                  * Anything else Append the current input
