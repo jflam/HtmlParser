@@ -52,6 +52,7 @@
     <Compile Include="Impl\ElementName.cs" />
     <Compile Include="Impl\HtmlAttributes.cs" />
     <Compile Include="Impl\LocatorImpl.cs" />
+    <Compile Include="Impl\MetaScanner.cs" />
     <Compile Include="Impl\NamedCharacters.cs" />
     <Compile Include="Impl\NamedCharactersAccel.cs" />
     <Compile Include="Impl\NCName.cs" />
