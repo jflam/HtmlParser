@@ -20,6 +20,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 using System;
+using System.Collections.Generic;
 
 public class ErrorReportingTokenizer : Tokenizer {
 
@@ -63,7 +64,7 @@ public class ErrorReportingTokenizer : Tokenizer {
 
     private char prev;
 
-    private HashMap<String, String> errorProfileMap = null;
+    private Dictionary<String, String> errorProfileMap = null;
 
     private TransitionHandler transitionHandler = null;
 
@@ -85,7 +86,7 @@ public class ErrorReportingTokenizer : Tokenizer {
     /**
      * @see org.xml.sax.Locator#getLineNumber()
      */
-    public int getLineNumber() {
+    public override int getLineNumber() {
         if (line > 0) {
             return line;
         } else {
@@ -96,7 +97,7 @@ public class ErrorReportingTokenizer : Tokenizer {
     /**
      * @see org.xml.sax.Locator#getColumnNumber()
      */
-    public int getColumnNumber() {
+    public override int getColumnNumber() {
         if (col > 0) {
             return col;
         } else {
@@ -110,7 +111,7 @@ public class ErrorReportingTokenizer : Tokenizer {
      * @param contentNonXmlCharPolicy
      *            the contentNonXmlCharPolicy to set
      */
-    public void setContentNonXmlCharPolicy(
+    public override void setContentNonXmlCharPolicy(
             XmlViolationPolicy contentNonXmlCharPolicy) {
         this.contentNonXmlCharPolicy = contentNonXmlCharPolicy;
     }
@@ -120,7 +121,7 @@ public class ErrorReportingTokenizer : Tokenizer {
      * 
      * @param errorProfile
      */
-    public void setErrorProfile(HashMap<String, String> errorProfileMap) {
+    public void setErrorProfile(Dictionary<String, String> errorProfileMap) {
         this.errorProfileMap = errorProfileMap;
     }
 
@@ -136,7 +137,7 @@ public class ErrorReportingTokenizer : Tokenizer {
     public void note(String profile, String message) {
         if (errorProfileMap == null)
             return;
-        String level = errorProfileMap.get(profile);
+        String level = errorProfileMap[profile];
         if ("warn".Equals(level)) {
             warn(message);
         } else if ("err".Equals(level)) {
@@ -146,7 +147,7 @@ public class ErrorReportingTokenizer : Tokenizer {
         }
     }
 
-    protected void startErrorReporting() {
+    protected override void startErrorReporting() {
         alreadyComplainedAboutNonAscii = false;
         line = linePrev = 0;
         col = colPrev = 1;
@@ -156,12 +157,12 @@ public class ErrorReportingTokenizer : Tokenizer {
         transitionBaseOffset = 0;
     }
 
-    protected void silentCarriageReturn() {
+    protected override void silentCarriageReturn() {
         nextCharOnNewLine = true;
         lastCR = true;
     }
 
-    protected void silentLineFeed() {
+    protected override void silentLineFeed() {
         nextCharOnNewLine = true;
     }
 
@@ -170,7 +171,7 @@ public class ErrorReportingTokenizer : Tokenizer {
      * 
      * @return the line
      */
-    public int getLine() {
+    public override int getLine() {
         return line;
     }
 
@@ -179,7 +180,7 @@ public class ErrorReportingTokenizer : Tokenizer {
      * 
      * @return the col
      */
-    public int getCol() {
+    public override int getCol() {
         return col;
     }
 
@@ -188,7 +189,7 @@ public class ErrorReportingTokenizer : Tokenizer {
      * 
      * @return the nextCharOnNewLine
      */
-    public bool isNextCharOnNewLine() {
+    public override bool isNextCharOnNewLine() {
         return nextCharOnNewLine;
     }
 
@@ -210,7 +211,7 @@ public class ErrorReportingTokenizer : Tokenizer {
      * 
      * @return the alreadyComplainedAboutNonAscii
      */
-    public bool isAlreadyComplainedAboutNonAscii() {
+    public override bool isAlreadyComplainedAboutNonAscii() {
         return alreadyComplainedAboutNonAscii;
     }
 
@@ -224,7 +225,7 @@ public class ErrorReportingTokenizer : Tokenizer {
      * 
      * @throws SAXException
      */
-    protected void flushChars(char[] buf, int pos) {
+    protected override void flushChars(char[] buf, int pos) {
         if (pos > cstart) {
             int currLine = line;
             int currCol = col;
@@ -237,7 +238,7 @@ public class ErrorReportingTokenizer : Tokenizer {
         cstart = 0x7fffffff;
     }
 
-    protected char checkChar(char[] buf, int pos) {
+    protected override char checkChar(char[] buf, int pos) {
         linePrev = line;
         colPrev = col;
         if (nextCharOnNewLine) {
@@ -256,6 +257,7 @@ public class ErrorReportingTokenizer : Tokenizer {
         switch (c) {
             case '\u0000':
                 err("Saw U+0000 in stream.");
+                break;
             case '\t':
             case '\r':
             case '\n':
@@ -318,7 +320,7 @@ public class ErrorReportingTokenizer : Tokenizer {
      * @see nu.validator.htmlparser.impl.Tokenizer#transition(int, int, bool,
      *      int)
      */
-    protected int transition(int from, int to, bool reconsume, int pos) {
+    protected override int transition(int from, int to, bool reconsume, int pos) {
         if (transitionHandler != null) {
             transitionHandler.transition(from, to, reconsume, transitionBaseOffset + pos);
         }
@@ -375,15 +377,15 @@ public class ErrorReportingTokenizer : Tokenizer {
                 || (c >= 0x100000 && c <= 0x10FFFD);
     }
 
-    protected void errGarbageAfterLtSlash() {
+    protected override void errGarbageAfterLtSlash() {
         err("Garbage after \u201C</\u201D.");
     }
 
-    protected void errLtSlashGt() {
+    protected override void errLtSlashGt() {
         err("Saw \u201C</>\u201D. Probable causes: Unescaped \u201C<\u201D (escape as \u201C&lt;\u201D) or mistyped end tag.");
     }
 
-    protected void errWarnLtSlashInRcdata() {
+    protected override void errWarnLtSlashInRcdata() {
         if (html4) {
             err((stateSave == Tokenizer.DATA ? "CDATA" : "RCDATA")
                     + " element \u201C"
@@ -397,7 +399,7 @@ public class ErrorReportingTokenizer : Tokenizer {
         }
     }
 
-    protected void errHtml4LtSlashInRcdata(char folded) {
+    protected override void errHtml4LtSlashInRcdata(char folded) {
         if (html4 && (index > 0 || (folded >= 'a' && folded <= 'z'))
                 && ElementName.IFRAME != endTagExpectation) {
             err((stateSave == Tokenizer.DATA ? "CDATA" : "RCDATA")
@@ -407,39 +409,39 @@ public class ErrorReportingTokenizer : Tokenizer {
         }
     }
 
-    protected void errCharRefLacksSemicolon() {
+    protected override void errCharRefLacksSemicolon() {
         err("Character reference was not terminated by a semicolon.");
     }
 
-    protected void errNoDigitsInNCR() {
+    protected override void errNoDigitsInNCR() {
         err("No digits after \u201C" + strBufToString() + "\u201D.");
     }
 
-    protected void errGtInSystemId() {
+    protected override void errGtInSystemId() {
         err("\u201C>\u201D in system identifier.");
     }
 
-    protected void errGtInPublicId() {
+    protected override void errGtInPublicId() {
         err("\u201C>\u201D in public identifier.");
     }
 
-    protected void errNamelessDoctype() {
+    protected override void errNamelessDoctype() {
         err("Nameless doctype.");
     }
 
-    protected void errConsecutiveHyphens() {
+    protected override void errConsecutiveHyphens() {
         err("Consecutive hyphens did not terminate a comment. \u201C--\u201D is not permitted inside a comment, but e.g. \u201C- -\u201D is.");
     }
 
-    protected void errPrematureEndOfComment() {
+    protected override void errPrematureEndOfComment() {
         err("Premature end of comment. Use \u201C-->\u201D to end a comment properly.");
     }
 
-    protected void errBogusComment() {
+    protected override void errBogusComment() {
         err("Bogus comment.");
     }
 
-    protected void errUnquotedAttributeValOrNull(char c) {
+    protected override void errUnquotedAttributeValOrNull(char c) {
         switch (c) {
             case '<':
                 err("\u201C<\u201D in an unquoted attribute value. Probable cause: Missing \u201C>\u201D immediately before.");
@@ -457,21 +459,21 @@ public class ErrorReportingTokenizer : Tokenizer {
         }
     }
 
-    protected void errSlashNotFollowedByGt() {
+    protected override void errSlashNotFollowedByGt() {
         err("A slash was not immediately followed by \u201C>\u201D.");
     }
 
-    protected void errHtml4XmlVoidSyntax() {
+    protected override void errHtml4XmlVoidSyntax() {
         if (html4) {
             err("The \u201C/>\u201D syntax on void elements is not allowed.  (This is an HTML4-only error.)");
         }
     }
 
-    protected void errNoSpaceBetweenAttributes() {
+    protected override void errNoSpaceBetweenAttributes() {
         err("No space between attributes.");
     }
 
-    protected void errHtml4NonNameInUnquotedAttribute(char c) {
+    protected override void errHtml4NonNameInUnquotedAttribute(char c) {
         if (html4
                 && !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
                         || (c >= '0' && c <= '9') || c == '.' || c == '-'
@@ -480,7 +482,7 @@ public class ErrorReportingTokenizer : Tokenizer {
         }
     }
 
-    protected void errLtOrEqualsOrGraveInUnquotedAttributeOrNull(char c) {
+    protected override void errLtOrEqualsOrGraveInUnquotedAttributeOrNull(char c) {
         switch (c) {
             case '=':
                 err("\u201C=\u201D at the start of an unquoted attribute value. Probable cause: Stray duplicate equals sign.");
@@ -494,11 +496,11 @@ public class ErrorReportingTokenizer : Tokenizer {
         }
     }
 
-    protected void errAttributeValueMissing() {
+    protected override void errAttributeValueMissing() {
         err("Attribute value missing.");
     }
 
-    protected void errBadCharBeforeAttributeNameOrNull(char c) {
+    protected override void errBadCharBeforeAttributeNameOrNull(char c) {
         if (c == '<') {
             err("Saw \u201C<\u201D when expecting an attribute name. Probable cause: Missing \u201C>\u201D immediately before.");
         } else if (c == '=') {
@@ -508,25 +510,25 @@ public class ErrorReportingTokenizer : Tokenizer {
         }
     }
 
-    protected void errEqualsSignBeforeAttributeName() {
+    protected override void errEqualsSignBeforeAttributeName() {
         err("Saw \u201C=\u201D when expecting an attribute name. Probable cause: Attribute name missing.");
     }
 
-    protected void errBadCharAfterLt(char c) {
+    protected override void errBadCharAfterLt(char c) {
         err("Bad character \u201C"
                 + c
                 + "\u201D after \u201C<\u201D. Probable cause: Unescaped \u201C<\u201D. Try escaping it as \u201C&lt;\u201D.");
     }
 
-    protected void errLtGt() {
+    protected override void errLtGt() {
         err("Saw \u201C<>\u201D. Probable causes: Unescaped \u201C<\u201D (escape as \u201C&lt;\u201D) or mistyped start tag.");
     }
 
-    protected void errProcessingInstruction() {
+    protected override void errProcessingInstruction() {
         err("Saw \u201C<?\u201D. Probable cause: Attempt to use an XML processing instruction in HTML. (XML processing instructions are not supported in HTML.)");
     }
 
-    protected void errUnescapedAmpersandInterpretedAsCharacterReference() {
+    protected override void errUnescapedAmpersandInterpretedAsCharacterReference() {
         if (errorHandler == null) {
             return;
         }
@@ -536,11 +538,11 @@ public class ErrorReportingTokenizer : Tokenizer {
         errorHandler.error(spe);
     }
 
-    protected void errNotSemicolonTerminated() {
+    protected override void errNotSemicolonTerminated() {
         err("Named character reference was not terminated by a semicolon. (Or \u201C&\u201D should have been escaped as \u201C&amp;\u201D.)");
     }
 
-    protected void errNoNamedCharacterMatch() {
+    protected override void errNoNamedCharacterMatch() {
         if (errorHandler == null) {
             return;
         }
@@ -550,13 +552,13 @@ public class ErrorReportingTokenizer : Tokenizer {
         errorHandler.error(spe);
     }
 
-    protected void errQuoteBeforeAttributeName(char c) {
+    protected override void errQuoteBeforeAttributeName(char c) {
         err("Saw \u201C"
                 + c
                 + "\u201D when expecting an attribute name. Probable cause: \u201C=\u201D missing immediately before.");
     }
 
-    protected void errQuoteOrLtInAttributeNameOrNull(char c) {
+    protected override void errQuoteOrLtInAttributeNameOrNull(char c) {
         if (c == '<') {
             err("\u201C<\u201D in attribute name. Probable cause: \u201C>\u201D missing immediately before.");
         } else if (c != '\uFFFD') {
@@ -566,27 +568,27 @@ public class ErrorReportingTokenizer : Tokenizer {
         }
     }
 
-    protected void errExpectedPublicId() {
+    protected override void errExpectedPublicId() {
         err("Expected a public identifier but the doctype ended.");
     }
 
-    protected void errBogusDoctype() {
+    protected override void errBogusDoctype() {
         err("Bogus doctype.");
     }
 
-    protected void maybeWarnPrivateUseAstral() {
+    protected override void maybeWarnPrivateUseAstral() {
         if (errorHandler != null && isAstralPrivateUse(value)) {
             warnAboutPrivateUseChar();
         }
     }
 
-    protected void maybeWarnPrivateUse(char ch) {
+    protected override void maybeWarnPrivateUse(char ch) {
         if (errorHandler != null && isPrivateUse(ch)) {
             warnAboutPrivateUseChar();
         }
     }
 
-    protected void maybeErrAttributesOnEndTag(HtmlAttributes attrs) {
+    protected override void maybeErrAttributesOnEndTag(HtmlAttributes attrs) {
         if (attrs.getLength() != 0) {
             /*
              * When an end tag token is emitted with attributes, that is a parse
@@ -596,13 +598,13 @@ public class ErrorReportingTokenizer : Tokenizer {
         }
     }
 
-    protected void maybeErrSlashInEndTag(bool selfClosing) {
+    protected override void maybeErrSlashInEndTag(bool selfClosing) {
         if (selfClosing && endTag) {
             err("Stray \u201C/\u201D at the end of an end tag.");
         }
     }
 
-    protected char errNcrNonCharacter(char ch) {
+    protected override char errNcrNonCharacter(char ch) {
         switch (contentNonXmlCharPolicy) {
             case XmlViolationPolicy.FATAL:
                 fatal("Character reference expands to a non-character ("
@@ -623,16 +625,16 @@ public class ErrorReportingTokenizer : Tokenizer {
     /**
      * @see nu.validator.htmlparser.impl.Tokenizer#errAstralNonCharacter(int)
      */
-    protected void errAstralNonCharacter(int ch) {
+    protected override void errAstralNonCharacter(int ch) {
         err("Character reference expands to an astral non-character ("
                 + toUPlusString(value) + ").");
     }
 
-    protected void errNcrSurrogate() {
+    protected override void errNcrSurrogate() {
         err("Character reference expands to a surrogate.");
     }
 
-    protected char errNcrControlChar(char ch) {
+    protected override char errNcrControlChar(char ch) {
         switch (contentNonXmlCharPolicy) {
             case XmlViolationPolicy.FATAL:
                 fatal("Character reference expands to a control character ("
@@ -650,105 +652,105 @@ public class ErrorReportingTokenizer : Tokenizer {
         return ch;
     }
 
-    protected void errNcrCr() {
+    protected override void errNcrCr() {
         err("A numeric character reference expanded to carriage return.");
     }
 
-    protected void errNcrInC1Range() {
+    protected override void errNcrInC1Range() {
         err("A numeric character reference expanded to the C1 controls range.");
     }
 
-    protected void errEofInPublicId() {
+    protected override void errEofInPublicId() {
         err("End of file inside public identifier.");
     }
 
-    protected void errEofInComment() {
+    protected override void errEofInComment() {
         err("End of file inside comment.");
     }
 
-    protected void errEofInDoctype() {
+    protected override void errEofInDoctype() {
         err("End of file inside doctype.");
     }
 
-    protected void errEofInAttributeValue() {
+    protected override void errEofInAttributeValue() {
         err("End of file reached when inside an attribute value. Ignoring tag.");
     }
 
-    protected void errEofInAttributeName() {
+    protected override void errEofInAttributeName() {
         err("End of file occurred in an attribute name. Ignoring tag.");
     }
 
-    protected void errEofWithoutGt() {
+    protected override void errEofWithoutGt() {
         err("Saw end of file without the previous tag ending with \u201C>\u201D. Ignoring tag.");
     }
 
-    protected void errEofInTagName() {
+    protected override void errEofInTagName() {
         err("End of file seen when looking for tag name. Ignoring tag.");
     }
 
-    protected void errEofInEndTag() {
+    protected override void errEofInEndTag() {
         err("End of file inside end tag. Ignoring tag.");
     }
 
-    protected void errEofAfterLt() {
+    protected override void errEofAfterLt() {
         err("End of file after \u201C<\u201D.");
     }
 
-    protected void errNcrOutOfRange() {
+    protected override void errNcrOutOfRange() {
         err("Character reference outside the permissible Unicode range.");
     }
 
-    protected void errNcrUnassigned() {
+    protected override void errNcrUnassigned() {
         err("Character reference expands to a permanently unassigned code point.");
     }
 
-    protected void errDuplicateAttribute() {
+    protected override void errDuplicateAttribute() {
         err("Duplicate attribute \u201C"
                 + attributeName.getLocal(AttributeName.HTML) + "\u201D.");
     }
 
-    protected void errEofInSystemId() {
+    protected override void errEofInSystemId() {
         err("End of file inside system identifier.");
     }
 
-    protected void errExpectedSystemId() {
+    protected override void errExpectedSystemId() {
         err("Expected a system identifier but the doctype ended.");
     }
 
-    protected void errMissingSpaceBeforeDoctypeName() {
+    protected override void errMissingSpaceBeforeDoctypeName() {
         err("Missing space before doctype name.");
     }
 
-    protected void errHyphenHyphenBang() {
+    protected override void errHyphenHyphenBang() {
         err("\u201C--!\u201D found in comment.");
     }
 
-    protected void errNcrControlChar() {
+    protected override void errNcrControlChar() {
         err("Character reference expands to a control character ("
                 + toUPlusString((char) value) + ").");
     }
 
-    protected void errNcrZero() {
+    protected override void errNcrZero() {
         err("Character reference expands to zero.");
     }
 
-    protected void errNoSpaceBetweenDoctypeSystemKeywordAndQuote() {
+    protected override void errNoSpaceBetweenDoctypeSystemKeywordAndQuote() {
         err("No space between the doctype \u201CSYSTEM\u201D keyword and the quote.");
     }
 
-    protected void errNoSpaceBetweenPublicAndSystemIds() {
+    protected override void errNoSpaceBetweenPublicAndSystemIds() {
         err("No space between the doctype public and system identifiers.");
     }
 
-    protected void errNoSpaceBetweenDoctypePublicKeywordAndQuote() {
+    protected override void errNoSpaceBetweenDoctypePublicKeywordAndQuote() {
         err("No space between the doctype \u201CPUBLIC\u201D keyword and the quote.");
     }
 
-    protected void noteAttributeWithoutValue() {
+    protected override void noteAttributeWithoutValue() {
         note("xhtml2", "Attribute without value");
     }
 
-    protected void noteUnquotedAttributeValue() {
+    protected override void noteUnquotedAttributeValue() {
         note("xhtml1", "Unquoted attribute value.");
     }
 
@@ -769,7 +771,7 @@ public class ErrorReportingTokenizer : Tokenizer {
      * @param offset
      *            the offset
      */
-    public void setTransitionBaseOffset(int offset) {
+    public override void setTransitionBaseOffset(int offset) {
         this.transitionBaseOffset = offset;
     }
 }

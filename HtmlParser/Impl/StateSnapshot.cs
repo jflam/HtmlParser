@@ -53,7 +53,7 @@ public class StateSnapshot<T> : TreeBuilderState<T> {
      * @param originalMode 
      * @param mode 
      */
-    StateSnapshot(StackNode<T>[] stack,
+    public StateSnapshot(StackNode<T>[] stack,
             StackNode<T>[] listOfActiveFormattingElements, T formPointer, T headPointer, T deepTreeSurrogateParent, int mode, int originalMode, bool framesetOk, bool needToDropLF, bool quirks) {
         this.stack = stack;
         this.listOfActiveFormattingElements = listOfActiveFormattingElements;

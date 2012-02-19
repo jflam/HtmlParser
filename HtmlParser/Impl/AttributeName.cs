@@ -148,7 +148,7 @@ public class AttributeName
             if (prefix[i] == null) {
                 arr[i] = local[i];
             } else {
-                arr[i] = String.Intern(prefix[i] + ':' + local[i]);  
+                arr[i] = prefix[i] + ':' + local[i];  
             }
         }
         return arr;

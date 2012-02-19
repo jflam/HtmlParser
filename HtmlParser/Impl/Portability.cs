@@ -31,7 +31,7 @@ public class Portability {
      * calling <code>releaseLocal</code> on the return value balances the refcount set by this method.
      */
     public static String newLocalNameFromBuffer(char[] buf, int offset, int length, Interner interner) {
-        return new String(buf, offset, length).intern();
+        return new String(buf, offset, length);
     }
 
     public static String newStringFromBuffer(char[] buf, int offset, int length) {

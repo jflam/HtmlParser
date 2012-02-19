@@ -793,7 +793,7 @@ public class ElementName
     public static readonly ElementName FESPECULARLIGHTING = new ElementName("fespecularlighting", "feSpecularLighting", TreeBuilderBase.OTHER);
     public static readonly ElementName DOMAINOFAPPLICATION = new ElementName("domainofapplication", "domainofapplication", TreeBuilderBase.OTHER);
     public static readonly ElementName FECOMPONENTTRANSFER = new ElementName("fecomponenttransfer", "feComponentTransfer", TreeBuilderBase.OTHER);
-    private readonly ElementName[] ELEMENT_NAMES = {
+    private static readonly ElementName[] ELEMENT_NAMES = {
     A,
     B,
     G,
@@ -1187,7 +1187,7 @@ public class ElementName
     DOMAINOFAPPLICATION,
     FECOMPONENTTRANSFER,
     };
-    private readonly int[] ELEMENT_HASHES = {
+    private static readonly int[] ELEMENT_HASHES = {
     1057,
     1090,
     1255,

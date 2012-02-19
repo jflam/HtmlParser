@@ -9,7 +9,7 @@
  * to deal in the Software without restriction, including without limitation 
  * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
  * and/or sell copies of the Software, and to permit persons to whom the 
- * Software is furnished to do so, subject to the following conditions:
+ * Software is furnished to do so, subject to the following conditions: 
  *
  * The above copyright notice and this permission notice shall be included in 
  * all copies or substantial portions of the Software.
@@ -34,6 +34,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 public abstract class TreeBuilderBase
@@ -340,7 +341,7 @@ public abstract class TreeBuilderBase
         int end = -1;
         char[] buffer = Portability.newCharArrayFromString(attributeValue);
 
-        charsetloop: for (int i = 0; i < buffer.Length; i++) {
+        for (int i = 0; i < buffer.Length; i++) {
             char c = buffer[i];
             switch (charsetState) {
                 case CHARSET_INITIAL:
@@ -451,7 +452,7 @@ public abstract class TreeBuilderBase
                     switch (c) {
                         case '\'':
                             end = i;
-                            goto charsetloop;
+                            goto charsetloop_break;
                         default:
                             continue;
                     }
@@ -459,7 +460,7 @@ public abstract class TreeBuilderBase
                     switch (c) {
                         case '\"':
                             end = i;
-                            goto charsetloop;
+                            goto charsetloop_break;
                         default:
                             continue;
                     }
@@ -472,13 +473,13 @@ public abstract class TreeBuilderBase
                         case ' ':
                         case ';':
                             end = i;
-                            goto charsetloop;
+                            goto charsetloop_break;
                         default:
                             continue;
                     }
             }
         }
-        String charset = null;
+charsetloop_break: String charset = null;
         if (start != -1) {
             if (end == -1) {
                 end = buffer.Length;
@@ -564,7 +565,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
 
     private XmlViolationPolicy namePolicy = XmlViolationPolicy.ALTER_INFOSET;
 
-    private Map<String, LocatorImpl> idLocations = new HashMap<String, LocatorImpl>();
+    private Dictionary<String, LocatorImpl> idLocations = new Dictionary<String, LocatorImpl>();
 
     private bool html4;
 
@@ -587,8 +588,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
     // [NOCPP[
 
     protected void fatal(Exception e) {
-        SAXParseException spe = new SAXParseException(e.Message,
-                tokenizer, e);
+        SAXParseException spe = new SAXParseException(e.Message, tokenizer, e);
         if (errorHandler != null) {
             errorHandler.fatalError(spe);
         }
@@ -702,7 +702,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
         deepTreeSurrogateParent = null;
         // [NOCPP[
         html4 = false;
-        idLocations.clear();
+        idLocations.Clear();
         wantingComments = wantsComments();
         firstCommentLocation = null;
         // ]NOCPP]
@@ -1099,7 +1099,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                 return;
             default:
                 int end = start + length;
-                charactersloop: for (int i = start; i < end; i++) {
+                for (int i = start; i < end; i++) {
                     switch (buf[i]) {
                         case ' ':
                         case '\t':
@@ -1135,8 +1135,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 case IN_CELL:
                                 case IN_CAPTION:
                                     if (start < i) {
-                                        accumulateCharacters(buf, start, i
-                                                - start);
+                                        accumulateCharacters(buf, start, i - start);
                                         start = i;
                                     }
 
@@ -1152,10 +1151,10 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                      * Append the token's character to the
                                      * current node.
                                      */
-                                    goto charactersloop;
+                                    goto charactersloop_break;
                                 case IN_SELECT:
                                 case IN_SELECT_IN_TABLE:
-                                    goto charactersloop;
+                                    goto charactersloop_break;
                                 case IN_TABLE:
                                 case IN_TABLE_BODY:
                                 case IN_ROW:
@@ -1166,8 +1165,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 case AFTER_AFTER_BODY:
                                 case AFTER_AFTER_FRAMESET:
                                     if (start < i) {
-                                        accumulateCharacters(buf, start, i
-                                                - start);
+                                        accumulateCharacters(buf, start, i - start);
                                         start = i;
                                     }
                                     /*
@@ -1184,9 +1182,9 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             }
                             // fall through 
                             // TODO: figure out how to solve the case of goto default in nested switch statements
-                            goto case explicit_label;
+                            goto default_hack;
                         default:
-                        explicit_label:
+                        default_hack: { } 
                             /*
                              * A character token that is not one of one of
                              * U+0009 CHARACTER TABULATION, U+000A LINE FEED
@@ -1220,9 +1218,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                      * 
                                      * Set the document to quirks mode.
                                      */
-                                    documentModeInternal(
-                                            DocumentMode.QUIRKS_MODE, null,
-                                            null, false);
+                                    documentModeInternal(DocumentMode.QUIRKS_MODE, null, null, false);
                                     /*
                                      * Then, switch to the root element mode of
                                      * the tree construction stage
@@ -1312,8 +1308,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                     continue;
                                 case AFTER_HEAD:
                                     if (start < i) {
-                                        accumulateCharacters(buf, start, i
-                                                - start);
+                                        accumulateCharacters(buf, start, i - start);
                                         start = i;
                                     }
                                     /*
@@ -1338,8 +1333,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 case IN_CELL:
                                 case IN_CAPTION:
                                     if (start < i) {
-                                        accumulateCharacters(buf, start, i
-                                                - start);
+                                        accumulateCharacters(buf, start, i - start);
                                         start = i;
                                     }
                                     /*
@@ -1354,7 +1348,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                      * Append the token's character to the
                                      * current node.
                                      */
-                                    goto charactersloop;
+                                    goto charactersloop_break;
                                 case IN_TABLE:
                                 case IN_TABLE_BODY:
                                 case IN_ROW:
@@ -1385,7 +1379,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                     continue;
                                 case IN_SELECT:
                                 case IN_SELECT_IN_TABLE:
-                                    goto charactersloop;
+                                    goto charactersloop_break;
                                 case AFTER_BODY:
                                     errNonSpaceAfterBody();
                                     fatal();
@@ -1446,6 +1440,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             }
                     }
                 }
+            charactersloop_break: 
                 if (start < end) {
                     accumulateCharacters(buf, start, end - start);
                 }
@@ -1475,12 +1470,12 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
     public void eof() {
         flushCharacters();
         // Note: Can't attach error messages to EOF in C++ yet
-        eofloop: for (;;) {
+        for (;;) {
             if (isInForeign()) {
                 // [NOCPP[
                 err("End of file in a foreign namespace context.");
                 // ]NOCPP]
-                goto eofloop;
+                goto eofloop_exit;
             }
             switch (mode) {
                 case INITIAL:
@@ -1564,7 +1559,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                 case IN_COLUMN_GROUP:
                     if (currentPtr == 0) {
                         Debug.Assert(fragment);
-                        goto eofloop;
+                        goto eofloop_exit;
                     } else {
                         popOnEof();
                         mode = IN_TABLE;
@@ -1575,7 +1570,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                 case IN_CELL:
                 case IN_BODY:
                     // [NOCPP[
-                    openelementloop: for (int i = currentPtr; i >= 0; i--) {
+                    for (int i = currentPtr; i >= 0; i--) {
                         int group = stack[i].getGroup();
                         switch (group) {
                             case DD_OR_DT:
@@ -1588,11 +1583,12 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 break;
                             default:
                                 errEofWithUnclosedElements();
-                                goto openelementloop;
+                                goto openelementloop_exit;
                         }
                     }
+            openelementloop_exit:
                     // ]NOCPP]
-                    goto eofloop;
+                    goto eofloop_exit;
                 case TEXT:
                     // [NOCPP[
                     if (errorHandler != null) {
@@ -1618,15 +1614,16 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                         errEofWithUnclosedElements();
                     }
                     // ]NOCPP]
-                    goto eofloop;
+                    goto eofloop_exit;
                 case AFTER_BODY:
                 case AFTER_FRAMESET:
                 case AFTER_AFTER_BODY:
                 case AFTER_AFTER_FRAMESET:
                 default:
-                    goto eofloop;
+                    goto eofloop_exit;
             }
         }
+    eofloop_exit: 
         while (currentPtr > 0) {
             popOnEof();
         }
@@ -1660,7 +1657,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
             listOfActiveFormattingElements = null;
         }
         // [NOCPP[
-        idLocations.clear();
+        idLocations.Clear();
         // ]NOCPP]
         charBuffer = null;
         end();
@@ -1674,14 +1671,14 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
             // ID uniqueness
             String id = attributes.getId();
             if (id != null) {
-                LocatorImpl oldLoc = idLocations.get(id);
+                LocatorImpl oldLoc = idLocations[id];
                 if (oldLoc != null) {
                     err("Duplicate ID \u201C" + id + "\u201D.");
                     errorHandler.warning(new SAXParseException(
                             "The first occurrence of ID \u201C" + id
                             + "\u201D was here.", oldLoc));
                 } else {
-                    idLocations.put(id, new LocatorImpl(tokenizer));
+                    idLocations[id] = new LocatorImpl(tokenizer);
                 }
             }
         }
@@ -1689,7 +1686,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
 
         int eltPos;
         needToDropLF = false;
-        starttagloop: for (;;) {
+        for (;;) {
             int group = elementName.getGroup();
             String name = elementName.name;
             if (isInForeign()) {
@@ -1718,7 +1715,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             while (!isSpecialParentInForeign(stack[currentPtr])) {
                                 pop();
                             }
-                            continue starttagloop;
+                            goto starttagloop_continue;
                         case FONT:
                             if (attributes.contains(AttributeName.COLOR)
                                     || attributes.contains(AttributeName.FACE)
@@ -1727,9 +1724,10 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 while (!isSpecialParentInForeign(stack[currentPtr])) {
                                     pop();
                                 }
-                                continue starttagloop;
+                                goto starttagloop_continue;
                             }
                             // else fall thru
+                            goto default;
                         default:
                             if ("http://www.w3.org/2000/svg" == currNs) {
                                 attributes.adjustForSvg();
@@ -1742,7 +1740,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                             elementName, attributes);
                                 }
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             } else {
                                 attributes.adjustForMath();
                                 if (selfClosing) {
@@ -1754,7 +1752,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                             elementName, attributes);
                                 }
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             }
                     } // switch
                 } // foreignObject / annotation-xml
@@ -1769,7 +1767,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                     attributes);
                             mode = IN_ROW;
                             attributes = null; // CPP
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case TD_OR_TH:
                             errStartTagInTableBody(name);
                             clearStackBackTo(findLastInTableScopeOrRootTbodyTheadTfoot());
@@ -1785,7 +1783,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             eltPos = findLastInTableScopeOrRootTbodyTheadTfoot();
                             if (eltPos == 0) {
                                 errStrayStartTag(name);
-                                goto starttagloop;
+                                goto starttagloop_break;
                             } else {
                                 clearStackBackTo(eltPos);
                                 pop();
@@ -1793,9 +1791,11 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 continue;
                             }
                         default:
-                            // fall through to IN_TABLE
+                            // fall through to IN_ROW
+                            goto in_row_fallthrough;
                     }
                 case IN_ROW:
+            in_row_fallthrough:
                     switch (group) {
                         case TD_OR_TH:
                             clearStackBackTo(findLastOrRoot(TreeBuilderBase.TR));
@@ -1805,7 +1805,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             mode = IN_CELL;
                             insertMarker();
                             attributes = null; // CPP
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case CAPTION:
                         case COL:
                         case COLGROUP:
@@ -1815,7 +1815,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             if (eltPos == 0) {
                                 Debug.Assert(fragment);
                                 errNoTableRowToClose();
-                                goto starttagloop;
+                                goto starttagloop_break;
                             }
                             clearStackBackTo(eltPos);
                             pop();
@@ -1823,9 +1823,11 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             continue;
                         default:
                             // fall through to IN_TABLE
+                            break;
                     }
+                    goto case IN_TABLE;
                 case IN_TABLE:
-                    intableloop: for (;;) {
+                    for (;;) {
                         switch (group) {
                             case CAPTION:
                                 clearStackBackTo(findLastOrRoot(TreeBuilderBase.TABLE));
@@ -1835,7 +1837,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                         attributes);
                                 mode = IN_CAPTION;
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case COLGROUP:
                                 clearStackBackTo(findLastOrRoot(TreeBuilderBase.TABLE));
                                 appendToCurrentNodeAndPushElement(
@@ -1843,14 +1845,14 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                         attributes);
                                 mode = IN_COLUMN_GROUP;
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case COL:
                                 clearStackBackTo(findLastOrRoot(TreeBuilderBase.TABLE));
                                 appendToCurrentNodeAndPushElement(
                                         ElementName.COLGROUP,
                                         HtmlAttributes.EMPTY_ATTRIBUTES);
                                 mode = IN_COLUMN_GROUP;
-                                continue starttagloop;
+                                goto starttagloop_continue;
                             case TBODY_OR_THEAD_OR_TFOOT:
                                 clearStackBackTo(findLastOrRoot(TreeBuilderBase.TABLE));
                                 appendToCurrentNodeAndPushElement(
@@ -1858,7 +1860,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                         attributes);
                                 mode = IN_TABLE_BODY;
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case TR:
                             case TD_OR_TH:
                                 clearStackBackTo(findLastOrRoot(TreeBuilderBase.TABLE));
@@ -1866,13 +1868,13 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                         ElementName.TBODY,
                                         HtmlAttributes.EMPTY_ATTRIBUTES);
                                 mode = IN_TABLE_BODY;
-                                continue starttagloop;
+                                goto starttagloop_continue;
                             case TABLE:
                                 errTableSeenWhileTableOpen();
                                 eltPos = findLastInTableScope(name);
                                 if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                     Debug.Assert(fragment);
-                                    goto starttagloop;
+                                    goto starttagloop_break;
                                 }
                                 generateImpliedEndTags();
                                 // XXX is the next if dead code?
@@ -1883,7 +1885,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                     pop();
                                 }
                                 resetTheInsertionMode();
-                                continue starttagloop;
+                                goto starttagloop_continue;
                             case SCRIPT:
                                 // XXX need to manage much more stuff
                                 // here if
@@ -1897,7 +1899,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 tokenizer.setStateAndEndTagExpectation(
                                         Tokenizer.SCRIPT_DATA, elementName);
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case STYLE:
                                 appendToCurrentNodeAndPushElement(
                                         elementName,
@@ -1907,35 +1909,36 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 tokenizer.setStateAndEndTagExpectation(
                                         Tokenizer.RAWTEXT, elementName);
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case INPUT:
                                 if (!Portability.lowerCaseLiteralEqualsIgnoreAsciiCaseString(
                                         "hidden",
                                         attributes.getValue(AttributeName.TYPE))) {
-                                    goto intableloop;
+                                    goto intableloop_exit;
                                 }
                                 appendVoidElementToCurrent(
                                         name, attributes,
                                         formPointer);
                                 selfClosing = false;
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case FORM:
                                 if (formPointer != null) {
                                     errFormWhenFormOpen();
-                                    goto starttagloop;
+                                    goto starttagloop_break;
                                 } else {
                                     errStartTagInTable(name);
                                     appendVoidFormToCurrent(attributes);
                                     attributes = null; // CPP
-                                    goto starttagloop;
+                                    goto starttagloop_break;
                                 }
                             default:
                                 errStartTagInTable(name);
-                                // fall through to IN_BODY
-                                goto intableloop;
+                                goto intableloop_exit;
                         }
                     }
+                intableloop_exit: goto case IN_CAPTION;
+                    // Fall though
                 case IN_CAPTION:
                     switch (group) {
                         case CAPTION:
@@ -1947,7 +1950,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             errStrayStartTag(name);
                             eltPos = findLastInTableScope("caption");
                             if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
-                                goto starttagloop;
+                                goto starttagloop_break;
                             }
                             generateImpliedEndTags();
                             if (errorHandler != null && currentPtr != eltPos) {
@@ -1960,9 +1963,11 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             mode = IN_TABLE;
                             continue;
                         default:
-                            // fall through to IN_BODY
+                            // fall through to IN_CELL
+                            goto in_cell_fallthrough;
                     }
                 case IN_CELL:
+            in_cell_fallthrough:
                     switch (group) {
                         case CAPTION:
                         case COL:
@@ -1973,14 +1978,16 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             eltPos = findLastInTableScopeTdTh();
                             if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 errNoCellToClose();
-                                goto starttagloop;
+                                goto starttagloop_break;
                             } else {
                                 closeTheCell(eltPos);
                                 continue;
                             }
                         default:
-                            // fall through to IN_BODY
+                            // fall through to FRAMESET_OK
+                            break;
                     }
+                    goto case FRAMESET_OK;
                 case FRAMESET_OK:
                     switch (group) {
                         case FRAMESET:
@@ -1988,7 +1995,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 if (currentPtr == 0 || stack[1].getGroup() != BODY) {
                                     Debug.Assert(fragment);
                                     errStrayStartTag(name);
-                                    goto starttagloop;
+                                    goto starttagloop_break;
                                 } else {
                                     errFramesetStart();
                                     detachFromParent(stack[1].node);
@@ -2000,11 +2007,11 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                             attributes);
                                     mode = IN_FRAMESET;
                                     attributes = null; // CPP
-                                    goto starttagloop;
+                                    goto starttagloop_break;
                                 }
                             } else {
                                 errStrayStartTag(name);
-                                goto starttagloop;
+                                goto starttagloop_break;
                             }
                             // NOT falling through!
                         case PRE_OR_LISTING:
@@ -2032,11 +2039,14 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 mode = IN_BODY;
                             }
                             // fall through to IN_BODY
+                            goto default;
                         default:
                             // fall through to IN_BODY
+                            break;
                     }
+                    goto case IN_BODY;
                 case IN_BODY:
-                    inbodyloop: for (;;) {
+                    for (;;) {
                         switch (group) {
                             case HTML:
                                 errStrayStartTag(name);
@@ -2044,7 +2054,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                     addAttributesToHtml(attributes);
                                     attributes = null; // CPP
                                 }
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case BASE:
                             case LINK_OR_BASEFONT_OR_BGSOUND:
                             case META:
@@ -2053,13 +2063,13 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             case TITLE:
                             case COMMAND:
                                 // Fall through to IN_HEAD
-                                goto inbodyloop;
+                                goto inbodyloop_exit;
                             case BODY:
                                 if (currentPtr == 0
                                         || stack[1].getGroup() != BODY) {
                                     Debug.Assert(fragment);
                                     errStrayStartTag(name);
-                                    goto starttagloop;
+                                    goto starttagloop_break;
                                 }
                                 errFooSeenWhenFooOpen(name);
                                 framesetOk = false;
@@ -2069,7 +2079,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 if (addAttributesToBody(attributes)) {
                                     attributes = null; // CPP
                                 }
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case P:
                             case DIV_OR_BLOCKQUOTE_OR_CENTER_OR_MENU:
                             case UL_OR_OL_OR_DL:
@@ -2079,7 +2089,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                         elementName,
                                         attributes);
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case H1_OR_H2_OR_H3_OR_H4_OR_H5_OR_H6:
                                 implicitlyCloseP();
                                 if (stack[currentPtr].getGroup() == H1_OR_H2_OR_H3_OR_H4_OR_H5_OR_H6) {
@@ -2090,14 +2100,14 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                         elementName,
                                         attributes);
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case FIELDSET:
                                 implicitlyCloseP();
                                 appendToCurrentNodeAndPushElementMayFoster(
                                         elementName,
                                         attributes, formPointer);
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case PRE_OR_LISTING:
                                 implicitlyCloseP();
                                 appendToCurrentNodeAndPushElementMayFoster(
@@ -2105,16 +2115,16 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                         attributes);
                                 needToDropLF = true;
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case FORM:
                                 if (formPointer != null) {
                                     errFormWhenFormOpen();
-                                    goto starttagloop;
+                                    goto starttagloop_break;
                                 } else {
                                     implicitlyCloseP();
                                     appendToCurrentNodeAndPushFormElementMayFoster(attributes);
                                     attributes = null; // CPP
-                                    goto starttagloop;
+                                    goto starttagloop_break;
                                 }
                             case LI:
                             case DD_OR_DT:
@@ -2146,7 +2156,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                         elementName,
                                         attributes);
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case PLAINTEXT:
                                 implicitlyCloseP();
                                 appendToCurrentNodeAndPushElementMayFoster(
@@ -2155,7 +2165,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 tokenizer.setStateAndEndTagExpectation(
                                         Tokenizer.PLAINTEXT, elementName);
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case A:
                                 int activeAPos = findInListOfActiveFormattingElementsContainsBetweenEndAndLastMarker("a");
                                 if (activeAPos != -1) {
@@ -2175,7 +2185,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                         elementName,
                                         attributes);
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case B_OR_BIG_OR_CODE_OR_EM_OR_I_OR_S_OR_SMALL_OR_STRIKE_OR_STRONG_OR_TT_OR_U:
                             case FONT:
                                 reconstructTheActiveFormattingElements();
@@ -2184,7 +2194,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                         elementName,
                                         attributes);
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case NOBR:
                                 reconstructTheActiveFormattingElements();
                                 if (TreeBuilderBase.NOT_FOUND_ON_STACK != findLastInScope("nobr")) {
@@ -2196,7 +2206,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                         elementName,
                                         attributes);
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case BUTTON:
                                 eltPos = findLastInScope(name);
                                 if (eltPos != TreeBuilderBase.NOT_FOUND_ON_STACK) {
@@ -2209,14 +2219,14 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                     while (currentPtr >= eltPos) {
                                         pop();
                                     }
-                                    continue starttagloop;
+                                    goto starttagloop_continue;
                                 } else {
                                     reconstructTheActiveFormattingElements();
                                     appendToCurrentNodeAndPushElementMayFoster(
                                             elementName,
                                             attributes, formPointer);
                                     attributes = null; // CPP
-                                    goto starttagloop;
+                                    goto starttagloop_break;
                                 }
                             case OBJECT:
                                 reconstructTheActiveFormattingElements();
@@ -2225,7 +2235,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                         attributes, formPointer);
                                 insertMarker();
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case MARQUEE_OR_APPLET:
                                 reconstructTheActiveFormattingElements();
                                 appendToCurrentNodeAndPushElementMayFoster(
@@ -2233,7 +2243,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                         attributes);
                                 insertMarker();
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case TABLE:
                                 // The only quirk. Blame Hixie and
                                 // Acid2.
@@ -2245,20 +2255,22 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                         attributes);
                                 mode = IN_TABLE;
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case BR:
                             case EMBED_OR_IMG:
                             case AREA_OR_WBR:
                                 reconstructTheActiveFormattingElements();
                                 // FALL THROUGH to PARAM_OR_SOURCE_OR_TRACK
+                                goto param_or_source_or_track_fallthrough;
                             // CPPONLY: case MENUITEM:
                             case PARAM_OR_SOURCE_OR_TRACK:
+                        param_or_source_or_track_fallthrough:
                                 appendVoidElementToCurrentMayFoster(
                                         elementName,
                                         attributes);
                                 selfClosing = false;
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case HR:
                                 implicitlyCloseP();
                                 appendVoidElementToCurrentMayFoster(
@@ -2266,11 +2278,11 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                         attributes);
                                 selfClosing = false;
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case IMAGE:
                                 errImage();
                                 elementName = ElementName.IMG;
-                                continue starttagloop;
+                                goto starttagloop_continue;
                             case KEYGEN:
                             case INPUT:
                                 reconstructTheActiveFormattingElements();
@@ -2279,11 +2291,11 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                         formPointer);
                                 selfClosing = false;
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case ISINDEX:
                                 errIsindex();
                                 if (formPointer != null) {
-                                    goto starttagloop;
+                                    goto starttagloop_break;
                                 }
                                 implicitlyCloseP();
                                 HtmlAttributes formAttrs = new HtmlAttributes(0);
@@ -2351,7 +2363,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 // Portability.delete(inputAttributes);
                                 // Don't delete attributes, they are deleted
                                 // later
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case TEXTAREA:
                                 appendToCurrentNodeAndPushElementMayFoster(
                                         elementName,
@@ -2362,7 +2374,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 mode = TEXT;
                                 needToDropLF = true;
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case XMP:
                                 implicitlyCloseP();
                                 reconstructTheActiveFormattingElements();
@@ -2374,7 +2386,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 tokenizer.setStateAndEndTagExpectation(
                                         Tokenizer.RAWTEXT, elementName);
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case NOSCRIPT:
                                 if (!scriptingEnabled) {
                                     reconstructTheActiveFormattingElements();
@@ -2382,9 +2394,10 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                             elementName,
                                             attributes);
                                     attributes = null; // CPP
-                                    goto starttagloop;
+                                    goto starttagloop_break;
                                 } else {
                                     // fall through
+                                    goto case NOFRAMES;
                                 }
                             case NOFRAMES:
                             case IFRAME:
@@ -2397,7 +2410,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 tokenizer.setStateAndEndTagExpectation(
                                         Tokenizer.RAWTEXT, elementName);
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case SELECT:
                                 reconstructTheActiveFormattingElements();
                                 appendToCurrentNodeAndPushElementMayFoster(
@@ -2417,7 +2430,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                         break;
                                 }
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case OPTGROUP:
                             case OPTION:
                                 if (isCurrent("option")) {
@@ -2428,7 +2441,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                         elementName,
                                         attributes);
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case RT_OR_RP:
                                 /*
                                  * If the stack of open elements has a ruby
@@ -2459,7 +2472,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                         elementName,
                                         attributes);
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case MATH:
                                 reconstructTheActiveFormattingElements();
                                 attributes.adjustForMath();
@@ -2472,7 +2485,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                             elementName, attributes);
                                 }
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case SVG:
                                 reconstructTheActiveFormattingElements();
                                 attributes.adjustForSvg();
@@ -2486,7 +2499,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                             elementName, attributes);
                                 }
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case CAPTION:
                             case COL:
                             case COLGROUP:
@@ -2497,25 +2510,26 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             case FRAMESET:
                             case HEAD:
                                 errStrayStartTag(name);
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case OUTPUT_OR_LABEL:
                                 reconstructTheActiveFormattingElements();
                                 appendToCurrentNodeAndPushElementMayFoster(
                                         elementName,
                                         attributes, formPointer);
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             default:
                                 reconstructTheActiveFormattingElements();
                                 appendToCurrentNodeAndPushElementMayFoster(
                                         elementName,
                                         attributes);
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                         }
                     }
+                inbodyloop_exit: goto case IN_HEAD;
                 case IN_HEAD:
-                    inheadloop: for (;;) {
+                    for (;;) {
                         switch (group) {
                             case HTML:
                                 errStrayStartTag(name);
@@ -2523,7 +2537,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                     addAttributesToHtml(attributes);
                                     attributes = null; // CPP
                                 }
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case BASE:
                             case COMMAND:
                                 appendVoidElementToCurrentMayFoster(
@@ -2531,11 +2545,11 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                         attributes);
                                 selfClosing = false;
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case META:
                             case LINK_OR_BASEFONT_OR_BGSOUND:
                                 // Fall through to IN_HEAD_NOSCRIPT
-                                goto inheadloop;
+                                goto inheadloop_exit;
                             case TITLE:
                                 appendToCurrentNodeAndPushElementMayFoster(
                                         elementName,
@@ -2545,7 +2559,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 tokenizer.setStateAndEndTagExpectation(
                                         Tokenizer.RCDATA, elementName);
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case NOSCRIPT:
                                 if (scriptingEnabled) {
                                     appendToCurrentNodeAndPushElement(
@@ -2562,7 +2576,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                     mode = IN_HEAD_NOSCRIPT;
                                 }
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case SCRIPT:
                                 // XXX need to manage much more stuff
                                 // here if
@@ -2576,7 +2590,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 tokenizer.setStateAndEndTagExpectation(
                                         Tokenizer.SCRIPT_DATA, elementName);
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case STYLE:
                             case NOFRAMES:
                                 appendToCurrentNodeAndPushElementMayFoster(
@@ -2587,18 +2601,19 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 tokenizer.setStateAndEndTagExpectation(
                                         Tokenizer.RAWTEXT, elementName);
                                 attributes = null; // CPP
-                                goto starttagloop;
+                                goto starttagloop_break;
                             case HEAD:
                                 /* Parse error. */
                                 errFooSeenWhenFooOpen(name);
                                 /* Ignore the token. */
-                                goto starttagloop;
+                                goto starttagloop_break;
                             default:
                                 pop();
                                 mode = AFTER_HEAD;
-                                continue starttagloop;
+                                goto starttagloop_continue;
                         }
                     }
+                inheadloop_exit: goto case IN_HEAD_NOSCRIPT;
                 case IN_HEAD_NOSCRIPT:
                     switch (group) {
                         case HTML:
@@ -2609,14 +2624,14 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 addAttributesToHtml(attributes);
                                 attributes = null; // CPP
                             }
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case LINK_OR_BASEFONT_OR_BGSOUND:
                             appendVoidElementToCurrentMayFoster(
                                     elementName,
                                     attributes);
                             selfClosing = false;
                             attributes = null; // CPP
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case META:
                             checkMetaCharset(attributes);
                             appendVoidElementToCurrentMayFoster(
@@ -2624,7 +2639,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                     attributes);
                             selfClosing = false;
                             attributes = null; // CPP
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case STYLE:
                         case NOFRAMES:
                             appendToCurrentNodeAndPushElement(
@@ -2635,13 +2650,13 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             tokenizer.setStateAndEndTagExpectation(
                                     Tokenizer.RAWTEXT, elementName);
                             attributes = null; // CPP
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case HEAD:
                             errFooSeenWhenFooOpen(name);
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case NOSCRIPT:
                             errFooSeenWhenFooOpen(name);
-                            goto starttagloop;
+                            goto starttagloop_break;
                         default:
                             errBadStartTagInHead(name);
                             pop();
@@ -2656,19 +2671,19 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 addAttributesToHtml(attributes);
                                 attributes = null; // CPP
                             }
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case COL:
                             appendVoidElementToCurrentMayFoster(
                                     elementName,
                                     attributes);
                             selfClosing = false;
                             attributes = null; // CPP
-                            goto starttagloop;
+                            goto starttagloop_break;
                         default:
                             if (currentPtr == 0) {
                                 Debug.Assert(fragment);
                                 errGarbageInColgroup();
-                                goto starttagloop;
+                                goto starttagloop_break;
                             }
                             pop();
                             mode = IN_TABLE;
@@ -2685,7 +2700,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             eltPos = findLastInTableScope("select");
                             if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 Debug.Assert(fragment);
-                                goto starttagloop; // http://www.w3.org/Bugs/Public/show_bug.cgi?id=8375
+                                goto starttagloop_break; // http://www.w3.org/Bugs/Public/show_bug.cgi?id=8375
                             }
                             while (currentPtr >= eltPos) {
                                 pop();
@@ -2694,7 +2709,9 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             continue;
                         default:
                             // fall through to IN_SELECT
+                            break;
                     }
+                    goto case IN_SELECT;
                 case IN_SELECT:
                     switch (group) {
                         case HTML:
@@ -2703,7 +2720,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 addAttributesToHtml(attributes);
                                 attributes = null; // CPP
                             }
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case OPTION:
                             if (isCurrent("option")) {
                                 pop();
@@ -2712,7 +2729,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                     elementName,
                                     attributes);
                             attributes = null; // CPP
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case OPTGROUP:
                             if (isCurrent("option")) {
                                 pop();
@@ -2724,20 +2741,20 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                     elementName,
                                     attributes);
                             attributes = null; // CPP
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case SELECT:
                             errStartSelectWhereEndSelectExpected();
                             eltPos = findLastInTableScope(name);
                             if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 Debug.Assert(fragment);
                                 errNoSelectInTableScope();
-                                goto starttagloop;
+                                goto starttagloop_break;
                             } else {
                                 while (currentPtr >= eltPos) {
                                     pop();
                                 }
                                 resetTheInsertionMode();
-                                goto starttagloop;
+                                goto starttagloop_break;
                             }
                         case INPUT:
                         case TEXTAREA:
@@ -2746,7 +2763,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             eltPos = findLastInTableScope("select");
                             if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 Debug.Assert(fragment);
-                                goto starttagloop;
+                                goto starttagloop_break;
                             }
                             while (currentPtr >= eltPos) {
                                 pop();
@@ -2766,10 +2783,10 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             tokenizer.setStateAndEndTagExpectation(
                                     Tokenizer.SCRIPT_DATA, elementName);
                             attributes = null; // CPP
-                            goto starttagloop;
+                            goto starttagloop_break;
                         default:
                             errStrayStartTag(name);
-                            goto starttagloop;
+                            goto starttagloop_break;
                     }
                 case AFTER_BODY:
                     switch (group) {
@@ -2779,7 +2796,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 addAttributesToHtml(attributes);
                                 attributes = null; // CPP
                             }
-                            goto starttagloop;
+                            goto starttagloop_break;
                         default:
                             errStrayStartTag(name);
                             mode = framesetOk ? FRAMESET_OK : IN_BODY;
@@ -2792,17 +2809,19 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                     elementName,
                                     attributes);
                             attributes = null; // CPP
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case FRAME:
                             appendVoidElementToCurrentMayFoster(
                                     elementName,
                                     attributes);
                             selfClosing = false;
                             attributes = null; // CPP
-                            goto starttagloop;
+                            goto starttagloop_break;
                         default:
                             // fall through to AFTER_FRAMESET
+                            break;
                     }
+                    goto case AFTER_FRAMESET;
                 case AFTER_FRAMESET:
                     switch (group) {
                         case HTML:
@@ -2811,7 +2830,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 addAttributesToHtml(attributes);
                                 attributes = null; // CPP
                             }
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case NOFRAMES:
                             appendToCurrentNodeAndPushElement(
                                     elementName,
@@ -2821,10 +2840,10 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             tokenizer.setStateAndEndTagExpectation(
                                     Tokenizer.RAWTEXT, elementName);
                             attributes = null; // CPP
-                            goto starttagloop;
+                            goto starttagloop_break;
                         default:
                             errStrayStartTag(name);
-                            goto starttagloop;
+                            goto starttagloop_break;
                     }
                 case INITIAL:
                     /*
@@ -2883,7 +2902,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             // XXX application cache should fire here
                             mode = BEFORE_HEAD;
                             attributes = null; // CPP
-                            goto starttagloop;
+                            goto starttagloop_break;
                         default:
                             /*
                              * Create an HTMLElement node with the tag name
@@ -2906,7 +2925,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 addAttributesToHtml(attributes);
                                 attributes = null; // CPP
                             }
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case HEAD:
                             /*
                              * A start tag whose tag name is "head"
@@ -2925,7 +2944,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                              */
                             mode = IN_HEAD;
                             attributes = null; // CPP
-                            goto starttagloop;
+                            goto starttagloop_break;
                         default:
                             /*
                              * Any other start tag token
@@ -2952,7 +2971,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 addAttributesToHtml(attributes);
                                 attributes = null; // CPP
                             }
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case BODY:
                             if (attributes.getLength() == 0) {
                                 // This has the right magic side effect
@@ -2966,14 +2985,14 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             framesetOk = false;
                             mode = IN_BODY;
                             attributes = null; // CPP
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case FRAMESET:
                             appendToCurrentNodeAndPushElement(
                                     elementName,
                                     attributes);
                             mode = IN_FRAMESET;
                             attributes = null; // CPP
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case BASE:
                             errFooBetweenHeadAndBody(name);
                             pushHeadPointerOntoStack();
@@ -2983,7 +3002,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             selfClosing = false;
                             pop(); // head
                             attributes = null; // CPP
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case LINK_OR_BASEFONT_OR_BGSOUND:
                             errFooBetweenHeadAndBody(name);
                             pushHeadPointerOntoStack();
@@ -2993,7 +3012,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             selfClosing = false;
                             pop(); // head
                             attributes = null; // CPP
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case META:
                             errFooBetweenHeadAndBody(name);
                             checkMetaCharset(attributes);
@@ -3004,7 +3023,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             selfClosing = false;
                             pop(); // head
                             attributes = null; // CPP
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case SCRIPT:
                             errFooBetweenHeadAndBody(name);
                             pushHeadPointerOntoStack();
@@ -3016,7 +3035,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             tokenizer.setStateAndEndTagExpectation(
                                     Tokenizer.SCRIPT_DATA, elementName);
                             attributes = null; // CPP
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case STYLE:
                         case NOFRAMES:
                             errFooBetweenHeadAndBody(name);
@@ -3029,7 +3048,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             tokenizer.setStateAndEndTagExpectation(
                                     Tokenizer.RAWTEXT, elementName);
                             attributes = null; // CPP
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case TITLE:
                             errFooBetweenHeadAndBody(name);
                             pushHeadPointerOntoStack();
@@ -3041,10 +3060,10 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             tokenizer.setStateAndEndTagExpectation(
                                     Tokenizer.RCDATA, elementName);
                             attributes = null; // CPP
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case HEAD:
                             errStrayStartTag(name);
-                            goto starttagloop;
+                            goto starttagloop_break;
                         default:
                             appendToCurrentNodeAndPushBodyElement();
                             mode = FRAMESET_OK;
@@ -3058,7 +3077,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 addAttributesToHtml(attributes);
                                 attributes = null; // CPP
                             }
-                            goto starttagloop;
+                            goto starttagloop_break;
                         default:
                             errStrayStartTag(name);
                             fatal();
@@ -3073,7 +3092,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 addAttributesToHtml(attributes);
                                 attributes = null; // CPP
                             }
-                            goto starttagloop;
+                            goto starttagloop_break;
                         case NOFRAMES:
                             appendToCurrentNodeAndPushElementMayFoster(
                                     elementName,
@@ -3083,17 +3102,19 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             tokenizer.setStateAndEndTagExpectation(
                                     Tokenizer.SCRIPT_DATA, elementName);
                             attributes = null; // CPP
-                            goto starttagloop;
+                            goto starttagloop_break;
                         default:
                             errStrayStartTag(name);
-                            goto starttagloop;
+                            goto starttagloop_break;
                     }
                 case TEXT:
                     Debug.Assert(false);
-                    goto starttagloop; // Avoid infinite loop if the assertion
-                                        // fails
+                    goto starttagloop_break; // Avoid infinite loop if the assertion fails
             }
+starttagloop_continue:
+            { } // continue the loop
         }
+starttagloop_break:
         if (selfClosing) {
             errSelfClosing();
         }
@@ -3142,7 +3163,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
         int eltPos;
         int group = elementName.getGroup();
         String name = elementName.name;
-        endtagloop: for (;;) {
+        for (;;) {
             if (isInForeign()) {
                 if (stack[currentPtr].name != name) {
                     errEndTagDidNotMatchCurrentOpenElement(name, stack[currentPtr].popName);
@@ -3153,7 +3174,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                         while (currentPtr >= eltPos) {
                             pop();
                         }
-                        goto endtagloop;
+                        goto endtagloop_break;
                     }
                     if (stack[--eltPos].ns == "http://www.w3.org/1999/xhtml") {
                         break;
@@ -3168,18 +3189,18 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             if (eltPos == 0) {
                                 Debug.Assert(fragment);
                                 errNoTableRowToClose();
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
                             clearStackBackTo(eltPos);
                             pop();
                             mode = IN_TABLE_BODY;
-                            goto endtagloop;
+                            goto endtagloop_break;
                         case TABLE:
                             eltPos = findLastOrRoot(TreeBuilderBase.TR);
                             if (eltPos == 0) {
                                 Debug.Assert(fragment);
                                 errNoTableRowToClose();
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
                             clearStackBackTo(eltPos);
                             pop();
@@ -3188,13 +3209,13 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                         case TBODY_OR_THEAD_OR_TFOOT:
                             if (findLastInTableScope(name) == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 errStrayEndTag(name);
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
                             eltPos = findLastOrRoot(TreeBuilderBase.TR);
                             if (eltPos == 0) {
                                 Debug.Assert(fragment);
                                 errNoTableRowToClose();
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
                             clearStackBackTo(eltPos);
                             pop();
@@ -3207,28 +3228,30 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                         case HTML:
                         case TD_OR_TH:
                             errStrayEndTag(name);
-                            goto endtagloop;
+                            goto endtagloop_break;
                         default:
                             // fall through to IN_TABLE
+                            break;
                     }
+                    goto case IN_TABLE_BODY;
                 case IN_TABLE_BODY:
                     switch (group) {
                         case TBODY_OR_THEAD_OR_TFOOT:
                             eltPos = findLastOrRoot(name);
                             if (eltPos == 0) {
                                 errStrayEndTag(name);
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
                             clearStackBackTo(eltPos);
                             pop();
                             mode = IN_TABLE;
-                            goto endtagloop;
+                            goto endtagloop_break;
                         case TABLE:
                             eltPos = findLastInTableScopeOrRootTbodyTheadTfoot();
                             if (eltPos == 0) {
                                 Debug.Assert(fragment);
                                 errStrayEndTag(name);
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
                             clearStackBackTo(eltPos);
                             pop();
@@ -3242,10 +3265,12 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                         case TD_OR_TH:
                         case TR:
                             errStrayEndTag(name);
-                            goto endtagloop;
+                            goto endtagloop_break;
                         default:
                             // fall through to IN_TABLE
+                            break;
                     }
+                    goto case IN_TABLE;
                 case IN_TABLE:
                     switch (group) {
                         case TABLE:
@@ -3253,13 +3278,13 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 Debug.Assert(fragment);
                                 errStrayEndTag(name);
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
                             while (currentPtr >= eltPos) {
                                 pop();
                             }
                             resetTheInsertionMode();
-                            goto endtagloop;
+                            goto endtagloop_break;
                         case BODY:
                         case CAPTION:
                         case COL:
@@ -3269,17 +3294,19 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                         case TD_OR_TH:
                         case TR:
                             errStrayEndTag(name);
-                            goto endtagloop;
+                            goto endtagloop_break;
                         default:
                             errStrayEndTag(name);
                             // fall through to IN_BODY
+                            break;
                     }
+                    goto case IN_CAPTION;
                 case IN_CAPTION:
                     switch (group) {
                         case CAPTION:
                             eltPos = findLastInTableScope("caption");
                             if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
                             generateImpliedEndTags();
                             if (errorHandler != null && currentPtr != eltPos) {
@@ -3290,12 +3317,12 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             }
                             clearTheListOfActiveFormattingElementsUpToTheLastMarker();
                             mode = IN_TABLE;
-                            goto endtagloop;
+                            goto endtagloop_break;
                         case TABLE:
                             errTableClosedWhileCaptionOpen();
                             eltPos = findLastInTableScope("caption");
                             if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
                             generateImpliedEndTags();
                             if (errorHandler != null && currentPtr != eltPos) {
@@ -3315,17 +3342,19 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                         case TD_OR_TH:
                         case TR:
                             errStrayEndTag(name);
-                            goto endtagloop;
+                            goto endtagloop_break;
                         default:
                             // fall through to IN_BODY
+                            break;
                     }
+                    goto case IN_CELL;
                 case IN_CELL:
                     switch (group) {
                         case TD_OR_TH:
                             eltPos = findLastInTableScope(name);
                             if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 errStrayEndTag(name);
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
                             generateImpliedEndTags();
                             if (errorHandler != null && !isCurrent(name)) {
@@ -3336,13 +3365,13 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             }
                             clearTheListOfActiveFormattingElementsUpToTheLastMarker();
                             mode = IN_ROW;
-                            goto endtagloop;
+                            goto endtagloop_break;
                         case TABLE:
                         case TBODY_OR_THEAD_OR_TFOOT:
                         case TR:
                             if (findLastInTableScope(name) == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 errStrayEndTag(name);
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
                             closeTheCell(findLastInTableScopeTdTh());
                             continue;
@@ -3352,10 +3381,12 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                         case COLGROUP:
                         case HTML:
                             errStrayEndTag(name);
-                            goto endtagloop;
+                            goto endtagloop_break;
                         default:
                             // fall through to IN_BODY
+                            break;
                     }
+                    goto case FRAMESET_OK;
                 case FRAMESET_OK:
                 case IN_BODY:
                     switch (group) {
@@ -3363,7 +3394,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             if (!isSecondOnStackBody()) {
                                 Debug.Assert(fragment);
                                 errStrayEndTag(name);
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
                             Debug.Assert(currentPtr >= 1);
                             if (errorHandler != null) {
@@ -3385,12 +3416,12 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 }
                             }
                             mode = AFTER_BODY;
-                            goto endtagloop;
+                            goto endtagloop_break;
                         case HTML:
                             if (!isSecondOnStackBody()) {
                                 Debug.Assert(fragment);
                                 errStrayEndTag(name);
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
                             if (errorHandler != null) {
                                 uncloseloop2: for (int i = 0; i <= currentPtr; i++) {
@@ -3429,24 +3460,24 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                     pop();
                                 }
                             }
-                            goto endtagloop;
+                            goto endtagloop_break;
                         case FORM:
                             if (formPointer == null) {
                                 errStrayEndTag(name);
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
                             formPointer = null;
                             eltPos = findLastInScope(name);
                             if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 errStrayEndTag(name);
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
                             generateImpliedEndTags();
                             if (errorHandler != null && !isCurrent(name)) {
                                 errUnclosedElements(eltPos, name);
                             }
                             removeFromStack(eltPos);
-                            goto endtagloop;
+                            goto endtagloop_break;
                         case P:
                             eltPos = findLastInButtonScope("p");
                             if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
@@ -3461,7 +3492,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 appendVoidElementToCurrentMayFoster(
                                         elementName,
                                         HtmlAttributes.EMPTY_ATTRIBUTES);
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
                             generateImpliedEndTagsExceptFor("p");
                             Debug.Assert(eltPos != TreeBuilderBase.NOT_FOUND_ON_STACK);
@@ -3471,7 +3502,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             while (currentPtr >= eltPos) {
                                 pop();
                             }
-                            goto endtagloop;
+                            goto endtagloop_break;
                         case LI:
                             eltPos = findLastInListScope(name);
                             if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
@@ -3486,7 +3517,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                     pop();
                                 }
                             }
-                            goto endtagloop;
+                            goto endtagloop_break;
                         case DD_OR_DT:
                             eltPos = findLastInScope(name);
                             if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
@@ -3501,7 +3532,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                     pop();
                                 }
                             }
-                            goto endtagloop;
+                            goto endtagloop_break;
                         case H1_OR_H2_OR_H3_OR_H4_OR_H5_OR_H6:
                             eltPos = findLastInScopeHn();
                             if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
@@ -3515,7 +3546,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                     pop();
                                 }
                             }
-                            goto endtagloop;
+                            goto endtagloop_break;
                         case OBJECT:
                         case MARQUEE_OR_APPLET:
                             eltPos = findLastInScope(name);
@@ -3531,7 +3562,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 }
                                 clearTheListOfActiveFormattingElementsUpToTheLastMarker();
                             }
-                            goto endtagloop;
+                            goto endtagloop_break;
                         case BR:
                             errEndTagBr();
                             if (isInForeign()) {
@@ -3544,7 +3575,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             appendVoidElementToCurrentMayFoster(
                                     elementName,
                                     HtmlAttributes.EMPTY_ATTRIBUTES);
-                            goto endtagloop;
+                            goto endtagloop_break;
                         case AREA_OR_WBR:
                         // CPPONLY: case MENUITEM:
                         case PARAM_OR_SOURCE_OR_TRACK:
@@ -3561,26 +3592,28 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                         case TABLE:
                         case TEXTAREA: // XXX??
                             errStrayEndTag(name);
-                            goto endtagloop;
+                            goto endtagloop_break;
                         case NOSCRIPT:
                             if (scriptingEnabled) {
                                 errStrayEndTag(name);
-                                goto endtagloop;
+                                goto endtagloop_break;
                             } else {
                                 // fall through
+                                goto case A;
                             }
                         case A:
                         case B_OR_BIG_OR_CODE_OR_EM_OR_I_OR_S_OR_SMALL_OR_STRIKE_OR_STRONG_OR_TT_OR_U:
                         case FONT:
                         case NOBR:
                             if (adoptionAgencyEndTag(name)) {
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
+                            goto default;
                             // else handle like any other tag
                         default:
                             if (isCurrent(name)) {
                                 pop();
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
 
                             eltPos = currentPtr;
@@ -3595,10 +3628,10 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                     while (currentPtr >= eltPos) {
                                         pop();
                                     }
-                                    goto endtagloop;
+                                    goto endtagloop_break;
                                 } else if (node.isSpecial()) {
                                     errStrayEndTag(name);
-                                    goto endtagloop;
+                                    goto endtagloop_break;
                                 }
                                 eltPos--;
                             }
@@ -3609,19 +3642,19 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             if (currentPtr == 0) {
                                 Debug.Assert(fragment);
                                 errGarbageInColgroup();
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
                             pop();
                             mode = IN_TABLE;
-                            goto endtagloop;
+                            goto endtagloop_break;
                         case COL:
                             errStrayEndTag(name);
-                            goto endtagloop;
+                            goto endtagloop_break;
                         default:
                             if (currentPtr == 0) {
                                 Debug.Assert(fragment);
                                 errGarbageInColgroup();
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
                             pop();
                             mode = IN_TABLE;
@@ -3639,7 +3672,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 eltPos = findLastInTableScope("select");
                                 if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                     Debug.Assert(fragment);
-                                    goto endtagloop; // http://www.w3.org/Bugs/Public/show_bug.cgi?id=8375
+                                    goto endtagloop_break; // http://www.w3.org/Bugs/Public/show_bug.cgi?id=8375
                                 }
                                 while (currentPtr >= eltPos) {
                                     pop();
@@ -3647,20 +3680,22 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 resetTheInsertionMode();
                                 continue;
                             } else {
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
                         default:
                             // fall through to IN_SELECT
+                            break;
                     }
+                    goto case IN_SELECT;
                 case IN_SELECT:
                     switch (group) {
                         case OPTION:
                             if (isCurrent("option")) {
                                 pop();
-                                goto endtagloop;
+                                goto endtagloop_break;
                             } else {
                                 errStrayEndTag(name);
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
                         case OPTGROUP:
                             if (isCurrent("option")
@@ -3672,32 +3707,32 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             } else {
                                 errStrayEndTag(name);
                             }
-                            goto endtagloop;
+                            goto endtagloop_break;
                         case SELECT:
                             eltPos = findLastInTableScope("select");
                             if (eltPos == TreeBuilderBase.NOT_FOUND_ON_STACK) {
                                 Debug.Assert(fragment);
                                 errStrayEndTag(name);
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
                             while (currentPtr >= eltPos) {
                                 pop();
                             }
                             resetTheInsertionMode();
-                            goto endtagloop;
+                            goto endtagloop_break;
                         default:
                             errStrayEndTag(name);
-                            goto endtagloop;
+                            goto endtagloop_break;
                     }
                 case AFTER_BODY:
                     switch (group) {
                         case HTML:
                             if (fragment) {
                                 errStrayEndTag(name);
-                                goto endtagloop;
+                                goto endtagloop_break;
                             } else {
                                 mode = AFTER_AFTER_BODY;
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
                         default:
                             errEndTagAfterBody();
@@ -3710,25 +3745,25 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             if (currentPtr == 0) {
                                 Debug.Assert(fragment);
                                 errStrayEndTag(name);
-                                goto endtagloop;
+                                goto endtagloop_break;
                             }
                             pop();
                             if ((!fragment) && !isCurrent("frameset")) {
                                 mode = AFTER_FRAMESET;
                             }
-                            goto endtagloop;
+                            goto endtagloop_break;
                         default:
                             errStrayEndTag(name);
-                            goto endtagloop;
+                            goto endtagloop_break;
                     }
                 case AFTER_FRAMESET:
                     switch (group) {
                         case HTML:
                             mode = AFTER_AFTER_FRAMESET;
-                            goto endtagloop;
+                            goto endtagloop_break;
                         default:
                             errStrayEndTag(name);
-                            goto endtagloop;
+                            goto endtagloop_break;
                     }
                 case INITIAL:
                     /*
@@ -3789,7 +3824,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             continue;
                         default:
                             errStrayEndTag(name);
-                            goto endtagloop;
+                            goto endtagloop_break;
                     }
                 case BEFORE_HEAD:
                     switch (group) {
@@ -3802,14 +3837,14 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             continue;
                         default:
                             errStrayEndTag(name);
-                            goto endtagloop;
+                            goto endtagloop_break;
                     }
                 case IN_HEAD:
                     switch (group) {
                         case HEAD:
                             pop();
                             mode = AFTER_HEAD;
-                            goto endtagloop;
+                            goto endtagloop_break;
                         case BR:
                         case HTML:
                         case BODY:
@@ -3818,14 +3853,14 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             continue;
                         default:
                             errStrayEndTag(name);
-                            goto endtagloop;
+                            goto endtagloop_break;
                     }
                 case IN_HEAD_NOSCRIPT:
                     switch (group) {
                         case NOSCRIPT:
                             pop();
                             mode = IN_HEAD;
-                            goto endtagloop;
+                            goto endtagloop_break;
                         case BR:
                             errStrayEndTag(name);
                             pop();
@@ -3833,7 +3868,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             continue;
                         default:
                             errStrayEndTag(name);
-                            goto endtagloop;
+                            goto endtagloop_break;
                     }
                 case AFTER_HEAD:
                     switch (group) {
@@ -3845,7 +3880,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                             continue;
                         default:
                             errStrayEndTag(name);
-                            goto endtagloop;
+                            goto endtagloop_break;
                     }
                 case AFTER_AFTER_BODY:
                     errStrayEndTag(name);
@@ -3862,9 +3897,10 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                         silentPop();
                     }
                     mode = originalMode;
-                    goto endtagloop;
+                    goto endtagloop_break;
             }
         } // endtagloop
+    endtagloop_break: { }
     }
 
     private int findLastInTableScopeOrRootTbodyTheadTfoot() {
@@ -4743,6 +4779,7 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                 case XmlViolationPolicy.FATAL:
                     fatal("Element name \u201C" + name
                             + "\u201D cannot be represented as XML 1.0.");
+                    break;
             }
         }
         return null; // keep compiler happy

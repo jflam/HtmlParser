@@ -346,6 +346,7 @@ public sealed class HtmlAttributes : Attributes {
                     return;
                 case XmlViolationPolicy.ALLOW:
                     // fall through
+                    break;
             }
         }
 
@@ -478,7 +479,7 @@ public sealed class HtmlAttributes : Attributes {
     
     // [NOCPP[
     
-    public void processNonNcNames<T>(TreeBuilder<T> treeBuilder, XmlViolationPolicy namePolicy) {
+    public void processNonNcNames<T>(TreeBuilder<T> treeBuilder, XmlViolationPolicy namePolicy) where T:class {
         for (int i = 0; i < length; i++) {
             AttributeName attName = names[i];
             if (!attName.isNcName(mode)) {
@@ -487,7 +488,9 @@ public sealed class HtmlAttributes : Attributes {
                     case XmlViolationPolicy.ALTER_INFOSET:
                         names[i] = AttributeName.create(NCName.escapeName(name));
                         // fall through
+                        goto allow_fallthrough;
                     case XmlViolationPolicy.ALLOW:
+                allow_fallthrough:
                         if (attName != AttributeName.XML_LANG) {
                             treeBuilder.warn("Attribute \u201C" + name + "\u201D is not serializable as XML 1.0.");
                         }
