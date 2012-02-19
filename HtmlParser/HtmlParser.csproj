@@ -33,6 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
+    <Compile Include="Impl\CoalescingTreeBuilder.cs" />
     <Compile Include="Impl\ErrorReportingTokenizer.cs" />
   </ItemGroup>
   <ItemGroup>

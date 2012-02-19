@@ -5121,7 +5121,7 @@ starttagloop_break:
     
     // ]NOCPP]
     
-    protected void accumulateCharacters(char[] buf, int start, int length) {
+    protected virtual void accumulateCharacters(char[] buf, int start, int length) {
         appendCharacters(stack[currentPtr].node, buf, start, length);
     }
 
