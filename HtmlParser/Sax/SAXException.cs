@@ -17,3 +17,14 @@ public class SAXParseException : Exception
         // TODO: something with the locator field ...
     }
 }
+
+public class SAXNotSupportedException : Exception
+{
+    public SAXNotSupportedException(string message) : base(message) { }
+}
+
+public class SAXNotRecognizedException : Exception
+{
+    public SAXNotRecognizedException() { }
+    public SAXNotRecognizedException(string message) : base(message) { }
+}
