@@ -1099,8 +1099,10 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                 return;
             default:
                 int end = start + length;
-                for (int i = start; i < end; i++) {
-                    switch (buf[i]) {
+                for (int i = start; i < end; i++) 
+                {
+                    switch (buf[i]) 
+                    {
                         case ' ':
                         case '\t':
                         case '\n':
@@ -1111,7 +1113,8 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                              * CHARACTER TABULATION, U+000A LINE FEED (LF),
                              * U+000C FORM FEED (FF), or U+0020 SPACE
                              */
-                            switch (mode) {
+                            switch (mode)
+                            {
                                 case INITIAL:
                                 case BEFORE_HTML:
                                 case BEFORE_HEAD:
@@ -1134,7 +1137,8 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 case IN_BODY:
                                 case IN_CELL:
                                 case IN_CAPTION:
-                                    if (start < i) {
+                                    if (start < i)
+                                    {
                                         accumulateCharacters(buf, start, i - start);
                                         start = i;
                                     }
@@ -1143,7 +1147,8 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                      * Reconstruct the active formatting
                                      * elements, if any.
                                      */
-                                    if (!isInForeignButNotHtmlIntegrationPoint()) {
+                                    if (!isInForeignButNotHtmlIntegrationPoint())
+                                    {
                                         flushCharacters();
                                         reconstructTheActiveFormattingElements();
                                     }
@@ -1164,7 +1169,8 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                 case AFTER_BODY:
                                 case AFTER_AFTER_BODY:
                                 case AFTER_AFTER_FRAMESET:
-                                    if (start < i) {
+                                    if (start < i)
+                                    {
                                         accumulateCharacters(buf, start, i - start);
                                         start = i;
                                     }
@@ -1180,17 +1186,17 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                      */
                                     continue;
                             }
+                            goto default;
                             // fall through 
                             // TODO: figure out how to solve the case of goto default in nested switch statements
-                            goto default_hack;
                         default:
-                        default_hack: { } 
                             /*
                              * A character token that is not one of one of
                              * U+0009 CHARACTER TABULATION, U+000A LINE FEED
                              * (LF), U+000C FORM FEED (FF), or U+0020 SPACE
                              */
-                            switch (mode) {
+                            switch (mode) 
+                            {
                                 case INITIAL:
                                     /*
                                      * Parse error.
@@ -1438,12 +1444,15 @@ public abstract class TreeBuilder<T> : TreeBuilderBase, TreeBuilderState<T>, Tok
                                     i--;
                                     continue;
                             }
+                            break;
                     }
+                    break;
                 }
             charactersloop_break: 
                 if (start < end) {
                     accumulateCharacters(buf, start, end - start);
                 }
+                break;
         }
     }
 
@@ -4448,12 +4457,12 @@ starttagloop_break:
                 detachFromParent(lastNode.node);
                 appendElement(lastNode.node, commonAncestor.node);
             }
-            T clone = createElement("http://www.w3.org/1999/xhtml",
+            T clone2 = createElement("http://www.w3.org/1999/xhtml",
                     formattingElt.name,
                     formattingElt.attributes.cloneAttributes(null));
             StackNode<T> formattingClone = new StackNode<T>(
                     formattingElt.getFlags(), formattingElt.ns,
-                    formattingElt.name, clone, formattingElt.popName,
+                    formattingElt.name, clone2, formattingElt.popName,
                     formattingElt.attributes
                     // [NOCPP[
                     , errorHandler == null ? null : new TaintableLocatorImpl(tokenizer)
@@ -4465,8 +4474,8 @@ starttagloop_break:
             // below
             formattingElt.dropAttributes(); // transfer ownership to
                                             // formattingClone
-            appendChildrenToNewParent(furthestBlock.node, clone);
-            appendElement(clone, furthestBlock.node);
+            appendChildrenToNewParent(furthestBlock.node, clone2);
+            appendElement(clone2, furthestBlock.node);
             removeFromListOfActiveFormattingElements(formattingEltListPos);
             insertIntoListOfActiveFormattingElements(formattingClone, bookmark);
             Debug.Assert(formattingEltStackPos < furthestBlockPos);
