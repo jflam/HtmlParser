@@ -473,7 +473,7 @@ public class Driver : EncodingDeclarationHandler {
 
     }
 
-    void notifyAboutMetaBoundary() {
+    public void notifyAboutMetaBoundary() {
         tokenizer.notifyAboutMetaBoundary();
     }
 
