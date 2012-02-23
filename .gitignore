@@ -1,3 +1,7 @@
 *.suo
+*.user
 HtmlParser/bin/**
 HtmlParser/obj/**
+RoadTrip/RoadTrip/bin/**
+RoadTrip/RoadTrip/bld/**
+RoadTrip/RoadTrip/obj/**
