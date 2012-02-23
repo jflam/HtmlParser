@@ -1,6 +1,9 @@
 ﻿// For an introduction to the Blank template, see the following documentation:
 // http://go.microsoft.com/fwlink/?LinkId=232509
 
+// TODO: secure these credentials and put them in one place
+var credentials = "ArPzSbmnfYJucWzarJwB7Gk29sfWPy97C6rpz-Rm1xTO_AWa-_hCg-5Oo-mAHkcR";
+
 var locations = new WinJS.Binding.List([
     { location: "Seattle, WA" },
     { location: "Portland, OR" }
@@ -10,6 +13,17 @@ var locations = new WinJS.Binding.List([
     "use strict";
 
     var app = WinJS.Application;
+
+    // Do an XHR request
+    app.search = function (location) {
+        $.ajax({
+            url: 'http://dev.virtualearth.net/REST/v1/Locations/' + location + '?output=json&key=' + credentials,
+            dataType: 'json',
+            success: function (data, text_status) {
+                console.log(data);
+            }
+        });
+    };
 
     app.onactivated = function (eventObject) {
         if (eventObject.detail.kind === Windows.ApplicationModel.Activation.ActivationKind.launch) {
@@ -22,17 +36,13 @@ var locations = new WinJS.Binding.List([
                         console.log("clicked on: " + invokedItem.data.location);
                     });
                 }, false);
+                $("#buttonSearch").click(function () {
+                    app.search($("#searchInput").value);
+                });
             } else {
                 // TODO: This application has been reactivated from suspension. 
                 // Restore application state here.
             }
-
-            //$("#bob").click(function () {
-            //    // Post something to the child window
-            //    document.frames["map"].postMessage("", "ms-appx-web://" + document.location.host);
-
-            //    // add some crap
-            //});
             WinJS.UI.processAll();
         }
     };

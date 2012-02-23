@@ -50,5 +50,13 @@
 		</div>
 	    <iframe src="ms-appx-web:///map.html" id="map"></iframe>
 	</div>
+	<div id="searchFlyout" data-win-control="WinJS.UI.Flyout">
+		<h4>Search for a location:</h4>
+		<input type="text" id="searchInput"><button id="buttonSearch" value="Search">Search</button>
+	</div>
+	<div data-win-control="WinJS.UI.AppBar">
+		<button data-win-control="WinJS.UI.AppBarCommand" 
+				data-win-options="{ id:'searchButton', label:'Search', type:'flyout', flyout:'searchFlyout' }"></button>
+	</div>
 </body>
 </html>
