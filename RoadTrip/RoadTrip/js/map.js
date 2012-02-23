@@ -1,10 +1,10 @@
 ﻿(function () {
+    // TODO: secure these credentials
     var credentials = "ArPzSbmnfYJucWzarJwB7Gk29sfWPy97C6rpz-Rm1xTO_AWa-_hCg-5Oo-mAHkcR";
     var map = null;
 
     $(document).ready(function () {
         var mapOptions = {
-            // TODO: secure these credentials
             credentials: credentials,
             center: new Microsoft.Maps.Location(47.733762, -122.146974),
             mapTypeId: Microsoft.Maps.MapTypeId.road,
@@ -12,6 +12,7 @@
             showLogo: false
         };
         map = new Microsoft.Maps.Map($("#map")[0], mapOptions);
+        search("miami, fl");
     });
 
     search = function (query) {
@@ -31,7 +32,7 @@
     };
 
     receive_message = function (e) {
-        search("new york, ny");
+        search(e.data);
     };
     
     window.addEventListener("message", receive_message, false);

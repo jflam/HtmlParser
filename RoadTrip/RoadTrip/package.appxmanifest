@@ -1,49 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-
-  <Identity
-    Name="169caa94-8d79-43d0-ab8e-5b5185b0b304"
-    Version="1.0.0.0"
-    Publisher="CN=jflam" />
-
+  <Identity Name="169caa94-8d79-43d0-ab8e-5b5185b0b304" Version="1.0.0.0" Publisher="CN=jflam" />
   <Properties>
     <DisplayName>RoadTrip</DisplayName>
     <Description>RoadTrip</Description>
     <PublisherDisplayName>jflam</PublisherDisplayName>
     <Logo>images\storelogo.png</Logo>
   </Properties>
-
   <Prerequisites>
     <OSMinVersion>6.2</OSMinVersion>
     <OSMaxVersionTested>6.2</OSMaxVersionTested>
   </Prerequisites>
-
   <Resources>
     <Resource Language="x-generate" />
   </Resources>
-
   <Applications>
-    <Application 
-      Id="App"
-      StartPage="default.html">
-
-      <VisualElements
-        DisplayName="RoadTrip"
-        Logo="images\logo.png"
-        SmallLogo="images\smalllogo.png"
-        Description="RoadTrip"
-        ForegroundText="light"
-        BackgroundColor="#000000">
-
+    <Application Id="App" StartPage="default.html">
+      <VisualElements DisplayName="RoadTrip" Logo="images\logo.png" SmallLogo="images\smalllogo.png" Description="RoadTrip" ForegroundText="light" BackgroundColor="#000000">
         <DefaultTile ShowName="allLogos" />
         <SplashScreen Image="images\splashscreen.png" />
-
       </VisualElements>
     </Application>
   </Applications>
-
   <Capabilities>
     <Capability Name="internetClient" />
   </Capabilities>
-
 </Package>
