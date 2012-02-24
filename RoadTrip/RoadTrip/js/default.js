@@ -20,7 +20,10 @@ var locations = new WinJS.Binding.List([
             url: 'http://dev.virtualearth.net/REST/v1/Locations/' + location + '?output=json&key=' + credentials,
             dataType: 'json',
             success: function (data, text_status) {
-                console.log(data);
+                for (var i = 0; i < data.resourceSets[0].resources.length; i++) {
+                    console.log(data.resourceSets[0].resources[i].bbox);
+                    console.log(data.resourceSets[0].resources[i].name);
+                }
             }
         });
     };
@@ -37,7 +40,7 @@ var locations = new WinJS.Binding.List([
                     });
                 }, false);
                 $("#buttonSearch").click(function () {
-                    app.search($("#searchInput").value);
+                    app.search($("#searchInput")[0].value);
                 });
             } else {
                 // TODO: This application has been reactivated from suspension. 
