@@ -41,6 +41,7 @@
 <body>
     <h1>RoadTrip</h1>
 	<div id="grid">
+        <!-- Itinerary listview -->
         <div id="itemTemplate" class="itemTemplate" data-win-control="WinJS.Binding.Template">
             <span class="location" data-win-bind="innerText: location"></span>
         </div>
@@ -48,16 +49,20 @@
             data-win-control="WinJS.UI.ListView" 
             data-win-options="{ itemDataSource: locations.dataSource, itemTemplate: itemTemplate, layout: { type: WinJS.UI.ListLayout } }">
 		</div>
+
+        <!-- Map view -->
 	    <iframe src="ms-appx-web:///map.html" id="map"></iframe>
 	</div>
+
+    <!-- Search flyout and templates -->
 	<div id="searchFlyout" data-win-control="WinJS.UI.Flyout">
-		<h4>Search for a location:</h4>
-		<input type="text" id="searchInput"><button id="buttonSearch" value="Search">Search</button>
+		<h4>Search for a location:</h4> <input type="text" id="searchInput"><button id="buttonSearch" value="Search">Search</button>
         <div id="searchResultsTemplate" data-win-control="WinJS.Binding.Template">
             <span data-win-bind="innerText: location"></span>
         </div>
         <div id="searchResultsList" data-win-control="WinJS.UI.ListView" data-win-options="{ layout: { type: WinJS.UI.ListLayout } }"></div>
 	</div>
+
 	<div data-win-control="WinJS.UI.AppBar">
 		<button data-win-control="WinJS.UI.AppBarCommand" 
 				data-win-options="{ id:'searchButton', label:'Search', type:'flyout', flyout:'searchFlyout' }"></button>

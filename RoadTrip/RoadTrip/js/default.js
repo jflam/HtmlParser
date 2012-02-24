@@ -39,16 +39,30 @@ var locations = new WinJS.Binding.List([
             if (eventObject.detail.previousExecutionState !== Windows.ApplicationModel.Activation.ApplicationExecutionState.terminated) {
                 // TODO: This application has been newly launched. Initialize 
                 // your application here.
+
+                // Bind event handlers
                 $("#list")[0].winControl.addEventListener("iteminvoked", function (eventObject) {
                     eventObject.detail.itemPromise.then(function (invokedItem) {
                         document.frames["map"].postMessage(invokedItem.data.location, "ms-appx-web://" + document.location.host);
                         console.log("clicked on: " + invokedItem.data.location);
                     });
                 }, false);
+
                 $("#buttonSearch").click(function () {
                     app.search($("#searchInput")[0].value);
                 });
-            } else {
+
+                $("#searchResultsList")[0].winControl.addEventListener("iteminvoked", function (eventObject) {
+                    eventObject.detail.itemPromise.then(function (invokedItem) {
+                        // Add to the locations list the new item and jump there
+                        document.frames["map"].postMessage(invokedItem.data.location, "ms-appx-web://" + document.location.host);
+                        locations.push({ location: invokedItem.data.location });
+
+                        // Dismiss the flyout control
+                        $("#searchFlyout")[0].winControl.hide();
+                    });
+                }, false);
+                } else {
                 // TODO: This application has been reactivated from suspension. 
                 // Restore application state here.
             }
