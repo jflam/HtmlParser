@@ -20,10 +20,16 @@ var locations = new WinJS.Binding.List([
             url: 'http://dev.virtualearth.net/REST/v1/Locations/' + location + '?output=json&key=' + credentials,
             dataType: 'json',
             success: function (data, text_status) {
+                // Emit the search results as a bindable list of locations that the user can choose from in the flyout
+                var results = new WinJS.Binding.List();
                 for (var i = 0; i < data.resourceSets[0].resources.length; i++) {
+                    results.push({ location: data.resourceSets[0].resources[i].name });
                     console.log(data.resourceSets[0].resources[i].bbox);
                     console.log(data.resourceSets[0].resources[i].name);
                 }
+                var resultsList = $("#searchResultsList")[0].winControl;
+                resultsList.itemDataSource = results.dataSource;
+                resultsList.itemTemplate = $("#searchResultsTemplate")[0];
             }
         });
     };

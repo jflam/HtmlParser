@@ -53,6 +53,10 @@
 	<div id="searchFlyout" data-win-control="WinJS.UI.Flyout">
 		<h4>Search for a location:</h4>
 		<input type="text" id="searchInput"><button id="buttonSearch" value="Search">Search</button>
+        <div id="searchResultsTemplate" data-win-control="WinJS.Binding.Template">
+            <span data-win-bind="innerText: location"></span>
+        </div>
+        <div id="searchResultsList" data-win-control="WinJS.UI.ListView" data-win-options="{ layout: { type: WinJS.UI.ListLayout } }"></div>
 	</div>
 	<div data-win-control="WinJS.UI.AppBar">
 		<button data-win-control="WinJS.UI.AppBarCommand" 
