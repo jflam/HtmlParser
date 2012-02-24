@@ -4,6 +4,10 @@
 // TODO: secure these credentials and put them in one place
 var credentials = "ArPzSbmnfYJucWzarJwB7Gk29sfWPy97C6rpz-Rm1xTO_AWa-_hCg-5Oo-mAHkcR";
 
+// TODO: figure out a good place to serialize all of this information - it should
+// probably be some kind of cloud service that I run with a document database.
+// The reasoning behind this is to allow people to easily share their trips and
+// to find trips that intersect?
 var locations = new WinJS.Binding.List([
     { location: "Seattle, WA" },
     { location: "Portland, OR" }
@@ -52,6 +56,8 @@ var locations = new WinJS.Binding.List([
                     app.search($("#searchInput")[0].value);
                 });
 
+                // TODO: note that this is probably not the right heuristic to use here - when the user searches for
+                // something they might want to see where it is beyond what the location text is ... need to test this further
                 $("#searchResultsList")[0].winControl.addEventListener("iteminvoked", function (eventObject) {
                     eventObject.detail.itemPromise.then(function (invokedItem) {
                         // Add to the locations list the new item and jump there
