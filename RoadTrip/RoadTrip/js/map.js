@@ -22,11 +22,25 @@
         get_map(message).setView({ bounds: rect });
     };
 
+    drop_pins = function (message) {
+        var map = get_map(message);
+        map.entities.clear();
+        var locations = message.locations;
+        for (var index in locations) {
+            var map_location = new Microsoft.Maps.Location(locations[index].Latitude, locations[index].Longitude);
+            var pushpin = new Microsoft.Maps.Pushpin(map_location);
+            map.entities.push(pushpin);
+        }
+    }
+
     receive_message = function (e) {
         var message = e.data;
         switch (e.data.action) {
             case 'zoom_to':
                 zoom_to(message);
+                break;
+            case 'drop_pins':
+                drop_pins(message);
                 break;
             default:
                 console.log('invalid action: ' + message.action);

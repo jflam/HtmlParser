@@ -54,18 +54,28 @@
 	    <iframe src="ms-appx-web:///map.html" id="map"></iframe>
 	</div>
 
-    <!-- Search flyout and templates -->
-	<div id="searchFlyout" data-win-control="WinJS.UI.Flyout">
+    <!-- Add stop flyout and templates -->
+	<div id="addStopFlyout" data-win-control="WinJS.UI.Flyout">
+		<h4>Search for a location:</h4> <input type="text" id="searchStopInput"><button id="buttonSearchStop" value="Search">Search</button>
+        <div id="searchStopResultsTemplate" data-win-control="WinJS.Binding.Template">
+            <span data-win-bind="innerText: location"></span>
+        </div>
+        <div id="searchStopResultsList" data-win-control="WinJS.UI.ListView" data-win-options="{ layout: { type: WinJS.UI.ListLayout } }"></div>
+	</div>
+
+    <div id="searchFlyout" data-win-control="WinJS.UI.Flyout">
 		<h4>Search for a location:</h4> <input type="text" id="searchInput"><button id="buttonSearch" value="Search">Search</button>
         <div id="searchResultsTemplate" data-win-control="WinJS.Binding.Template">
             <span data-win-bind="innerText: location"></span>
         </div>
         <div id="searchResultsList" data-win-control="WinJS.UI.ListView" data-win-options="{ layout: { type: WinJS.UI.ListLayout } }"></div>
-	</div>
+    </div>
 
 	<div data-win-control="WinJS.UI.AppBar">
 		<button data-win-control="WinJS.UI.AppBarCommand" 
-				data-win-options="{ id:'searchButton', label:'Search', type:'flyout', flyout:'searchFlyout' }"></button>
+				data-win-options="{ label:'Add Stop', icon: 'add', type:'flyout', flyout:'addStopFlyout' }"></button>
+        <button data-win-control="WinJS.UI.AppBarCommand"
+                data-win-options="{ label:'Search', icon: 'find', type:'flyout', flyout:'searchFlyout' }"></button>
 	</div>
 </body>
 </html>

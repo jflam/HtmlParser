@@ -18,6 +18,7 @@ var locations = new WinJS.Binding.List([
     "use strict";
 
     var app = WinJS.Application;
+    var current_bbox = null;
 
     // Search Bing Maps for the location
     app.search_map = function (location) {
@@ -33,15 +34,42 @@ var locations = new WinJS.Binding.List([
                         bbox: data.resourceSets[0].resources[i].bbox
                     });
                 }
-                var resultsList = $("#searchResultsList")[0].winControl;
+                var resultsList = $("#searchStopResultsList")[0].winControl;
                 resultsList.itemDataSource = results.dataSource;
-                resultsList.itemTemplate = $("#searchResultsTemplate")[0];
+                resultsList.itemTemplate = $("#searchStopResultsTemplate")[0];
             }
         });
     };
 
-    // Search Bing for the search term
+    app.make_pushpins = function (locations) {
+        var message = {
+            action: 'drop_pins',
+            locations: locations,
+            credentials: bing_maps_key
+        };
+        document.frames['map'].postMessage(message, 'ms-appx-web://' + document.location.host);
+    };
+
+    // Search Bing for the term given the bounding box of the map
+    app.search_bing = function (term, bbox) {
+        console.log("searching for " + term + " at " + bbox);
+        // pick center
+        var latitude = (bbox[0] + bbox[2]) / 2;
+        var longitude = (bbox[1] + bbox[3]) / 2;
+        // radius
+        var radius = 20.0; // miles?
+        $.ajax({
+            url: 'http://api.bing.net/json.aspx?AppId=' + bing_search_key + '&Sources=Phonebook&Phonebook.Count=25&Query=' + term + '&Latitude=' + latitude + '&Longitude=' + longitude + '&Radius=' + radius,
+            dataType: 'json',
+            success: function (data, text_status) {
+                app.make_pushpins(data.SearchResponse.Phonebook.Results);
+            }
+        });
+    }
+
+    // Zoom the map to the bbox
     app.zoom_to = function (bbox) {
+        current_bbox = bbox;
         var message = {
             action: 'zoom_to',
             bbox: bbox,
@@ -63,13 +91,18 @@ var locations = new WinJS.Binding.List([
                     });
                 }, false);
 
+                $("#buttonSearchStop").click(function () {
+                    app.search_map($("#searchStopInput")[0].value);
+                });
+
                 $("#buttonSearch").click(function () {
-                    app.search_map($("#searchInput")[0].value);
+                    // TODO: jquery this
+                    app.search_bing($("#searchInput")[0].value, current_bbox);
                 });
 
                 // TODO: note that this is probably not the right heuristic to use here - when the user searches for
                 // something they might want to see where it is beyond what the location text is ... need to test this further
-                $("#searchResultsList")[0].winControl.addEventListener("iteminvoked", function (eventObject) {
+                $("#searchStopResultsList")[0].winControl.addEventListener("iteminvoked", function (eventObject) {
                     eventObject.detail.itemPromise.then(function (invokedItem) {
                         app.zoom_to(invokedItem.data.bbox);
                         locations.push({
@@ -78,7 +111,7 @@ var locations = new WinJS.Binding.List([
                         });
 
                         // Dismiss the flyout control
-                        $("#searchFlyout")[0].winControl.hide();
+                        $("#addStopFlyout")[0].winControl.hide();
                     });
                 }, false);
                 } else {
