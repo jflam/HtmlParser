@@ -52,13 +52,11 @@ var locations = new WinJS.Binding.List([
 
     // Search Bing for the term given the bounding box of the map
     app.search_bing = function (term, bbox) {
-        console.log("searching for " + term + " at " + bbox);
-        // TODO: take current bounding box of map and compute the center along with the radius
-        // pick center
+        // Compute center of bbox
         var latitude = (bbox[0] + bbox[2]) / 2;
         var longitude = (bbox[1] + bbox[3]) / 2;
-        // radius
-        var radius = 20.0; // miles?
+        // Roughly 69 miles per degree of latitude. Use lattitude difference in bbox to compute radius
+        var radius = (bbox[2] - bbox[0]) * 69 / 2;
         $.ajax({
             url: 'http://api.bing.net/json.aspx?AppId=' + bing_search_key + '&Sources=Phonebook&Phonebook.Count=25&Query=' + term + '&Latitude=' + latitude + '&Longitude=' + longitude + '&Radius=' + radius,
             dataType: 'json',
@@ -82,9 +80,6 @@ var locations = new WinJS.Binding.List([
     app.onactivated = function (eventObject) {
         if (eventObject.detail.kind === Windows.ApplicationModel.Activation.ActivationKind.launch) {
             if (eventObject.detail.previousExecutionState !== Windows.ApplicationModel.Activation.ApplicationExecutionState.terminated) {
-                // TODO: This application has been newly launched. Initialize 
-                // your application here.
-
                 // Bind event handlers
                 $("#list")[0].winControl.addEventListener("iteminvoked", function (eventObject) {
                     eventObject.detail.itemPromise.then(function (invokedItem) {
@@ -93,12 +88,13 @@ var locations = new WinJS.Binding.List([
                 }, false);
 
                 $("#buttonSearchStop").click(function () {
-                    app.search_map($("#searchStopInput")[0].value);
+                    app.search_map($("#searchStopInput").val());
+                    $("#addStopFlyout")[0].winControl.hide();
                 });
 
                 $("#buttonSearch").click(function () {
-                    // TODO: jquery this
-                    app.search_bing($("#searchInput")[0].value, current_bbox);
+                    app.search_bing($("#searchInput").val(), current_bbox);
+                    $("#searchFlyout")[0].winControl.hide();
                 });
 
                 // TODO: note that this is probably not the right heuristic to use here - when the user searches for
