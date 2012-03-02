@@ -53,6 +53,7 @@ var locations = new WinJS.Binding.List([
     // Search Bing for the term given the bounding box of the map
     app.search_bing = function (term, bbox) {
         console.log("searching for " + term + " at " + bbox);
+        // TODO: take current bounding box of map and compute the center along with the radius
         // pick center
         var latitude = (bbox[0] + bbox[2]) / 2;
         var longitude = (bbox[1] + bbox[3]) / 2;
@@ -130,6 +131,20 @@ var locations = new WinJS.Binding.List([
         // asynchronous operation before your application is suspended, call
         // eventObject.setPromise(). 
     };
+
+    app.receive_message = function (e) {
+        var message = e.data;
+        switch (message.action) {
+            case 'map_resized':
+                current_bbox = message.bbox;
+                break;
+            default:
+                console.log('invalid action: ' + message.action);
+                break;
+        }
+    };
+
+    window.addEventListener("message", app.receive_message, false);
 
     app.start();
 })();

@@ -1,5 +1,6 @@
 ﻿(function () {
     var map = null;
+    var locations = null; // locations of places on the map
 
     get_map = function (message) {
         if (map == null) {
@@ -11,6 +12,22 @@
                 showLogo: false
             };
             map = new Microsoft.Maps.Map($("#map")[0], mapOptions);
+            
+            // Bind handler for map resized event
+            Microsoft.Maps.Events.addHandler(map, 'viewchangeend', function () {
+                // Compute from bounds
+                var locationRect = map.getBounds();
+                var halfWidth = locationRect.width / 2;
+                var halfHeight = locationRect.height / 2;
+                var bbox = [locationRect.center.latitude - halfHeight, locationRect.center.longitude - halfWidth, locationRect.center.latitude + halfHeight, locationRect.center.longitude + halfWidth];
+                var message = {
+                    action: 'map_resized',
+                    bbox: bbox
+                };
+
+                // Post message back to parent frame
+                window.parent.postMessage(message, 'ms-appx://' + document.location.host);
+            });
         }
         return map;
     }
@@ -25,13 +42,32 @@
     drop_pins = function (message) {
         var map = get_map(message);
         map.entities.clear();
+        locations = message.locations; // assign to module scoped variable for later reference
         var locations = message.locations;
         for (var index in locations) {
             var map_location = new Microsoft.Maps.Location(locations[index].Latitude, locations[index].Longitude);
             var pushpin = new Microsoft.Maps.Pushpin(map_location);
+
+            // Bind an event handler to the pushpin to replace it with an InfoBox when the user clicks on it.
+            Microsoft.Maps.Events.addHandler(pushpin, 'click', (function (location) {
+                return function () {
+                    var options = {
+                        title: location.Title,
+                        description: location.Address,
+                        titleClickHandler: function () {
+                            console.log("Navigating to: " + location.Url);
+                        }
+                    };
+                    var infobox = new Microsoft.Maps.Infobox(new Microsoft.Maps.Location(location.Latitude, location.Longitude), options);
+                    map.entities.push(infobox);
+
+                    console.log("clicked on: ");
+                }
+            })(locations[index]));
+
             map.entities.push(pushpin);
         }
-    }
+    };
 
     receive_message = function (e) {
         var message = e.data;
