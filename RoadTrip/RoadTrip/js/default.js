@@ -89,7 +89,6 @@ var locations = new WinJS.Binding.List([
 
                 $("#buttonSearchStop").click(function () {
                     app.search_map($("#searchStopInput").val());
-                    $("#addStopFlyout")[0].winControl.hide();
                 });
 
                 $("#buttonSearch").click(function () {
