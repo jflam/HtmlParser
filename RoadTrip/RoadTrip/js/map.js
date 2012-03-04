@@ -1,6 +1,7 @@
 ﻿(function () {
     var map = null;
     var locations = null; // locations of places on the map
+    var current_infobox = null;
 
     get_map = function (message) {
         if (map == null) {
@@ -58,10 +59,14 @@
                             console.log("Navigating to: " + location.Url);
                         }
                     };
+
+                    // Dismiss current infobox if present
+                    if (current_infobox != null) {
+                        map.entities.remove(current_infobox);
+                    }
                     var infobox = new Microsoft.Maps.Infobox(new Microsoft.Maps.Location(location.Latitude, location.Longitude), options);
                     map.entities.push(infobox);
-
-                    console.log("clicked on: ");
+                    current_infobox = infobox;
                 }
             })(locations[index]));
 
