@@ -5,7 +5,7 @@
     <title>FluidLayout</title>
 
     <!-- WinJS references -->
-    <link href="//Microsoft.WinJS.0.6/css/ui-dark.css" rel="stylesheet">
+    <link href="//Microsoft.WinJS.0.6/css/ui-light.css" rel="stylesheet">
     <script src="//Microsoft.WinJS.0.6/js/base.js"></script>
     <script src="//Microsoft.WinJS.0.6/js/ui.js"></script>
 
@@ -14,6 +14,14 @@
     <script src="/js/default.js"></script>
 </head>
 <body>
-    <p>Content goes here</p>
+    <header role="banner">
+        <h1 class="titlearea win-type-ellipsis">
+            <span class="pagetitle">Title of app</span>
+        </h1>
+    </header>
+    <section role="main">
+        <!-- TODO: bind this thing against some data and play with the CSS stylings -->
+        <div data-win-control="WinJS.UI.ListView" id="ListView"></div>
+    </section>
 </body>
 </html>

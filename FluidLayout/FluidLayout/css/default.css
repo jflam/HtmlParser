@@ -1,14 +1,74 @@
-﻿body {
+﻿/* This is pretty standard stuff up here in the CSS */
+
+body {
+    -ms-grid-columns: 1fr; /* single column layout */
+    -ms-grid-rows: 133px 1fr 0px; /* why 3 rows? 1fr means the rest ... is it the same as 100% */
+    display: -ms-grid; /* display as a grid */
+    height: 100%;
+    width: 100%;
+    -ms-scroll-translation: vertical-to-horizontal; /* magical fix to get scrolling working correctly */
+}
+
+header[role=banner] {
+    -ms-grid-columns: 120px 1fr; /* 120px padding on left */
+    -ms-grid-rows: 1fr; /* take up everything */
+    display: -ms-grid;
+}
+
+    header[role=banner] .titlearea {
+        -ms-grid-column: 2; /* skip padding area */
+        margin-top: 37px; /* some kind of guideline - where is this written down? */
+    }
+
+        header[role=banner] .titlearea .pagetitle {
+            width: calc(100% - 20px);
+        }
+
+section[role=main] {
+    background-color: green;
+    -ms-grid-row: 2; /* show up on second row*/
+    margin-top: 37px; /* some kind of guideline - where is this written down? */
+    height: 100%;
+    width: 100%;
+    margin-left: 120px; /* arbitrary - becomes 100px for portrait and 20px for snapped */
 }
 
 @media screen and (-ms-view-state: fullscreen-landscape) {
+    body {
+        background-color: #ffd800;
+    }
+
+    section[role=main] {
+        margin-left:  120px; /* per template */
+    }
 }
 
 @media screen and (-ms-view-state: filled) {
+    body {
+        background-color:  #f00;
+    }
+
+    section[role=main] {
+        margin-left:  120px; /* TODO: I have no idea what this should be */
+    }
 }
 
 @media screen and (-ms-view-state: snapped) {
+    body {
+        background-color:  #0094ff;
+    }
+
+    section[role=main] {
+        margin-left:  20px; /* per template */
+    }
 }
 
 @media screen and (-ms-view-state: fullscreen-portrait) {
+    body {
+        background-color:  #00ff21;
+    }
+
+    section[role=main] {
+        margin-left:  100px; /* based on template this should be 100px for portrait */
+    }
 }
