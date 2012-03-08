@@ -21,7 +21,8 @@
     </header>
     <section role="main">
         <!-- TODO: bind this thing against some data and play with the CSS stylings -->
-        <div data-win-control="WinJS.UI.ListView" id="ListView"></div>
+        <div data-win-control="WinJS.UI.ListView" 
+             data-win-options="{ itemDataSource: my_data.dataSource, itemTemplate: item_template, layout: { groupInfo: groupInfo, type: WinJS.UI.GridLayout } }"></div>
     </section>
 </body>
 </html>

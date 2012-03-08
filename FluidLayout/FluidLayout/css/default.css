@@ -9,6 +9,34 @@ body {
     -ms-scroll-translation: vertical-to-horizontal; /* magical fix to get scrolling working correctly */
 }
 
+/* Styles for the ListView control with variable sized items */
+.small
+{
+    width: 300px;
+    height: 70px;
+    padding: 5px;
+    background-color:  red;
+    display: -ms-grid;
+}
+
+.medium
+{
+    width: 300px;
+    height: 158px;
+    padding: 5px;
+    background-color:  white;
+    display: -ms-grid;
+}
+
+.large
+{
+    width: 300px;
+    height: 546px;
+    padding: 5px;
+    background-color:  blue;
+    display: -ms-grid;
+}
+
 header[role=banner] {
     -ms-grid-columns: 120px 1fr; /* 120px padding on left */
     -ms-grid-rows: 1fr; /* take up everything */

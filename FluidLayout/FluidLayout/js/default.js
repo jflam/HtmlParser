@@ -1,9 +1,44 @@
 ﻿// For an introduction to the Blank template, see the following documentation:
 // http://go.microsoft.com/fwlink/?LinkId=232509
+
+var my_data = new WinJS.Binding.List([
+        { title: 'First', size: 'small' },
+        { title: 'Second', size: 'medium' },
+        { title: 'Third', size: 'large' },
+        { title: 'First', size: 'small' },
+        { title: 'Second', size: 'medium' },
+        { title: 'Third', size: 'large' },
+        { title: 'First', size: 'small' },
+        { title: 'Second', size: 'medium' },
+        { title: 'Third', size: 'large' }
+    ]);
+
+
+function item_template(item_promise) {
+    return item_promise.then(function (current_item) {
+        var result = document.createElement('div');
+        result.className = current_item.data.size;
+
+        var title = document.createElement("h4");
+        title.innerText = current_item.data.title;
+        result.appendChild(title);
+
+        return result;
+    });
+};
+
 (function () {
     "use strict";
 
     var app = WinJS.Application;
+
+    function groupInfo() {
+        return {
+            multiSize: true,
+            slotWidth: 310,
+            slotHeight: 80
+        };
+    }
 
     app.onactivated = function (eventObject) {
         if (eventObject.detail.kind === Windows.ApplicationModel.Activation.ActivationKind.launch) {
