@@ -4,7 +4,7 @@
 // Database of American Idol Twitter IDs
 var idols = new WinJS.Binding.List([
     { name: 'Colton Dixon', photo: 'http://media.americanidol.com/contestants/season_11/5a9dkg8g6e/top_24/colton_dixon.jpg', twitter: 'CDixonAI11', facebook: 'CDixonAI11' },
-    { name: 'Deandre Brackensick', photo: 'http://media.americanidol.com/contestants/season_11/5a9dkg8g6e/top_24/deandre_brackensick.jpg', twitter: 'BracensickAI11', facebook: 'BrackensickAI11' },
+    { name: 'Deandre Brackensick', photo: 'http://media.americanidol.com/contestants/season_11/5a9dkg8g6e/top_24/deandre_brackensick.jpg', twitter: 'BrackensickAI11', facebook: 'BrackensickAI11' },
     { name: 'Elise Testone', photo: 'http://media.americanidol.com/contestants/season_11/5a9dkg8g6e/top_24/elise_testone.jpg', twitter: 'ETestoneAI11', facebook: 'ETestoneAI11' },
     { name: 'Erika Van Pelt', photo: 'http://media.americanidol.com/contestants/season_11/5a9dkg8g6e/top_24/erika_van_pelt.jpg', twitter: 'EVanPeltAI11', facebook: 'EVanPeltAI11' },
     { name: 'Heejun Han', photo: 'http://media.americanidol.com/contestants/season_11/5a9dkg8g6e/top_24/heejun_han.jpg', twitter: 'HHanAI11', facebook: 'HHanAI11' },
@@ -38,7 +38,9 @@ function item_template(item_promise) {
 
         var subtitle = document.createElement('h6');
         subtitle.className = 'idol-subtitle';
-        subtitle.textContent = '10,485';
+        if (current_item.data.twitter_user_info != undefined) {
+            subtitle.textContent = current_item.data.twitter_user_info.followers_count;
+        }
         overlay.appendChild(subtitle);
 
         result.appendChild(overlay);
@@ -48,12 +50,9 @@ function item_template(item_promise) {
 
 var follower_count_query = 'https://api.twitter.com/1/users/show.json?screen_name=';
 
-// TODO: Cache in offline store
-function get_twitter_follower_count(name) {
-    WinJS.xhr({
-    }).then(function (complete) {
-    }, function (error) {
-    }, function (progress) {
+function get_twitter_user_info(name) {
+    return WinJS.xhr({
+        url: follower_count_query + name,
     });
 };
 
@@ -62,11 +61,26 @@ function get_twitter_follower_count(name) {
 
     var app = WinJS.Application;
 
+    // TODO: there is a lot to analyze in this function. especially around errors. what should this do? this is hard to
+    // truly understand the nuances of the function.
+    app.update_data = function () {
+        WinJS.Promise.join(idols.map(function (idol) {
+            return get_twitter_user_info(idol.twitter).then(function (response) {
+                idol.twitter_user_info = JSON.parse(response.responseText).followers_count;
+                return idol.twitter_user_info;
+            });
+        })).done(function (followers) {
+            // trigger the re-bind
+            id('idolsListView').winControl.forceLayout();
+        });
+    };
+
     app.onactivated = function (eventObject) {
         if (eventObject.detail.kind === Windows.ApplicationModel.Activation.ActivationKind.launch) {
             if (eventObject.detail.previousExecutionState !== Windows.ApplicationModel.Activation.ApplicationExecutionState.terminated) {
                 // TODO: This application has been newly launched. Initialize 
                 // your application here.
+                app.update_data();
             } else {
                 // TODO: This application has been reactivated from suspension. 
                 // Restore application state here.
