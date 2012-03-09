@@ -38,9 +38,18 @@ function item_template(item_promise) {
 
         var subtitle = document.createElement('h6');
         subtitle.className = 'idol-subtitle';
-        if (current_item.data.twitter_user_info != undefined) {
-            subtitle.textContent = current_item.data.twitter_user_info.followers_count;
-        }
+
+        // Create a promise that will go and get this information for us
+        // TODO: do I need to hold onto this promise object for it to run reliably in face of GC? I think so.
+        subtitle.promise = get_twitter_user_info().then(function (response) {
+            var user_info = JSON.parse(response.responseText);
+            current_item.data.twitter_user_info = user_info;
+            subtitle.textContent = user_info.followers_count;
+        }, function (error) {
+            subtitle.textContent = "N/A";
+            console.log(error.responseText);
+        });
+
         overlay.appendChild(subtitle);
 
         result.appendChild(overlay);
@@ -56,31 +65,22 @@ function get_twitter_user_info(name) {
     });
 };
 
+function get_data() {
+    return new WinJS.Promise(function (complete) {
+        complete('42');
+    });
+}
+
 (function () {
     "use strict";
 
     var app = WinJS.Application;
-
-    // TODO: there is a lot to analyze in this function. especially around errors. what should this do? this is hard to
-    // truly understand the nuances of the function.
-    app.update_data = function () {
-        WinJS.Promise.join(idols.map(function (idol) {
-            return get_twitter_user_info(idol.twitter).then(function (response) {
-                idol.twitter_user_info = JSON.parse(response.responseText).followers_count;
-                return idol.twitter_user_info;
-            });
-        })).done(function (followers) {
-            // trigger the re-bind
-            id('idolsListView').winControl.forceLayout();
-        });
-    };
 
     app.onactivated = function (eventObject) {
         if (eventObject.detail.kind === Windows.ApplicationModel.Activation.ActivationKind.launch) {
             if (eventObject.detail.previousExecutionState !== Windows.ApplicationModel.Activation.ApplicationExecutionState.terminated) {
                 // TODO: This application has been newly launched. Initialize 
                 // your application here.
-                app.update_data();
             } else {
                 // TODO: This application has been reactivated from suspension. 
                 // Restore application state here.
