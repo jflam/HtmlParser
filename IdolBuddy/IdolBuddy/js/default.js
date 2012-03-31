@@ -36,20 +36,18 @@ function item_template(item_promise) {
         caption.textContent = current_item.data.name;
         overlay.appendChild(caption);
 
+        // Deferred execution to retrieve follower count
         var subtitle = document.createElement('h6');
         subtitle.className = 'idol-subtitle';
-
-        // Create a promise that will go and get this information for us
-        // TODO: do I need to hold onto this promise object for it to run reliably in face of GC? I think so.
-        subtitle.promise = get_twitter_user_info().then(function (response) {
+        subtitle.promise = get_twitter_user_info(current_item.data.name).then(function (response) {
             var user_info = JSON.parse(response.responseText);
             current_item.data.twitter_user_info = user_info;
             subtitle.textContent = user_info.followers_count;
+            console.dir(user_info);
         }, function (error) {
             subtitle.textContent = "N/A";
-            console.log(error.responseText);
+            console.dir(error);
         });
-
         overlay.appendChild(subtitle);
 
         result.appendChild(overlay);
@@ -57,19 +55,13 @@ function item_template(item_promise) {
     });
 };
 
-var follower_count_query = 'https://api.twitter.com/1/users/show.json?screen_name=';
+var follower_count_query = 'http://api.twitter.com/1/users/show.json?screen_name=';
 
 function get_twitter_user_info(name) {
     return WinJS.xhr({
         url: follower_count_query + name,
     });
 };
-
-function get_data() {
-    return new WinJS.Promise(function (complete) {
-        complete('42');
-    });
-}
 
 (function () {
     "use strict";
@@ -81,6 +73,10 @@ function get_data() {
             if (eventObject.detail.previousExecutionState !== Windows.ApplicationModel.Activation.ApplicationExecutionState.terminated) {
                 // TODO: This application has been newly launched. Initialize 
                 // your application here.
+                var listView = document.getElementById('idolsListView');
+                listView = listView.winControl;
+                listView.itemDataSource = idols.dataSource;
+                listView.itemTemplate = item_template;
             } else {
                 // TODO: This application has been reactivated from suspension. 
                 // Restore application state here.
