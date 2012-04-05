@@ -27,6 +27,7 @@
  * @author hsivonen
  */
 using System;
+using System.Text;
 
 public sealed class BomSniffer {
     

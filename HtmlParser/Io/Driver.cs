@@ -23,7 +23,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-
+using System.Text;
 
 public class Driver : EncodingDeclarationHandler {
 
@@ -313,7 +313,7 @@ public class Driver : EncodingDeclarationHandler {
 
     public bool internalEncodingDeclaration(String internalCharset) {
         try {
-            internalCharset = Encoding.toAsciiLowerCase(internalCharset);
+            internalCharset = internalCharset.ToLower(); // Encoding.toAsciiLowerCase(internalCharset);
             Encoding cs;
             if ("utf-16".Equals(internalCharset)
                     || "utf-16be".Equals(internalCharset)
@@ -324,18 +324,18 @@ public class Driver : EncodingDeclarationHandler {
                 cs = Encoding.UTF8;
                 internalCharset = "utf-8";
             } else {
-                cs = Encoding.forName(internalCharset);
+                cs = Encoding.GetEncoding(internalCharset); // cs = Encoding.forName(internalCharset);
             }
-            Encoding actual = cs.getActualHtmlEncoding();
-            if (actual == null) {
-                actual = cs;
-            }
-            if (!actual.isAsciiSuperset()) {
-                tokenizer.errTreeBuilder("Internal encoding declaration specified \u201C"
-                        + internalCharset
-                        + "\u201D which is not an ASCII superset. Not changing the encoding.");
-                return false;
-            }
+            Encoding actual = cs; //cs.getActualHtmlEncoding();
+            //if (actual == null) {
+            //    actual = cs;
+            //}
+            //if (!actual.isAsciiSuperset()) {
+            //    tokenizer.errTreeBuilder("Internal encoding declaration specified \u201C"
+            //            + internalCharset
+            //            + "\u201D which is not an ASCII superset. Not changing the encoding.");
+            //    return false;
+            //}
             if (characterEncoding == null) {
                 // Reader case
                 return true;
@@ -348,7 +348,7 @@ public class Driver : EncodingDeclarationHandler {
                 tokenizer.errTreeBuilder("Internal encoding declaration \u201C"
                         + internalCharset
                         + "\u201D disagrees with the actual encoding of the document (\u201C"
-                        + characterEncoding.getCanonName() + "\u201D).");
+                        + characterEncoding.WebName + "\u201D).");
             } else {
                 Encoding newEnc = whineAboutEncodingAndReturnActual(
                         internalCharset, cs);
@@ -409,11 +409,11 @@ public class Driver : EncodingDeclarationHandler {
         if (encoding == null) {
             return null;
         }
-        encoding = Encoding.toAsciiLowerCase(encoding);
+        encoding = encoding.ToLower(); 
         try {
-            Encoding cs = Encoding.forName(encoding);
-            if ("utf-16".Equals(cs.getCanonName())
-                    || "utf-32".Equals(cs.getCanonName())) {
+            Encoding cs = Encoding.GetEncoding(encoding);
+            if ("utf-16".Equals(cs.WebName)
+                    || "utf-32".Equals(cs.WebName)) {
                 swallowBom = false;
             }
             return whineAboutEncodingAndReturnActual(encoding, cs);
@@ -432,43 +432,44 @@ public class Driver : EncodingDeclarationHandler {
      * @throws SAXException
      */
     protected Encoding whineAboutEncodingAndReturnActual(String encoding, Encoding cs) {
-        String canonName = cs.getCanonName();
-        if (!cs.isRegistered()) {
-            if (encoding.StartsWith("x-")) {
-                tokenizer.err("The encoding \u201C"
-                        + encoding
-                        + "\u201D is not an IANA-registered encoding. (Charmod C022)");
-            } else {
-                tokenizer.err("The encoding \u201C"
-                        + encoding
-                        + "\u201D is not an IANA-registered encoding and did not use the \u201Cx-\u201D prefix. (Charmod C023)");
-            }
-        } else if (!canonName.Equals(encoding)) {
-            tokenizer.err("The encoding \u201C"
-                    + encoding
-                    + "\u201D is not the preferred name of the character encoding in use. The preferred name is \u201C"
-                    + canonName + "\u201D. (Charmod C024)");
-        }
-        if (cs.isShouldNot()) {
-            tokenizer.warn("Authors should not use the character encoding \u201C"
-                    + encoding
-                    + "\u201D. It is recommended to use \u201CUTF-8\u201D.");
-        } else if (cs.isLikelyEbcdic()) {
-            tokenizer.warn("Authors should not use EBCDIC-based encodings. It is recommended to use \u201CUTF-8\u201D.");
-        } else if (cs.isObscure()) {
-            tokenizer.warn("The character encoding \u201C"
-                    + encoding
-                    + "\u201D is not widely supported. Better interoperability may be achieved by using \u201CUTF-8\u201D.");
-        }
-        Encoding actual = cs.getActualHtmlEncoding();
-        if (actual == null) {
-            return cs;
-        } else {
-            tokenizer.warn("Using \u201C" + actual.getCanonName()
-                    + "\u201D instead of the declared encoding \u201C"
-                    + encoding + "\u201D.");
-            return actual;
-        }
+        //String canonName = cs.WebName;
+        //if (!cs.isRegistered()) {
+        //    if (encoding.StartsWith("x-")) {
+        //        tokenizer.err("The encoding \u201C"
+        //                + encoding
+        //                + "\u201D is not an IANA-registered encoding. (Charmod C022)");
+        //    } else {
+        //        tokenizer.err("The encoding \u201C"
+        //                + encoding
+        //                + "\u201D is not an IANA-registered encoding and did not use the \u201Cx-\u201D prefix. (Charmod C023)");
+        //    }
+        //} else if (!canonName.Equals(encoding)) {
+        //    tokenizer.err("The encoding \u201C"
+        //            + encoding
+        //            + "\u201D is not the preferred name of the character encoding in use. The preferred name is \u201C"
+        //            + canonName + "\u201D. (Charmod C024)");
+        //}
+        //if (cs.isShouldNot()) {
+        //    tokenizer.warn("Authors should not use the character encoding \u201C"
+        //            + encoding
+        //            + "\u201D. It is recommended to use \u201CUTF-8\u201D.");
+        //} else if (cs.isLikelyEbcdic()) {
+        //    tokenizer.warn("Authors should not use EBCDIC-based encodings. It is recommended to use \u201CUTF-8\u201D.");
+        //} else if (cs.isObscure()) {
+        //    tokenizer.warn("The character encoding \u201C"
+        //            + encoding
+        //            + "\u201D is not widely supported. Better interoperability may be achieved by using \u201CUTF-8\u201D.");
+        //}
+        //Encoding actual = cs; // cs.getActualHtmlEncoding();
+        //if (actual == null) {
+        //    return cs;
+        //} else {
+        //    tokenizer.warn("Using \u201C" + actual.WebName
+        //            + "\u201D instead of the declared encoding \u201C"
+        //            + encoding + "\u201D.");
+        //    return actual;
+        //}
+        return Encoding.GetEncoding(encoding.ToLower());
     }
 
     private class ReparseException : SAXException {

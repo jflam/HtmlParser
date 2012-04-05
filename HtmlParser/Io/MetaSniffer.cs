@@ -21,6 +21,7 @@
  */
 
 using System;
+using System.Text;
 
 public class MetaSniffer : MetaScanner, Locator {
     

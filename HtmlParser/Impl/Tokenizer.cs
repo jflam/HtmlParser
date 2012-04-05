@@ -1047,13 +1047,14 @@ public class Tokenizer : Locator {
         errorHandler.error(spe);
     }
 
-    public void errTreeBuilder<T>(String message) where T:class {
+    // TODO: this used to be errTreeBuilder<T> but I don't understand what the T type is used for
+    public void errTreeBuilder(String message) { //where T:class {
         ErrorHandler eh = null;
         // TODO: understand what actually needs to happen here?
-        if (tokenHandler is TreeBuilder<T>) {
-            TreeBuilder<T> treeBuilder = (TreeBuilder<T>) tokenHandler;
-            eh = treeBuilder.getErrorHandler();
-        }
+        //if (tokenHandler is TreeBuilder<T>) {
+        //    TreeBuilder<T> treeBuilder = (TreeBuilder<T>) tokenHandler;
+        //    eh = treeBuilder.getErrorHandler();
+        //}
         if (eh == null) {
             eh = errorHandler;
         }
