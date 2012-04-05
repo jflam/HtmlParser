@@ -22,6 +22,8 @@
  */
 using System;
 using System.Diagnostics;
+using System.IO;
+
 
 public class Driver : EncodingDeclarationHandler {
 
@@ -29,7 +31,7 @@ public class Driver : EncodingDeclarationHandler {
      * The input UTF-16 code unit stream. If a byte stream was given, this
      * object is an instance of <code>HtmlInputStreamReader</code>.
      */
-    private Reader reader;
+    private TextReader reader;
 
     /**
      * The reference to the rewindable byte stream. <code>null</code> if p
@@ -161,7 +163,7 @@ public class Driver : EncodingDeclarationHandler {
         this.reader = inputSource.getCharacterStream();
         this.characterEncoding = encodingFromExternalDeclaration(inputSource.getEncoding());
         if (this.reader == null) {
-            InputStream inputStream = inputSource.getByteStream();
+            Stream inputStream = inputSource.getByteStream();
             if (inputStream == null) {
                 throw new SAXException("Both streams in InputSource were null.");
             }
@@ -184,7 +186,7 @@ public class Driver : EncodingDeclarationHandler {
         try {
             for (;;) {
                 try {
-                    for (int i = 0; i < characterHandlers.length; i++) {
+                    for (int i = 0; i < characterHandlers.Length; i++) {
                         CharacterHandler ch = characterHandlers[i];
                         ch.start();
                     }

@@ -21,6 +21,9 @@
  */
 using System;
 
+public class UnsupportedCharsetException : Exception {
+}
+
 public class ChardetSniffer : nsICharsetDetectionObserver {
 
     private readonly byte[] source;
