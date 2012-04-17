@@ -59,6 +59,7 @@
     <Content Include="css\default.css" />
     <Content Include="lib\codemirror.css" />
     <Content Include="lib\codemirror.js" />
+    <Content Include="lib\modes\javascript.js" />
     <Content Include="lib\util\closetag.js" />
     <Content Include="lib\util\dialog.css" />
     <Content Include="lib\util\dialog.js" />
