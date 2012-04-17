@@ -32,7 +32,14 @@
         matchBrackets: true,
         indentUnit: 4,
         theme: 'lesser-dark',
+        keyMap: 'repl',
       });
+      CodeMirror.keyMap.repl = {
+          'Ctrl-S': function (cm) {
+              // do something here
+              var x = 42;
+          }
+      };
       </script>
 </body>
 </html>
