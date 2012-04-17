@@ -13,33 +13,34 @@
     <link href="/css/default.css" rel="stylesheet" />
     <script src="/js/default.js"></script>
 
+    <script src="/lib/wl.js"></script>
     <link rel="stylesheet" href="/lib/codemirror.css">
     <link rel="stylesheet" href="/lib/theme/lesser-dark.css">
     <script src="/lib/codemirror.js"></script>
     <script src="/lib/modes/javascript.js"></script>
     <style type="text/css">
         .CodeMirror {
-            border-top: 1px solid black; 
-            border-bottom: 1px solid black; 
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
+    <h1>monkey<span style="font-family: 'Segoe UI'; font-weight: bolder">bars</span></h1>
     <textarea id="code">add = function(x, y) { return x + y; }</textarea>
     <script>
-      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-        lineNumbers: true,
-        matchBrackets: true,
-        indentUnit: 4,
-        theme: 'lesser-dark',
-        keyMap: 'repl',
-      });
-      CodeMirror.keyMap.repl = {
-          'Ctrl-S': function (cm) {
-              // do something here
-              var x = 42;
-          }
-      };
-      </script>
+        var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+            lineNumbers: true,
+            matchBrackets: true,
+            indentUnit: 4,
+            theme: 'lesser-dark',
+            keyMap: 'repl',
+        });
+        CodeMirror.keyMap.repl = {
+            'Ctrl-S': function (cm) {
+                var text = editor.getValue();
+                WinJS.Application.save_file_locally(text);
+            }
+        };
+    </script>
 </body>
 </html>

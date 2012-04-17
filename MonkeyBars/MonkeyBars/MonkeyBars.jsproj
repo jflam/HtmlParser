@@ -83,6 +83,7 @@
     <Content Include="lib\util\searchcursor.js" />
     <Content Include="lib\util\simple-hint.css" />
     <Content Include="lib\util\simple-hint.js" />
+    <Content Include="lib\wl.js" />
     <None Include="MonkeyBars_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
