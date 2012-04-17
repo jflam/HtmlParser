@@ -39,7 +39,13 @@
             'Ctrl-S': function (cm) {
                 var text = editor.getValue();
                 WinJS.Application.save_file_locally(text);
-            }
+            },
+            'Ctrl-O': function (cm) {
+                var text = WinJS.Application.load_file_locally().then(function (text) {
+                    editor.setValue(text);
+                });
+            },
+            fallthrough: ["default"],
         };
     </script>
 </body>

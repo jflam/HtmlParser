@@ -51,14 +51,32 @@
 
             savePicker.pickSaveFileAsync().done(function (file) {
                 if (file) {
-                    Windows.Storage.FileIO.writeTextAsync(file, text).done(function () {
-                    });
+                    Windows.Storage.FileIO.writeTextAsync(file, text);
                 } else {
-                    // Error
+                    // TODO: Error - when would we ever wind up here without a file?
                 }
             });
         }
     };
+
+    app.load_file_locally = function () {
+        return new WinJS.Promise(function (complete) {
+            if (ensureUnsnapped()) {
+                var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
+                openPicker.viewMode = Windows.Storage.Pickers.PickerViewMode.list;
+                openPicker.suggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.documentsLibrary;
+                openPicker.fileTypeFilter.replaceAll([".js"]);
+
+                openPicker.pickSingleFileAsync().done(function (file) {
+                    if (file) {
+                        Windows.Storage.FileIO.readTextAsync(file).done(complete);
+                    } else {
+                        // TODO: Error - when would we ever wind up here without a file?
+                    }
+                });
+            }
+        });
+    }
 
     app.save_file_to_skydrive = function () {
         // TODO: something here with skydrive
