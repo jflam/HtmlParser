@@ -60,6 +60,15 @@
     <Content Include="lib\codemirror.css" />
     <Content Include="lib\codemirror.js" />
     <Content Include="lib\modes\javascript.js" />
+    <Content Include="lib\themes\cobalt.css" />
+    <Content Include="lib\themes\eclipse.css" />
+    <Content Include="lib\themes\elegant.css" />
+    <Content Include="lib\themes\lesser-dark.css" />
+    <Content Include="lib\themes\monokai.css" />
+    <Content Include="lib\themes\neat.css" />
+    <Content Include="lib\themes\night.css" />
+    <Content Include="lib\themes\rubyblue.css" />
+    <Content Include="lib\themes\xq-dark.css" />
     <Content Include="lib\util\closetag.js" />
     <Content Include="lib\util\dialog.css" />
     <Content Include="lib\util\dialog.js" />
