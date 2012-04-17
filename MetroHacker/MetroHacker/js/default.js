@@ -10,6 +10,19 @@
             if (eventObject.detail.previousExecutionState !== Windows.ApplicationModel.Activation.ApplicationExecutionState.terminated) {
                 // TODO: This application has been newly launched. Initialize 
                 // your application here.
+                toolbar.style.display = "none";
+                key.onclick = function () {
+                    var affected = document.querySelectorAll(".below");
+                    var expandAnimation = WinJS.UI.Animation.createExpandAnimation(toolbar, affected);
+
+                    // Insert expanding item into document flow. This will change the position of the affected items.
+                    toolbar.style.display = "block";
+                    toolbar.style.position = "inherit";
+                    toolbar.style.opacity = "1";
+
+                    // Execute expand animation.
+                    expandAnimation.execute();
+                }
             } else {
                 // TODO: This application has been reactivated from suspension. 
                 // Restore application state here.
