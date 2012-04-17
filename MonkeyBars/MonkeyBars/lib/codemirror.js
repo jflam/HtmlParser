@@ -17,7 +17,7 @@ var CodeMirror = (function() {
     var wrapper = document.createElement("div");
     wrapper.className = "CodeMirror" + (options.lineWrapping ? " CodeMirror-wrap" : "");
     // This mess creates the base DOM structure for the editor.
-    wrapper.innerHTML =
+    wrapper.innerHTML = window.toStaticHTML(
       '<div style="overflow: hidden; position: relative; width: 3px; height: 0px;">' + // Wraps and hides input textarea
         '<textarea style="position: absolute; padding: 0; width: 1px; height: 1em" wrap="off" ' +
           'autocorrect="off" autocapitalize="off"></textarea></div>' +
@@ -30,7 +30,7 @@ var CodeMirror = (function() {
               '<div style="position: absolute; width: 100%; height: 0; overflow: hidden; visibility: hidden;"></div>' +
               '<pre class="CodeMirror-cursor">&#160;</pre>' + // Absolutely positioned blinky cursor
               '<div style="position: relative; z-index: -1"></div><div></div>' + // DIVs containing the selection and the actual code
-            '</div></div></div></div></div>';
+            '</div></div></div></div></div>');
     if (place.appendChild) place.appendChild(wrapper); else place(wrapper);
     // I've never seen more elegant code in my life.
     var inputDiv = wrapper.firstChild, input = inputDiv.firstChild,
