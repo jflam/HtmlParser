@@ -27,6 +27,7 @@
  * @author hsivonen
  */
 using System;
+using System.Text;
 
 public sealed class BomSniffer {
     
@@ -39,7 +40,7 @@ public sealed class BomSniffer {
         this.source = source;
     }
     
-    Encoding sniff() {
+    public Encoding sniff() {
         int b = source.readByte();
         if (b == 0xEF) { // UTF-8
             b = source.readByte();

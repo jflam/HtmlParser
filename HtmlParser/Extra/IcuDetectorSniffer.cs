@@ -20,8 +20,10 @@
  * DEALINGS IN THE SOFTWARE.
  */
 using System;
+using System.IO;
+using System.Text;
 
-public class IcuDetectorSniffer : InputStream {
+public class IcuDetectorSniffer : Stream {
 
     private readonly ByteReadable source;
 

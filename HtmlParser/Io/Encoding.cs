@@ -20,6 +20,12 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
  * DEALINGS IN THE SOFTWARE.
  */
+
+
+// TODO: I don't believe that this entire file is necessary - we have the System.Text.Encoding class in .NET that 
+// returns System.Text.Encoder and System.Text.Decoder types. It looks like that's what this class effectively dupes.
+
+#if false
 using System;
 using System.Collections.Generic;
 
@@ -375,3 +381,4 @@ public class Encoding {
         }
     }
 }
+#endif

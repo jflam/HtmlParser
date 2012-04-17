@@ -35,12 +35,13 @@
 using System;
 using System.Diagnostics;
 using System.Text;
+using System.IO;
 
-public sealed class HtmlInputStreamReader : Reader, ByteReadable, Locator {
+public sealed class HtmlInputStreamReader : TextReader, ByteReadable, Locator {
 
     private const int SNIFFING_LIMIT = 1024;
 
-    private readonly InputStream inputStream;
+    private readonly Stream inputStream;
 
     private readonly ErrorHandler errorHandler;
 
@@ -93,7 +94,7 @@ public sealed class HtmlInputStreamReader : Reader, ByteReadable, Locator {
      * @throws IOException
      * @throws SAXException
      */
-    public HtmlInputStreamReader(InputStream inputStream,
+    public HtmlInputStreamReader(Stream inputStream,
             ErrorHandler errorHandler, Tokenizer tokenizer, Driver driver,
             Heuristics heuristics) {
         this.inputStream = inputStream;
@@ -150,7 +151,7 @@ public sealed class HtmlInputStreamReader : Reader, ByteReadable, Locator {
         this.decoder.onUnmappableCharacter(CodingErrorAction.REPORT);
     }
 
-    public HtmlInputStreamReader(InputStream inputStream,
+    public HtmlInputStreamReader(Stream inputStream,
             ErrorHandler errorHandler, Tokenizer tokenizer, Driver driver,
             Encoding encoding) {
         this.inputStream = inputStream;
@@ -168,7 +169,8 @@ public sealed class HtmlInputStreamReader : Reader, ByteReadable, Locator {
     }
 
     public override void close() {
-        inputStream.close();
+        // TODO: correct these semantics
+        inputStream.Dispose();
     }
 
     public override int read(char[] charArray) {

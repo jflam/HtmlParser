@@ -20,6 +20,11 @@
  * DEALINGS IN THE SOFTWARE.
  */
 using System;
+using System.Text;
+
+public class UnsupportedCharsetException : Exception {
+    public UnsupportedCharsetException(string message) : base(message) { }
+}
 
 public class ChardetSniffer : nsICharsetDetectionObserver {
 
