@@ -32,7 +32,7 @@
     <ProjectConfiguration Include="Release|x86">
       <Configuration>Release</Configuration>
       <Platform>x86</Platform>
-    </ProjectConfiguration>  
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>ae4cc509-231d-4bb9-91e2-248a246ba2d7</ProjectGuid>
@@ -57,6 +57,22 @@
     <Content Include="images\storelogo.png" />
     <Content Include="js\default.js" />
     <Content Include="css\default.css" />
+    <Content Include="lib\codemirror.css" />
+    <Content Include="lib\codemirror.js" />
+    <Content Include="lib\util\closetag.js" />
+    <Content Include="lib\util\dialog.css" />
+    <Content Include="lib\util\dialog.js" />
+    <Content Include="lib\util\foldcode.js" />
+    <Content Include="lib\util\formatting.js" />
+    <Content Include="lib\util\javascript-hint.js" />
+    <Content Include="lib\util\loadmode.js" />
+    <Content Include="lib\util\match-highlighter.js" />
+    <Content Include="lib\util\overlay.js" />
+    <Content Include="lib\util\runmode.js" />
+    <Content Include="lib\util\search.js" />
+    <Content Include="lib\util\searchcursor.js" />
+    <Content Include="lib\util\simple-hint.css" />
+    <Content Include="lib\util\simple-hint.js" />
     <None Include="MonkeyBars_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
