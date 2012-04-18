@@ -13,12 +13,17 @@
             if (args.detail.previousExecutionState !== activation.ApplicationExecutionState.terminated) {
                 // TODO: This application has been newly launched. Initialize
                 // your application here.
-                WL.init();
+                // TODO: initialize WL library here
+                // WL.init();
             } else {
                 // TODO: This application has been reactivated from suspension.
                 // Restore application state here.
             }
             args.setPromise(WinJS.UI.processAll());
+
+            // Bind event handlers 
+            document.getElementById('cmdOpenFile').addEventListener('click', app.load_buffer);
+            document.getElementById('cmdSaveFile').addEventListener('click', app.save_buffer);
         }
     };
 
@@ -39,6 +44,18 @@
         return ((Windows.UI.ViewManagement.ApplicationView.value !== Windows.UI.ViewManagement.ApplicationViewState.snapped) ||
             Windows.UI.ViewManagement.ApplicationView.tryUnsnap());
     }
+    
+    // TODO: figure out how to design commands correctly in WWAs ... need a sample
+    app.save_buffer = function () {
+        var text = app.editor.getValue();
+        app.save_file_locally(text);
+    };
+
+    app.load_buffer = function () {
+        var text = app.load_file_locally().then(function (text) {
+            app.editor.setValue(text);
+        });
+    };
 
     // This function will save either locally via a file picker or to SkyDrive (later)
     app.save_file_locally = function (text) {

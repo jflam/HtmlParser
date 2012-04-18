@@ -28,7 +28,7 @@
     <h1>monkey<span style="font-family: 'Segoe UI'; font-weight: bolder">bars</span></h1>
     <textarea id="code">add = function(x, y) { return x + y; }</textarea>
     <script>
-        var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+        WinJS.Application.editor = CodeMirror.fromTextArea(document.getElementById("code"), {
             lineNumbers: true,
             matchBrackets: true,
             indentUnit: 4,
@@ -37,16 +37,30 @@
         });
         CodeMirror.keyMap.repl = {
             'Ctrl-S': function (cm) {
-                var text = editor.getValue();
-                WinJS.Application.save_file_locally(text);
+                WinJS.Application.save_buffer();
             },
             'Ctrl-O': function (cm) {
-                var text = WinJS.Application.load_file_locally().then(function (text) {
-                    editor.setValue(text);
-                });
+                WinJS.Application.load_buffer();
             },
             fallthrough: ["default"],
         };
     </script>
+
+    <div data-win-control="WinJS.UI.AppBar" data-win-options="">
+        <hr     data-win-control="WinJS.UI.AppBarCommand"
+            data-win-options="{type:'separator',section:'global'}" />
+
+        <button data-win-control="WinJS.UI.AppBarCommand"
+            data-win-options="{id:'cmdDelete',label:'Help',icon:'help',section:'global',tooltip:'Search for help'}">
+        </button>
+
+        <button data-win-control="WinJS.UI.AppBarCommand"
+            data-win-options="{id:'cmdOpenFile',label:'Open',icon:'openfile',section:'selection',tooltip:'Open a file'}">
+        </button>
+
+        <button data-win-control="WinJS.UI.AppBarCommand"
+            data-win-options="{id:'cmdSaveFile',label:'Save',icon:'save',section:'selection',tooltip:'Save a file'}">
+        </button>
+    </div>
 </body>
 </html>
