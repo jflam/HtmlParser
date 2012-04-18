@@ -46,12 +46,30 @@
         };
     </script>
 
+    <!-- This is a hard-coded iframe that will display dev docs. in the future this iframe will contain much more interesting
+         content - likely screen scraped and reformatted to look more awesome MSDN docs -->
+    <iframe id="helpViewer" style="width:100%; margin-top:10px; height:400px; background-color: #fff" src="http://msdn.microsoft.com/en-us/library/windows/apps/Hh700490.aspx"></iframe>
+
+    <!-- Declarative flyout control for search -->
+    <div id="searchFlyout" data-win-control="WinJS.UI.Flyout" aria-label="{Search flyout}">
+        <div>
+            <p>
+                <label for="searchTerm">
+                    Search: <br />
+                </label>
+                <span id="searchTermError" class="error"></span>
+                <input type="text" id="searchTerm" />                    
+            </p>
+        </div>
+        <button id="searchButton">Search</button>
+    </div>
+
     <div data-win-control="WinJS.UI.AppBar" data-win-options="">
         <hr     data-win-control="WinJS.UI.AppBarCommand"
             data-win-options="{type:'separator',section:'global'}" />
 
         <button data-win-control="WinJS.UI.AppBarCommand"
-            data-win-options="{id:'cmdDelete',label:'Help',icon:'help',section:'global',tooltip:'Search for help'}">
+            data-win-options="{id:'cmdDelete',label:'Help',icon:'help',section:'global',tooltip:'Search for help',type:'flyout',flyout:'searchFlyout'}">
         </button>
 
         <button data-win-control="WinJS.UI.AppBarCommand"
