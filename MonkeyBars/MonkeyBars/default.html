@@ -42,6 +42,9 @@
             'Ctrl-O': function (cm) {
                 WinJS.Application.load_buffer();
             },
+            'Ctrl-Enter': function (cm) {
+                WinJS.Application.eval_selection();
+            },
             fallthrough: ["default"],
         };
     </script>

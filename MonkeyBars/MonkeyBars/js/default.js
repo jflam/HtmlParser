@@ -1,8 +1,6 @@
 ﻿// For an introduction to the Blank template, see the following documentation:
 // http://go.microsoft.com/fwlink/?LinkId=232509
 (function () {
-    "use strict";
-
     var app = WinJS.Application;
     var activation = Windows.ApplicationModel.Activation;
 
@@ -93,7 +91,42 @@
                 });
             }
         });
-    }
+    };
+
+    app.eval_selection = function () {
+
+        // If the user doesn't have a selection, we execute the current line, otherwise we execute the selection
+        var code = null;
+        if (app.editor.somethingSelected()) {
+            // Eval the selection
+            code = app.editor.getSelection();
+            var result = eval(code);
+
+        } else {
+            // We need to select the entire line that the cursor is on
+            var pos = app.editor.getCursor(true);
+            code = app.editor.getLine(pos.line);
+        }
+
+        // Execute user code
+        var result = eval(code);
+
+        // Get the end of the selection
+        var selection_end = app.editor.getCursor(false);
+        selection_end.ch = null; // end of line
+        app.editor.setCursor(selection_end);
+
+        // Insert the result after the end of the selection
+        var new_position = null;
+        if (typeof (result) === 'function') {
+            new_position = app.editor.replaceRange('\n//> created function(s)\n', selection_end);
+        } else {
+            new_position = app.editor.replaceRange('\n//> ' + result + '\n', selection_end);
+        }
+
+        // Make sure the cursor is on the start of the line after the result
+        app.editor.setCursor({line: new_position.line + 1, ch: 0});
+    };
 
     app.save_file_to_skydrive = function () {
         // TODO: something here with skydrive
