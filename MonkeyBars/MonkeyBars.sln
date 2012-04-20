@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 11 Express for Windows 8
 Project("{262852C6-CD72-467D-83FE-5EEB1973A190}") = "MonkeyBars", "MonkeyBars\MonkeyBars.jsproj", "{AE4CC509-231D-4BB9-91E2-248A246BA2D7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonkeyLibs", "MonkeyLibs\MonkeyLibs.csproj", "{89F5CEA0-2DBC-4804-83A0-8505E510966A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -15,6 +17,22 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{89F5CEA0-2DBC-4804-83A0-8505E510966A}.Debug|ARM.ActiveCfg = Debug|ARM
+		{89F5CEA0-2DBC-4804-83A0-8505E510966A}.Debug|ARM.Build.0 = Debug|ARM
+		{89F5CEA0-2DBC-4804-83A0-8505E510966A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89F5CEA0-2DBC-4804-83A0-8505E510966A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89F5CEA0-2DBC-4804-83A0-8505E510966A}.Debug|x64.ActiveCfg = Debug|x64
+		{89F5CEA0-2DBC-4804-83A0-8505E510966A}.Debug|x64.Build.0 = Debug|x64
+		{89F5CEA0-2DBC-4804-83A0-8505E510966A}.Debug|x86.ActiveCfg = Debug|x86
+		{89F5CEA0-2DBC-4804-83A0-8505E510966A}.Debug|x86.Build.0 = Debug|x86
+		{89F5CEA0-2DBC-4804-83A0-8505E510966A}.Release|ARM.ActiveCfg = Release|ARM
+		{89F5CEA0-2DBC-4804-83A0-8505E510966A}.Release|ARM.Build.0 = Release|ARM
+		{89F5CEA0-2DBC-4804-83A0-8505E510966A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89F5CEA0-2DBC-4804-83A0-8505E510966A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89F5CEA0-2DBC-4804-83A0-8505E510966A}.Release|x64.ActiveCfg = Release|x64
+		{89F5CEA0-2DBC-4804-83A0-8505E510966A}.Release|x64.Build.0 = Release|x64
+		{89F5CEA0-2DBC-4804-83A0-8505E510966A}.Release|x86.ActiveCfg = Release|x86
+		{89F5CEA0-2DBC-4804-83A0-8505E510966A}.Release|x86.Build.0 = Release|x86
 		{AE4CC509-231D-4BB9-91E2-248A246BA2D7}.Debug|ARM.ActiveCfg = Debug|ARM
 		{AE4CC509-231D-4BB9-91E2-248A246BA2D7}.Debug|ARM.Build.0 = Debug|ARM
 		{AE4CC509-231D-4BB9-91E2-248A246BA2D7}.Debug|ARM.Deploy.0 = Debug|ARM

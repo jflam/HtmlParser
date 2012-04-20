@@ -17,6 +17,10 @@
                 // TODO: This application has been reactivated from suspension.
                 // Restore application state here.
             }
+
+            var archive = new MonkeyLibs.Archive();
+            var result = archive.add(3, 4);
+
             args.setPromise(WinJS.UI.processAll());
 
             // Bind event handlers 
