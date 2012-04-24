@@ -97,6 +97,14 @@
         });
     };
 
+    app.eval = function (code) {
+        try {
+            return eval(code);
+        } catch (e) {
+            return e;
+        }
+    };
+
     app.eval_selection = function () {
 
         // If the user doesn't have a selection, we execute the current line, otherwise we execute the selection
@@ -112,8 +120,8 @@
             code = app.editor.getLine(pos.line);
         }
 
-        // Execute user code
-        var result = eval(code);
+        // Execute user code and handle exceptions
+        var result = app.eval(code);
 
         // Get the end of the selection
         var selection_end = app.editor.getCursor(false);
