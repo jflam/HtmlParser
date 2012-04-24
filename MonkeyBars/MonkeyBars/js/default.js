@@ -18,8 +18,8 @@
                 // Restore application state here.
             }
 
-            var archive = new MonkeyLibs.Archive();
-            var result = archive.add(3, 4);
+            //var archive = new MonkeyLibs.Archive();
+            //var result = archive.add(3, 4);
 
             args.setPromise(WinJS.UI.processAll());
 
