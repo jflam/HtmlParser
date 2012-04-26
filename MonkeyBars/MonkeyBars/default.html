@@ -26,7 +26,10 @@
 </head>
 <body>
     <h1>monkey<span style="font-family: 'Segoe UI'; font-weight: bolder">bars</span></h1>
-    <textarea id="code">add = function(x, y) { return x + y; }</textarea>
+
+    <div id="code"></div>
+    <div id="helpViewer" class="Docs"></div>
+
     <script>
         WinJS.Application.editor = CodeMirror.fromTextArea(document.getElementById("code"), {
             lineNumbers: true,
@@ -48,10 +51,6 @@
             fallthrough: ["default"],
         };
     </script>
-
-    <!-- This is a hard-coded iframe that will display dev docs. in the future this iframe will contain much more interesting
-         content - likely screen scraped and reformatted to look more awesome MSDN docs -->
-    <div id="helpViewer" style="width:100%; margin-top:10px; height:400px; color: #fff" ></div>
 
     <!-- Declarative flyout control for search -->
     <div id="searchFlyout" data-win-control="WinJS.UI.Flyout" aria-label="{Search flyout}">

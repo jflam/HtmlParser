@@ -1,4 +1,15 @@
-﻿body {
+﻿.CodeMirror {
+    width: 50%;
+    float: left;
+}
+
+.Docs {
+    width: 45%;
+    float: right;
+    margin: 10px;
+}
+
+body {
 }
 
 @media screen and (-ms-view-state: fullscreen-landscape) {
