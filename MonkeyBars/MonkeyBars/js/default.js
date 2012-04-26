@@ -18,10 +18,24 @@
                 // Restore application state here.
             }
 
-            // id ms310241
+            // Identifiers can be one of several things:
+            // 1) a Short ID -> something like ms224917
+            // 2) a content GUID 
+            // 3) a content alias -> Windows.Data.Json.JsonArray
+            // 4) a content URL -> can reverse this out of a general search engine query? DOESN'T SEEM USEFUL.
+            // 5) an asset ID
+            var contentAlias = "windows.storage.pickers.fileopenpicker";
+            var contentShortId = "br229583";
+            var assetId = "nodepage.windows_runtime_reference";
+            var contentUrl = "http://msdn.microsoft.com/en-us/library/windows/apps/Hh738369.aspx";
+            var identifier = assetId;
+
             var help = new MonkeyWrap.MsdnHelp();
-            var result = help.getHelp("windows.data.json.jsonarray").then(
+            var result = help.getHelp(identifier).then(
                 function (response) {
+                    if (response === "") {
+                        response = "<h2>no content</h2>";
+                    }
                     var html = window.toStaticHTML(response);
                     helpViewer.innerHTML = html; 
                 });

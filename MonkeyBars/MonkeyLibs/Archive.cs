@@ -25,13 +25,20 @@ namespace MonkeyLibs
             request.requestedDocuments = docs;
 
             var proxy = new Msdn.ContentServicePortTypeClient();
-            var response = await proxy.GetContentAsync(request);
-            foreach (var doc in response.getContentResponse.primaryDocuments)
+            try
             {
-                if (doc.primaryFormat == "Mtps.Xhtml")
+                var response = await proxy.GetContentAsync(request);
+                foreach (var doc in response.getContentResponse.primaryDocuments)
                 {
-                    return doc.Any.ToString(System.Xml.Linq.SaveOptions.DisableFormatting);
+                    if (doc.primaryFormat == "Mtps.Xhtml")
+                    {
+                        return doc.Any.ToString(System.Xml.Linq.SaveOptions.DisableFormatting);
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                return "Error: " + e.Message;
             }
 
             return String.Empty;
