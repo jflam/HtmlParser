@@ -6,11 +6,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{89F5CEA0-2DBC-4804-83A0-8505E510966A}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{AD161F74-D2C2-4302-87BB-651216DAF714}</ProjectGuid>
+    <OutputType>winmdobj</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MonkeyLibs</RootNamespace>
-    <AssemblyName>MonkeyLibs</AssemblyName>
+    <RootNamespace>MonkeyWrap</RootNamespace>
+    <AssemblyName>MonkeyWrap</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -100,52 +100,14 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <WCFMetadata Include="Service References\" />
+    <ProjectReference Include="..\MonkeyLibs\MonkeyLibs.csproj">
+      <Project>{89f5cea0-2dbc-4804-83a0-8505e510966a}</Project>
+      <Name>MonkeyLibs</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Archive.cs" />
+    <Compile Include="MsdnHelp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service References\Msdn\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Properties\ServiceReferences.Designer.ClientConfig" />
-    <None Include="Service References\Msdn\atoms.xsd" />
-    <None Include="Service References\Msdn\atoms1.xsd" />
-    <None Include="Service References\Msdn\atoms2.xsd" />
-    <None Include="Service References\Msdn\atoms3.xsd" />
-    <None Include="Service References\Msdn\atoms4.xsd" />
-    <None Include="Service References\Msdn\atoms5.xsd" />
-    <None Include="Service References\Msdn\atoms6.xsd" />
-    <None Include="Service References\Msdn\atoms7.xsd" />
-    <None Include="Service References\Msdn\atoms8.xsd" />
-    <None Include="Service References\Msdn\ContentService.wsdl" />
-    <None Include="Service References\Msdn\default.xsd" />
-    <None Include="Service References\Msdn\default1.xsd" />
-    <None Include="Service References\Msdn\default2.xsd" />
-    <None Include="Service References\Msdn\default3.xsd" />
-    <None Include="Service References\Msdn\urn_msdn_com_public_content_syndication_2006_09_common.xsd" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadataStorage Include="Service References\Msdn\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\Msdn\ContentService.disco" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\Msdn\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\Msdn\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\Msdn\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

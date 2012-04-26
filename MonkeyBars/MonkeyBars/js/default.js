@@ -18,7 +18,7 @@
                 // Restore application state here.
             }
 
-            var help = new MonkeyLibs.Help();
+            var help = new MonkeyWrap.MsdnHelp();
             var result = help.getHelp("ms310241").then(
                 function (response) {
                     var x = response;

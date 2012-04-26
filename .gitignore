@@ -18,3 +18,5 @@ MonkeyBars/MonkeyBars/bin/**
 MonkeyBars/MonkeyBars/bld/**
 MonkeyBars/MonkeyLibs/bin/**
 MonkeyBars/MonkeyLibs/obj/**
+MonkeyBars/MonkeyWrap/bin/**
+MonkeyBars/MonkeyWrap/obj/**
