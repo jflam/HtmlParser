@@ -18,19 +18,17 @@
     <link rel="stylesheet" href="/lib/theme/lesser-dark.css">
     <script src="/lib/codemirror.js"></script>
     <script src="/lib/modes/javascript.js"></script>
-    <style type="text/css">
-        .CodeMirror {
-            margin-top: 10px;
-        }
-    </style>
 </head>
 <body>
     <h1>monkey<span style="font-family: 'Segoe UI'; font-weight: bolder">bars</span></h1>
 
-    <div id="code"></div>
-    <div id="helpViewer" class="Docs"></div>
+    <div class="Container">
+        <div id="code"></div>
+        <div id="helpViewer" class="Docs"></div>        
+    </div>
 
     <script>
+        // TODO: move this somewhere else like default.js
         WinJS.Application.editor = CodeMirror.fromTextArea(document.getElementById("code"), {
             lineNumbers: true,
             matchBrackets: true,
@@ -48,8 +46,32 @@
             'Ctrl-Enter': function (cm) {
                 WinJS.Application.eval_selection();
             },
+            'F11': function (cm) {
+                var scroller = WinJS.Application.editor.getScrollerElement();
+                scroller.style.position = "absolute";
+                scroller.style.top = "0";
+                scroller.style.left = "0";
+                scroller.style.display = "block";
+                scroller.style.height = "100%";
+                scroller.style.width = "100%";
+                WinJS.Application.editor.refresh();
+            },
+            'Esc': function (cm) {
+                var scroller = WinJS.Application.editor.getScrollerElement();
+                scroller.style.position = "";
+                scroller.style.top = "";
+                scroller.style.left = "";
+                scroller.style.display = "";
+                scroller.style.height = "90%";
+                scroller.style.width = "";
+                WinJS.Application.editor.refresh();
+            },
             fallthrough: ["default"],
         };
+        var scroller = WinJS.Application.editor.getScrollerElement();
+        scroller.style.height = "90%";
+        scroller.style.backgroundColor = "#000";
+        WinJS.Application.editor.refresh();
     </script>
 
     <!-- Declarative flyout control for search -->

@@ -1,12 +1,37 @@
-﻿.CodeMirror {
+﻿.Container {
+    background-color: #000;
+    height: 100%;
+    display: -ms-flexbox;
+}
+
+.CodeMirror {
+    margin-top: 10px;
+    background-color: #000;
     width: 50%;
-    float: left;
+    height: 100%;
+}
+
+.CodeMirror-fullscreen {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    margin: 0;
+    padding: 0;
+    background-color: #ffd800;
+    border: 0px solid #BBBBBB;
+    opacity: 1;
 }
 
 .Docs {
-    width: 45%;
-    float: right;
+    width: 49%;
+    height: 90%;
+    background-color: #000;
     margin: 10px;
+    overflow: scroll;
 }
 
 body {
