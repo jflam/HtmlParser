@@ -18,6 +18,12 @@
                 // Restore application state here.
             }
 
+            var help = new MonkeyLibs.Help();
+            var result = help.getHelp("ms310241").then(
+                function (response) {
+                    var x = response;
+                    var y = 42;
+                });
             //var archive = new MonkeyLibs.Archive();
             //var result = archive.add(3, 4);
 
