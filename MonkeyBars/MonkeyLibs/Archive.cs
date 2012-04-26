@@ -21,7 +21,7 @@ namespace MonkeyLibs
             var request = new Msdn.getContentRequest();
             request.contentIdentifier = id;
             request.locale = "en-us";
-            request.version = String.Empty;
+            request.version = "MSDN.10";
             request.requestedDocuments = docs;
 
             var proxy = new Msdn.ContentServicePortTypeClient();

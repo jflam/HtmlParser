@@ -18,14 +18,13 @@
                 // Restore application state here.
             }
 
+            // id ms310241
             var help = new MonkeyWrap.MsdnHelp();
-            var result = help.getHelp("ms310241").then(
+            var result = help.getHelp("windows.data.json.jsonarray").then(
                 function (response) {
-                    var x = response;
-                    var y = 42;
+                    var html = window.toStaticHTML(response);
+                    helpViewer.innerHTML = html; 
                 });
-            //var archive = new MonkeyLibs.Archive();
-            //var result = archive.add(3, 4);
 
             args.setPromise(WinJS.UI.processAll());
 
