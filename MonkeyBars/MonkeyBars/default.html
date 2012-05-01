@@ -13,6 +13,8 @@
     <link href="/css/default.css" rel="stylesheet" />
     <script src="/js/default.js"></script>
 
+    <!-- Libraries -->
+    <script src="/lib/lobrow.js"></script>
     <script src="/lib/wl.js"></script>
     <link rel="stylesheet" href="/lib/codemirror.css">
     <link rel="stylesheet" href="/lib/theme/lesser-dark.css">
@@ -28,6 +30,13 @@
     </div>
 
     <script>
+        // Initialize lobrow?
+        lobrow.require(["/lib/jsdom"], 
+            function (jsdom) {
+                var x = 42;
+                var y = 43;
+            });
+
         // TODO: move this somewhere else like default.js
         WinJS.Application.editor = CodeMirror.fromTextArea(document.getElementById("code"), {
             lineNumbers: true,

@@ -28,7 +28,7 @@
             var contentShortId = "br229583";
             var assetId = "nodepage.windows_runtime_reference";
             var contentUrl = "http://msdn.microsoft.com/en-us/library/windows/apps/Hh738369.aspx";
-            var identifier = assetId;
+            var identifier = contentAlias;
 
             var help = new MonkeyWrap.MsdnHelp();
             var result = help.getHelp(identifier).then(
