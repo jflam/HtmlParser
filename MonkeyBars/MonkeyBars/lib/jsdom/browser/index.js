@@ -1,11 +1,11 @@
-var http          = require('http'),
-    URL           = require('url'),
+var http          = require('/lib/shred'),
+    URL           = require('/lib/url'),
     HtmlToDom     = require('./htmltodom').HtmlToDom,
     domToHtml     = require('./domtohtml').domToHtml,
     htmlencoding  = require('./htmlencoding'),
     HTMLEncode    = htmlencoding.HTMLEncode,
     HTMLDecode    = htmlencoding.HTMLDecode,
-    jsdom         = require('../../jsdom'),
+    jsdom         = require('../../lib/jsdom'),
     Contextify    = null;
 
 try {

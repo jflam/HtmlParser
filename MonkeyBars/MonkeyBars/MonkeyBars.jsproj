@@ -57,6 +57,7 @@
     <Content Include="images\storelogo.png" />
     <Content Include="js\default.js" />
     <Content Include="css\default.css" />
+    <Content Include="lib\assert.js" />
     <Content Include="lib\codemirror.css" />
     <Content Include="lib\codemirror.js" />
     <Content Include="lib\cssom\clone.js" />
@@ -101,16 +102,9 @@
     <Content Include="lib\jsdom.js" />
     <Content Include="lib\lobrow.js" />
     <Content Include="lib\modes\javascript.js" />
-    <Content Include="lib\request.js" />
-    <Content Include="lib\request\forever.js" />
-    <Content Include="lib\request\LICENSE" />
-    <Content Include="lib\request\main.js" />
-    <Content Include="lib\request\mimetypes.js" />
-    <Content Include="lib\request\oauth.js" />
-    <Content Include="lib\request\package.json" />
-    <Content Include="lib\request\README.md" />
-    <Content Include="lib\request\tunnel.js" />
-    <Content Include="lib\request\uuid.js" />
+    <Content Include="lib\path.js" />
+    <Content Include="lib\querystring.js" />
+    <Content Include="lib\shred.bundle.js" />
     <Content Include="lib\theme\cobalt.css" />
     <Content Include="lib\theme\eclipse.css" />
     <Content Include="lib\theme\elegant.css" />
@@ -121,6 +115,7 @@
     <Content Include="lib\theme\rubyblue.css" />
     <Content Include="lib\theme\xq-dark.css" />
     <Content Include="lib\url.js" />
+    <Content Include="lib\util.js" />
     <Content Include="lib\util\closetag.js" />
     <Content Include="lib\util\dialog.css" />
     <Content Include="lib\util\dialog.js" />

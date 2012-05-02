@@ -1,8 +1,8 @@
 var core = require("./core").dom.level2.core,
     html = require("./html").dom.level2.html,
     utils = require("../utils"),
-    cssom = require("cssom"),
-    assert = require('assert');
+    cssom = require("/lib/cssom/index"),
+    assert = require('/lib/assert');
 
 // What works now:
 // - Accessing the rules defined in individual stylesheets

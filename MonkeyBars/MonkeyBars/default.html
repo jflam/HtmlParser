@@ -14,6 +14,7 @@
     <script src="/js/default.js"></script>
 
     <!-- Libraries -->
+    <script src="/lib/shred.bundle.js"></script>
     <script src="/lib/lobrow.js"></script>
     <script src="/lib/wl.js"></script>
     <link rel="stylesheet" href="/lib/codemirror.css">
@@ -31,11 +32,11 @@
 
     <script>
         // Initialize lobrow?
-        lobrow.require(["/lib/jsdom"], 
-            function (jsdom) {
-                var x = 42;
-                var y = 43;
-            });
+        //lobrow.require(["/lib/jsdom"], 
+        //    function (jsdom) {
+        //        var x = 42;
+        //        var y = 43;
+        //    });
 
         // TODO: move this somewhere else like default.js
         WinJS.Application.editor = CodeMirror.fromTextArea(document.getElementById("code"), {
@@ -51,6 +52,13 @@
             },
             'Ctrl-O': function (cm) {
                 WinJS.Application.load_buffer();
+            },
+            'Ctrl-Y': function (cm) {
+                lobrow.require(["/lib/jsdom"], 
+                    function (jsdom) {
+                        var x = 42;
+                        var y = 43;
+                    });
             },
             'Ctrl-Enter': function (cm) {
                 WinJS.Application.eval_selection();

@@ -1,11 +1,11 @@
-var core                  = require("./core").dom.level2.core,
-    events                = require("./core").dom.level2.events,
+var core = require("./core").dom.level2.core,
+    events = require("./core").dom.level2.events,
     applyDocumentFeatures = require('../browser/documentfeatures').applyDocumentFeatures,
-    URL                   = require("url"),
-    Path = require('path'),
+    URL = require("/lib/url"),
+    Path = require('/lib/path'),
     // NOTENOTE: deleted a req fs
-    http                  = require('http'),
-    https                 = require('https');
+    http = require('/lib/shred.bundle');
+//    https                 = require('https');
 
 // modify cloned instance for more info check: https://github.com/tmpvar/jsdom/issues/325
 core = Object.create(core);
