@@ -7,21 +7,99 @@
     var activation = Windows.ApplicationModel.Activation;
     WinJS.strictProcessing();
 
+    app.handler = null;
+
+    app.parse_comment = function (node) {
+        var result = {};
+        var comment = node.children[0].children[0].children[0];
+
+        // Isolate the <img> tag's width attribute which is used for indentation
+        var single_pixel_gif = comment.children[0].children[0];
+        result.comment_indentation = single_pixel_gif.attribs.width / 40;
+
+        // Extract out the author, post time and permalink for the comment
+        var comment_head = comment.children[2].children[0].children[0];
+        result.comment_user = comment_head.children[0].children[0].data;
+        result.comment_time = comment_head.children[1].data;
+        result.comment_permalink = comment_head.children[2].attribs.href;
+        result.comment_html = "";
+
+        function strip_tags(node) {
+            var attributes = "";
+            for (var key in node.attribs) {
+                attributes += key + "=\"" + node.attribs[key] + "\" ";
+            }
+
+            if (node.name != 'font') {
+                result.comment_html += "<" + node.name + " " + attributes + ">";
+            }
+
+            for (var i = 0; i < node.children.length; i++) {
+                var child = node.children[i];
+                if (child.type == "text") {
+                    result.comment_html += child.data;
+                } else {
+                    strip_tags(child);
+                }
+            }
+
+            if (node.name != 'font') {
+                result.comment_html += "</" + node.name + ">";
+            }
+        }
+
+        // Render the comment HTML and strip out <font> tags
+        var comment_body = comment.children[2].children[3];
+        strip_tags(comment_body);
+
+        return result;
+    }
+
+    app.parse_hackernews = function () {
+        $.ajax("http://news.ycombinator.com/item?id=3921052").then(
+            function (response) {
+                var parser = new Tautologistics.NodeHtmlParser.Parser(app.handler);
+                parser.parseComplete(response);
+
+                var dom = app.handler.dom;
+
+                var body = dom[0].children[1];
+                var center = body.children[0];
+                var table = center.children[0];
+
+                // summary info
+                var comment_thread = {};
+
+                var summary = table.children[2].children[0].children[0]; // this is a table
+                comment_thread.title = summary.children[0].children[1].children[0].children[0].data;
+                var details = summary.children[1].children[1];
+                comment_thread.points = details.children[0].children[0].data;
+                comment_thread.user = details.children[2].children[0].data;
+                comment_thread.time = details.children[3].data;
+                comment_thread.comments = [];
+
+                // parse each comment
+                var comments = table.children[2].children[0].children[4].children;
+                for (var i = 0; i < comments.length; i++) {
+                    comment_thread.comments.push(app.parse_comment(comments[i]));
+                }
+
+                return comment_thread;
+            });
+    };
+    
+    app.render_hackernews = function (comment_thread) {
+        return "<h1>hi mom</h1>";
+    };
+
     app.render_wikipedia = function () {
         $.ajax("http://en.wikipedia.org/wiki/Portsmouth").then(
             function (response) {
-                // hack around with the htmlparser
-                var handler = new Tautologistics.NodeHtmlParser.DefaultHandler(function (error, dom) {
-                    //if (error)
-                    //    // error
-                    //else
-                    //    // parsing done ... do something
-                });
-                var parser = new Tautologistics.NodeHtmlParser.Parser(handler);
+                var parser = new Tautologistics.NodeHtmlParser.Parser(app.handler);
                 parser.parseComplete(response);
 
                 // handler.dom has the interesting things in it
-                var dom = handler.dom;
+                var dom = app.handler.dom;
 
                 // now let's use soupselect ...
                 var images = SoupSelect.select(dom, "img");
@@ -54,9 +132,22 @@
 
             args.setPromise(WinJS.UI.processAll());
 
-            var button = document.getElementById("render_wikipedia");
-            button.addEventListener("click", function () {
+            document.getElementById("render_wikipedia").addEventListener("click", function () {
                 app.render_wikipedia();
+            });
+
+            document.getElementById("render_hackernews").addEventListener("click", function () {
+                var comment_thread = app.parse_hackernews();
+                var html = app.render_hackernews(comment_thread);
+                article.innerHTML = html;
+            });
+
+            // Initialize our soupselect handler
+            app.handler = new Tautologistics.NodeHtmlParser.DefaultHandler(function (error, dom) {
+                //if (error)
+                //    // error
+                //else
+                //    // parsing done ... do something
             });
         }
     };
