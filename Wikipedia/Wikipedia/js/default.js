@@ -13,6 +13,14 @@
         var html = "";
 
         function walk(node) {
+            // fix up image tags to pre-pend http:
+            if (node.type == "tag" && node.name.toLowerCase() == "img") {
+                var src = node.attribs.src;
+                if (src.indexOf("//") == 0) {
+                    node.attribs.src = "http:" + node.attribs.src;
+                }
+            }
+
             var attributes = "";
             for (var key in node.attribs) {
                 attributes += key + "=\"" + node.attribs[key] + "\" ";
@@ -20,9 +28,10 @@
 
             if (node.type == "text") {
                 html += node.data;
-            } else {
+            } else if (node.type == "tag") {
                 html += "<" + node.name + " " + attributes + ">";
             }
+
 
             if (node.children != null) {
                 for (var i = 0; i < node.children.length; i++) {
@@ -169,7 +178,8 @@
                 var dom = app.handler.dom;
                 var body = SoupSelect.select(dom, "div.mw-body")[0];
                 var html = app.inner_html(body);
-                article.innerHTML = window.toStaticHTML(html);
+                var clean_html = window.toStaticHTML(html);
+                article.innerHTML = window.toStaticHTML(clean_html);
 
                 //// TODO: useful hack while we wait for a fix for this bug
                 //MSApp.execUnsafeLocalFunction(function () {
