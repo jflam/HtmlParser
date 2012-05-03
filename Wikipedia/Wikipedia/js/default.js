@@ -89,10 +89,39 @@
                 });
         });
     };
-    
+
     app.render_hackernews = function (comment_thread) {
         var html = "";
-        html += "<h1>" + comment_thread.title + "</h1>";
+        html += "<h1 class=\"hn\">" + comment_thread.title + "</h1>";
+        html += "<h2 class=\"hn\"><span class=\"emph\">" + comment_thread.points + " | " + comment_thread.comments.length + " comments</span> by " + comment_thread.user + " " + comment_thread.time + "</h2>";
+        html += "<div class=\"comments\">";
+
+        // Track indentation levels
+        var current_indent = -1;
+        for (var i = 0; i < comment_thread.comments.length; i++) {
+            var comment = comment_thread.comments[i];
+            var indent_diff = comment.comment_indentation - current_indent;
+            if (indent_diff > 0) {
+                html += "<div class=\"comment\">";
+            } else if (indent_diff == 0) {
+                html += "</div><div class=\"comment\">";
+            } else if (indent_diff == -1) {
+                html += "</div></div><div class=\"comment\">";
+            } else if (indent_diff == -2) {
+                html += "</div></div></div><div class=\"comment\">";
+            } else if (indent_diff == -3) {
+                html += "</div></div></div></div><div class=\"comment\">";
+            }
+            current_indent = comment.comment_indentation;
+
+            html += "<span class=\"heading\">";
+            html += "<span class=\"dropcap\">" + (i + 1) + "</span>";
+            html += "<span class=\"emph\">" + comment.comment_user + "</span>" + comment.comment_time;
+            html += "</span><br>";
+            html += "<span class=\"comment\">" + comment.comment_html + "</span>";
+        }
+
+        html += "</div>";
         return html;
     };
 
