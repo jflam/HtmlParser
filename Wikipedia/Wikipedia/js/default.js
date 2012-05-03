@@ -9,6 +9,41 @@
 
     app.handler = null;
 
+    app.inner_html = function (node) {
+        var html = "";
+
+        function walk(node) {
+            var attributes = "";
+            for (var key in node.attribs) {
+                attributes += key + "=\"" + node.attribs[key] + "\" ";
+            }
+
+            if (node.type == "text") {
+                html += node.data;
+            } else {
+                html += "<" + node.name + " " + attributes + ">";
+            }
+
+            if (node.children != null) {
+                for (var i = 0; i < node.children.length; i++) {
+                    var child = node.children[i];
+                    if (child.type == "text") {
+                        html += child.data;
+                    } else {
+                        walk(child);
+                    }
+                }
+            }
+
+            if (node.type == "tag") {
+                html += "</" + node.name + ">";
+            } 
+        };
+
+        walk(node);
+        return html;
+    }
+
     app.parse_comment = function (node) {
         var result = {};
         var comment = node.children[0].children[0].children[0];
@@ -131,22 +166,12 @@
                 var parser = new Tautologistics.NodeHtmlParser.Parser(app.handler);
                 parser.parseComplete(response);
 
-                // handler.dom has the interesting things in it
                 var dom = app.handler.dom;
+                var body = SoupSelect.select(dom, "div.mw-body")[0];
+                var html = app.inner_html(body);
+                article.innerHTML = window.toStaticHTML(html);
 
-                // now let's use soupselect ...
-                var images = SoupSelect.select(dom, "img");
-                var tags = "";
-                for (var index in images) {
-                    var image = images[index];
-                    image.attribs.src = "http:" + image.attribs.src;
-                    tags += "<img src='" + image.attribs.src + "'><br>";
-                }
-
-                var html = window.toStaticHTML(tags);
-                article.innerHTML = html;
-
-                //// TODO: remove hack while we wait for a fix for this bug
+                //// TODO: useful hack while we wait for a fix for this bug
                 //MSApp.execUnsafeLocalFunction(function () {
                 //    article.innerHTML = html;
                 //});
