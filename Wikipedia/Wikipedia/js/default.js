@@ -34,10 +34,16 @@
 
                     // now let's use soupselect ...
                     var images = SoupSelect.select(dom, "img");
+                    var tags = "";
+                    for (var index in images) {
+                        var image = images[index];
+                        image.attribs.src = "http:" + image.attribs.src;
+                        tags += "<img src='" + image.attribs.src + "'><br>";
+                    }
 
-                    article.innerHTML = "<b>done</b>";
+                    var html = window.toStaticHTML(tags);
+                    article.innerHTML = html;
 
-                    //var html = window.toStaticHTML(response);
                     //// TODO: remove hack while we wait for a fix for this bug
                     //MSApp.execUnsafeLocalFunction(function () {
                     //    article.innerHTML = html;
