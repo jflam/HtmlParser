@@ -56,40 +56,44 @@
     }
 
     app.parse_hackernews = function () {
-        $.ajax("http://news.ycombinator.com/item?id=3921052").then(
-            function (response) {
-                var parser = new Tautologistics.NodeHtmlParser.Parser(app.handler);
-                parser.parseComplete(response);
+        return new WinJS.Promise(function (complete) {
+            $.ajax("http://news.ycombinator.com/item?id=3921052").then(
+                function (response) {
+                    var parser = new Tautologistics.NodeHtmlParser.Parser(app.handler);
+                    parser.parseComplete(response);
 
-                var dom = app.handler.dom;
+                    var dom = app.handler.dom;
 
-                var body = dom[0].children[1];
-                var center = body.children[0];
-                var table = center.children[0];
+                    var body = dom[0].children[1];
+                    var center = body.children[0];
+                    var table = center.children[0];
 
-                // summary info
-                var comment_thread = {};
+                    // summary info
+                    var comment_thread = {};
 
-                var summary = table.children[2].children[0].children[0]; // this is a table
-                comment_thread.title = summary.children[0].children[1].children[0].children[0].data;
-                var details = summary.children[1].children[1];
-                comment_thread.points = details.children[0].children[0].data;
-                comment_thread.user = details.children[2].children[0].data;
-                comment_thread.time = details.children[3].data;
-                comment_thread.comments = [];
+                    var summary = table.children[2].children[0].children[0]; // this is a table
+                    comment_thread.title = summary.children[0].children[1].children[0].children[0].data;
+                    var details = summary.children[1].children[1];
+                    comment_thread.points = details.children[0].children[0].data;
+                    comment_thread.user = details.children[2].children[0].data;
+                    comment_thread.time = details.children[3].data;
+                    comment_thread.comments = [];
 
-                // parse each comment
-                var comments = table.children[2].children[0].children[4].children;
-                for (var i = 0; i < comments.length; i++) {
-                    comment_thread.comments.push(app.parse_comment(comments[i]));
-                }
+                    // parse each comment
+                    var comments = table.children[2].children[0].children[4].children;
+                    for (var i = 0; i < comments.length; i++) {
+                        comment_thread.comments.push(app.parse_comment(comments[i]));
+                    }
 
-                return comment_thread;
-            });
+                    complete(comment_thread);
+                });
+        });
     };
     
     app.render_hackernews = function (comment_thread) {
-        return "<h1>hi mom</h1>";
+        var html = "";
+        html += "<h1>" + comment_thread.title + "</h1>";
+        return html;
     };
 
     app.render_wikipedia = function () {
@@ -137,9 +141,9 @@
             });
 
             document.getElementById("render_hackernews").addEventListener("click", function () {
-                var comment_thread = app.parse_hackernews();
-                var html = app.render_hackernews(comment_thread);
-                article.innerHTML = html;
+                app.parse_hackernews().then(function (comment_thread) {
+                    article.innerHTML = app.render_hackernews(comment_thread);
+                });
             });
 
             // Initialize our soupselect handler
