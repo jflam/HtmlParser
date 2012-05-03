@@ -20,3 +20,5 @@ MonkeyBars/MonkeyLibs/bin/**
 MonkeyBars/MonkeyLibs/obj/**
 MonkeyBars/MonkeyWrap/bin/**
 MonkeyBars/MonkeyWrap/obj/**
+Wikipedia/Wikipedia/bin/**
+Wikipedia/Wikipedia/bld/**
