@@ -43,6 +43,7 @@ span.comment {
 
 .emph { 
     font-family: 'Segoe UI';
+    color: #00ff21;
     font-weight: bold;
     font-size: 13pt; 
 }
@@ -53,6 +54,16 @@ span.comment {
     margin-right: 4px; 
     font-size: 2em; 
     line-height: 90%; 
+}
+
+a:link {
+    color: #00ff21; 
+    text-decoration: none;
+}
+
+a:visited { 
+    color: silver; 
+    text-decoration: none; 
 }
 
 @media screen and (-ms-view-state: fullscreen-landscape) {
