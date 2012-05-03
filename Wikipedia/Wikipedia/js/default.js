@@ -7,6 +7,41 @@
     var activation = Windows.ApplicationModel.Activation;
     WinJS.strictProcessing();
 
+    app.render_wikipedia = function () {
+        $.ajax("http://en.wikipedia.org/wiki/Portsmouth").then(
+            function (response) {
+                // hack around with the htmlparser
+                var handler = new Tautologistics.NodeHtmlParser.DefaultHandler(function (error, dom) {
+                    //if (error)
+                    //    // error
+                    //else
+                    //    // parsing done ... do something
+                });
+                var parser = new Tautologistics.NodeHtmlParser.Parser(handler);
+                parser.parseComplete(response);
+
+                // handler.dom has the interesting things in it
+                var dom = handler.dom;
+
+                // now let's use soupselect ...
+                var images = SoupSelect.select(dom, "img");
+                var tags = "";
+                for (var index in images) {
+                    var image = images[index];
+                    image.attribs.src = "http:" + image.attribs.src;
+                    tags += "<img src='" + image.attribs.src + "'><br>";
+                }
+
+                var html = window.toStaticHTML(tags);
+                article.innerHTML = html;
+
+                //// TODO: remove hack while we wait for a fix for this bug
+                //MSApp.execUnsafeLocalFunction(function () {
+                //    article.innerHTML = html;
+                //});
+            });
+    }
+
     app.onactivated = function (args) {
         if (args.detail.kind === activation.ActivationKind.launch) {
             if (args.detail.previousExecutionState !== activation.ApplicationExecutionState.terminated) {
@@ -17,40 +52,12 @@
                 // Restore application state here.
             }
 
-            $.ajax("http://en.wikipedia.org/wiki/Portsmouth").then(
-                function (response) {
-                    // hack around with the htmlparser
-                    var handler = new Tautologistics.NodeHtmlParser.DefaultHandler(function (error, dom) {
-                        //if (error)
-                        //    // error
-                        //else
-                        //    // parsing done ... do something
-                    });
-                    var parser = new Tautologistics.NodeHtmlParser.Parser(handler);
-                    parser.parseComplete(response);
-
-                    // handler.dom has the interesting things in it
-                    var dom = handler.dom;
-
-                    // now let's use soupselect ...
-                    var images = SoupSelect.select(dom, "img");
-                    var tags = "";
-                    for (var index in images) {
-                        var image = images[index];
-                        image.attribs.src = "http:" + image.attribs.src;
-                        tags += "<img src='" + image.attribs.src + "'><br>";
-                    }
-
-                    var html = window.toStaticHTML(tags);
-                    article.innerHTML = html;
-
-                    //// TODO: remove hack while we wait for a fix for this bug
-                    //MSApp.execUnsafeLocalFunction(function () {
-                    //    article.innerHTML = html;
-                    //});
-                });
-
             args.setPromise(WinJS.UI.processAll());
+
+            var button = document.getElementById("render_wikipedia");
+            button.addEventListener("click", function () {
+                app.render_wikipedia();
+            });
         }
     };
 

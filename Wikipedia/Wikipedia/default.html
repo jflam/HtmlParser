@@ -20,6 +20,12 @@
     <h1>Metropedia</h1>
     
     <!-- Make sure that the content is rendered inside of a separate iframe -->
-    <div id="article"></div>
+    <div id="article">
+    	
+    </div>
+
+	<div data-win-control="WinJS.UI.AppBar">
+    		<button data-win-control="WinJS.UI.AppBarCommand" data-win-options="{icon:'library', id:'render_wikipedia', label:'Wikipedia', onclick:render_wikipedia, section:'global', type:'button'}"></button>
+    	</div>
 </body>
 </html>
