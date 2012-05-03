@@ -820,4 +820,9 @@ exports.ElementType = ElementType;
 
 exports.DomUtils = DomUtils;
 
+if (!runningInNode()) {
+    // Need to export this too
+    this.Tautologistics.DomUtils = DomUtils;
+};
+
 })();

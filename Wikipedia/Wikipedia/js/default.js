@@ -31,6 +31,10 @@
 
                     // handler.dom has the interesting things in it
                     var dom = handler.dom;
+
+                    // now let's use soupselect ...
+                    var images = SoupSelect.select(dom, "img");
+
                     article.innerHTML = "<b>done</b>";
 
                     //var html = window.toStaticHTML(response);
