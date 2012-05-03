@@ -17,22 +17,27 @@
                 // Restore application state here.
             }
 
-            // Load with some random wikipedia page so we can style it
-            //WinJS.xhr({ url: "http://en.wikipedia.org/wiki/Portsmouth" }).done(
-            //    function (result) {
-            //        var html = window.toStaticHTML(result.responseText);
-            //        MSApp.execUnsafeLocalFunction(function () {
-            //            article.innerHTML = html;
-            //        });
-            //    });
-
             $.ajax("http://en.wikipedia.org/wiki/Portsmouth").then(
                 function (response) {
-                    var html = window.toStaticHTML(response);
-                    // TODO: remove hack while we wait for a fix for this bug
-                    MSApp.execUnsafeLocalFunction(function () {
-                        article.innerHTML = html;
+                    // hack around with the htmlparser
+                    var handler = new Tautologistics.NodeHtmlParser.DefaultHandler(function (error, dom) {
+                        //if (error)
+                        //    // error
+                        //else
+                        //    // parsing done ... do something
                     });
+                    var parser = new Tautologistics.NodeHtmlParser.Parser(handler);
+                    parser.parseComplete(response);
+
+                    // handler.dom has the interesting things in it
+                    var dom = handler.dom;
+                    article.innerHTML = "<b>done</b>";
+
+                    //var html = window.toStaticHTML(response);
+                    //// TODO: remove hack while we wait for a fix for this bug
+                    //MSApp.execUnsafeLocalFunction(function () {
+                    //    article.innerHTML = html;
+                    //});
                 });
 
             args.setPromise(WinJS.UI.processAll());

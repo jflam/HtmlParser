@@ -57,8 +57,11 @@
     <Content Include="images\storelogo.png" />
     <Content Include="js\default.js" />
     <Content Include="css\default.css" />
+    <Content Include="js\htmlparser.js" />
+    <Content Include="js\htmlparser.min.js" />
     <Content Include="js\jquery-1.7.2.js" />
     <Content Include="js\jquery-1.7.2.min.js" />
+    <Content Include="js\soupselect.js" />
     <None Include="Wikipedia_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
