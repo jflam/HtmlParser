@@ -10,6 +10,60 @@ div#article {
     column-gap: 20px;
 }
 
+/* Column styling - column break before each section */
+span.mw-headline {
+    break-before: column; 
+    margin-top: 2em 
+}
+
+/* Make some sections hidden for the time being - the infobox and the reflist */
+.infobox {
+    visibility: hidden;
+    display: none;
+}
+
+.reflist {
+    visibility: hidden;
+    display: none;
+}
+
+/* Make some UI elements invisible */
+.editsection {
+    visibility: hidden;
+    display: none;
+}
+
+#siteSub {
+    visibility: hidden;
+    display: none;
+}
+
+.navbox {
+    visibility: hidden;
+    display: none;
+}
+
+.dablink {
+    visibility: hidden;
+    display: none;
+}
+
+#jump-to-nav {
+    visibility: hidden;
+    display: none;
+}
+
+.metadata {
+    visibility: hidden;
+    display: none;
+}
+
+/* Make the end-notes invisible - but add this back as an element that can be toggled on/off */
+.reference {
+    visibility: hidden;
+    display: none;
+}
+    
 h1.hn { 
     font-family: "Segoe UI"; 
     font-size: 16pt; 
