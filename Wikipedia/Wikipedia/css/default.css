@@ -9,12 +9,22 @@ div#ui {
 
 div#article {
     height: 80%;
-    margin-top: 100px;
-    padding-bottom: 100px;
+    padding-top: 80px;
+    padding-bottom: 80px;
     padding-left: 120px;
     overflow: scroll;
     column-count: 3;
     column-gap: 50px;
+}
+
+/* Override some default wikipedia styling */
+.gallery {
+    list-style-type: none;
+}
+
+p {
+    font-size: 10.5pt;
+    line-height: 1.5em;
 }
 
 /* Column styling - column break before each section */

@@ -170,7 +170,9 @@
     };
 
     app.render_wikipedia = function () {
-        $.ajax("http://en.wikipedia.org/wiki/Portsmouth").then(
+        //var url = "http://en.wikipedia.org/wiki/Portsmouth";
+        var url = "http://en.wikipedia.org/wiki/American_Idol";
+        $.ajax(url).then(
             function (response) {
                 var parser = new Tautologistics.NodeHtmlParser.Parser(app.handler);
                 parser.parseComplete(response);
