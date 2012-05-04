@@ -2,12 +2,19 @@
     color: white;
 }
 
-div#article {
+div#ui {
     width: 100%;
     height: 100%;
+}
+
+div#article {
+    height: 80%;
+    margin-top: 100px;
+    padding-bottom: 100px;
+    padding-left: 120px;
     overflow: scroll;
     column-count: 3;
-    column-gap: 20px;
+    column-gap: 50px;
 }
 
 /* Column styling - column break before each section */
@@ -17,43 +24,27 @@ span.mw-headline {
 }
 
 /* Make some sections hidden for the time being - the infobox and the reflist */
-.infobox {
-    visibility: hidden;
-    display: none;
-}
-
-.reflist {
+.infobox,
+.toc,
+.reflist,
+.catlinks,
+.articlefeedback,
+.printfooter {
     visibility: hidden;
     display: none;
 }
 
 /* Make some UI elements invisible */
-.editsection {
-    visibility: hidden;
-    display: none;
-}
-
-#siteSub {
-    visibility: hidden;
-    display: none;
-}
-
-.navbox {
-    visibility: hidden;
-    display: none;
-}
-
-.dablink {
-    visibility: hidden;
-    display: none;
-}
-
-#jump-to-nav {
-    visibility: hidden;
-    display: none;
-}
-
-.metadata {
+.magnify,
+.portal,
+.editsection,
+#siteSub,
+.navbox,
+.dablink,
+#jump-to-nav,
+.metadata,
+#coordinates
+{
     visibility: hidden;
     display: none;
 }
@@ -63,7 +54,8 @@ span.mw-headline {
     visibility: hidden;
     display: none;
 }
-    
+
+/* General styling for the app */    
 h1.hn { 
     font-family: "Segoe UI"; 
     font-size: 16pt; 
