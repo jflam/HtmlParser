@@ -220,49 +220,21 @@
                 //else
                 //    // parsing done ... do something
             });
-
-            var xhrRequest;
-
-            // Initialize our search suggestions provider
-            // Provide suggestions using an URL that supports the Open Search suggestion format.
-            // This code should be placed in your apps global scope, e.g. default.js, and run as soon as your app is launched.
-            Windows.ApplicationModel.Search.SearchPane.getForCurrentView().onsuggestionsrequested = function (eventObject) {
-                var queryText = eventObject.queryText, language = eventObject.language, suggestionRequest = eventObject.request;
-
-                // Indicate that we'll obtain suggestions asynchronously:
-                var deferral = suggestionRequest.getDeferral();
-                var suggestionUri = "http://en.wikipedia.org/w/api.php?action=opensearch&search=" + encodeURIComponent(queryText);
-
-                // Cancel the previous suggestion request if it is not finished.
-                if (xhrRequest && xhrRequest.cancel) {
-                    xhrRequest.cancel();
+        } else if (eventObject.detail.kind === Windows.ApplicationModel.Activation.ActivationKind.search) {
+                // Use setPromise to indicate to the system that the splash screen must not be torn down
+                // until after processAll and navigate complete asynchronously.
+            eventObject.setPromise(WinJS.UI.processAll().then(function () {
+                if (eventObject.detail.queryText === "") {
+                    // Navigate to your landing page since the user is pre-scoping to your app.
+                } else {
+                    // Display results in UI for eventObject.detail.queryText and eventObject.detail.language.
+                    // eventObject.detail.language represents user's locale.
                 }
 
-                // Create request to obtain suggestions from service and supply them to the Search Pane.
-                xhrRequest = WinJS.xhr({ url: suggestionUri });
-                xhrRequest.done(
-                    function (request) {
-                        if (request.responseText) {
-                            var parsedResponse = JSON.parse(request.responseText);
-                            if (parsedResponse && parsedResponse instanceof Array) {
-                                var suggestions = parsedResponse[1];
-                                if (suggestions) {
-                                    suggestionRequest.searchSuggestionCollection.appendQuerySuggestions(suggestions);
-                                    WinJS.log && WinJS.log("Suggestions provided for query: " + queryText, "sample", "status");
-                                } else {
-                                    WinJS.log && WinJS.log("No suggestions provided for query: " + queryText, "sample", "status");
-                                }
-                            }
-                        }
-
-                        deferral.complete(); // Indicate we're done supplying suggestions.
-                    },
-                    function (error) {
-                        WinJS.log && WinJS.log("Error retrieving suggestions for query: " + queryText, "sample", "status");
-                        // Call complete on the deferral when there is an error.
-                        deferral.complete();
-                    });
-            };
+                // Navigate to the first scenario since it handles search activation.
+                var url = scenarios[0].url;
+                return WinJS.Navigation.navigate(url, { searchDetails: eventObject.detail });
+            }));
         }
     };
 
@@ -274,6 +246,55 @@
         // asynchronous operation before your application is suspended, call
         // args.setPromise().
     };
+
+    // Register for search 
+    Windows.ApplicationModel.Search.SearchPane.getForCurrentView().onquerysubmitted = function (eventObject) {
+        WinJS.log && WinJS.log("User submitted the search query: " + eventObject.queryText, "sample", "status");
+    };
+
+    var xhrRequest;
+
+    // Register and initialize our search suggestions provider
+    // Provide suggestions using an URL that supports the Open Search suggestion format.
+    // This code should be placed in your apps global scope, e.g. default.js, and run as soon as your app is launched.
+    Windows.ApplicationModel.Search.SearchPane.getForCurrentView().onsuggestionsrequested = function (eventObject) {
+        var queryText = eventObject.queryText, language = eventObject.language, suggestionRequest = eventObject.request;
+
+        // Indicate that we'll obtain suggestions asynchronously:
+        var deferral = suggestionRequest.getDeferral();
+        var suggestionUri = "http://en.wikipedia.org/w/api.php?action=opensearch&search=" + encodeURIComponent(queryText);
+
+        // Cancel the previous suggestion request if it is not finished.
+        if (xhrRequest && xhrRequest.cancel) {
+            xhrRequest.cancel();
+        }
+
+        // Create request to obtain suggestions from service and supply them to the Search Pane.
+        xhrRequest = WinJS.xhr({ url: suggestionUri });
+        xhrRequest.done(
+            function (request) {
+                if (request.responseText) {
+                    var parsedResponse = JSON.parse(request.responseText);
+                    if (parsedResponse && parsedResponse instanceof Array) {
+                        var suggestions = parsedResponse[1];
+                        if (suggestions) {
+                            suggestionRequest.searchSuggestionCollection.appendQuerySuggestions(suggestions);
+                            WinJS.log && WinJS.log("Suggestions provided for query: " + queryText, "sample", "status");
+                        } else {
+                            WinJS.log && WinJS.log("No suggestions provided for query: " + queryText, "sample", "status");
+                        }
+                    }
+                }
+
+                deferral.complete(); // Indicate we're done supplying suggestions.
+            },
+            function (error) {
+                WinJS.log && WinJS.log("Error retrieving suggestions for query: " + queryText, "sample", "status");
+                // Call complete on the deferral when there is an error.
+                deferral.complete();
+            });
+    };
+
 
     app.start();
 })();
