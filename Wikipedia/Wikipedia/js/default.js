@@ -169,10 +169,13 @@
         return html;
     };
 
-    app.render_wikipedia = function () {
-        //var url = "http://en.wikipedia.org/wiki/Portsmouth";
-        var url = "http://en.wikipedia.org/wiki/North_American_P-51_Mustang";
-        //var url = "http://en.wikipedia.org/wiki/American_Idol";
+    //var url = "http://en.wikipedia.org/wiki/Portsmouth";
+    //var url = "http://en.wikipedia.org/wiki/North_American_P-51_Mustang";
+    //var url = "http://en.wikipedia.org/wiki/American_Idol";
+    app.render_wikipedia = function (url) {
+        // TODOO: This callback in a search handler is an example of a swallowing exception event. Doc this in the 
+        // errors doc as a simple example of something that even 1st chance exceptions don't catch. Make
+        // sure that I understand exactly why this happens.
         $.ajax(url).then(
             function (response) {
                 var parser = new Tautologistics.NodeHtmlParser.Parser(app.handler);
@@ -204,21 +207,14 @@
             args.setPromise(WinJS.UI.processAll());
 
             document.getElementById("render_wikipedia").addEventListener("click", function () {
-                app.render_wikipedia();
+                var url = "http://en.wikipedia.org/wiki/Portsmouth";
+                app.render_wikipedia(url);
             });
 
             document.getElementById("render_hackernews").addEventListener("click", function () {
                 app.parse_hackernews().then(function (comment_thread) {
                     article.innerHTML = app.render_hackernews(comment_thread);
                 });
-            });
-
-            // Initialize our soupselect handler
-            app.handler = new Tautologistics.NodeHtmlParser.DefaultHandler(function (error, dom) {
-                //if (error)
-                //    // error
-                //else
-                //    // parsing done ... do something
             });
         } else if (eventObject.detail.kind === Windows.ApplicationModel.Activation.ActivationKind.search) {
                 // Use setPromise to indicate to the system that the splash screen must not be torn down
@@ -236,6 +232,14 @@
                 return WinJS.Navigation.navigate(url, { searchDetails: eventObject.detail });
             }));
         }
+
+        // Initialize our soupselect handler -- regardless of execution path -- this is a crappy error experience ... need to report this!!!
+        app.handler = new Tautologistics.NodeHtmlParser.DefaultHandler(function (error, dom) {
+            //if (error)
+            //    // error
+            //else
+            //    // parsing done ... do something
+        });
     };
 
     app.oncheckpoint = function (args) {
@@ -249,7 +253,11 @@
 
     // Register for search 
     Windows.ApplicationModel.Search.SearchPane.getForCurrentView().onquerysubmitted = function (eventObject) {
-        WinJS.log && WinJS.log("User submitted the search query: " + eventObject.queryText, "sample", "status");
+        // TODO: what is the heuristic for mapping to URL? Replace spaces with underscores?
+        // Do I do a search and return the first search result?
+        var query = eventObject.queryText;
+        var article_url = "http://en.wikipedia.org/wiki/" + query.replace(' ', '_');
+        app.render_wikipedia(article_url);
     };
 
     var xhrRequest;
