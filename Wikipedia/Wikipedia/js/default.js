@@ -251,11 +251,24 @@
         // args.setPromise().
     };
 
+    app.search_wikipedia = function (query) {
+        // URI en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=microsoft&srlimit=10
+        var uri = "http://en.wikipedia.org/w/api.php?action=query&list=search&format=json&&srlimit=10&srsearch=";
+        var search_uri = uri + encodeURIComponent(query);
+        $.ajax(search_uri).then(
+            function (response) {
+                var x = 42;
+            });
+    };
+
     // Register for search 
     Windows.ApplicationModel.Search.SearchPane.getForCurrentView().onquerysubmitted = function (eventObject) {
         // TODO: what is the heuristic for mapping to URL? Replace spaces with underscores?
         // Do I do a search and return the first search result?
+        // TODO: navigate to the search results page ...?
+        // How do I do navigation using this framework?
         var query = eventObject.queryText;
+        // app.search_wikipedia(query);
         var article_url = "http://en.wikipedia.org/wiki/" + query.replace(' ', '_');
         app.render_wikipedia(article_url);
     };
