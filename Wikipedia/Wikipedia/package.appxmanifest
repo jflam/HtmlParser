@@ -18,6 +18,10 @@
       <VisualElements DisplayName="Wikipedia" Logo="images\logo.png" SmallLogo="images\smalllogo.png" Description="Wikipedia" ForegroundText="light" BackgroundColor="#464646">
         <DefaultTile ShowName="allLogos" />
         <SplashScreen Image="images\splashscreen.png" />
+        <InitialRotationPreference>
+          <Rotation Preference="portrait" />
+          <Rotation Preference="landscape" />
+        </InitialRotationPreference>
       </VisualElements>
       <Extensions>
         <Extension Category="windows.search" />

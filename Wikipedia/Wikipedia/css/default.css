@@ -131,6 +131,17 @@ div#article {
 }
 
 @media screen and (-ms-view-state: filled) {
+
+div#article {
+    height: 80%;
+    padding-top: 80px;
+    padding-bottom: 80px;
+    padding-left: 120px;
+    overflow: scroll;
+    column-count: 2;
+    column-gap: 50px;
+}
+
 }
 
 @media screen and (-ms-view-state: snapped) {
@@ -146,4 +157,14 @@ div#article {
 }
 
 @media screen and (-ms-view-state: fullscreen-portrait) {
+
+div#article {
+    height: 100%;
+    padding-top: 80px;
+    padding-bottom: 80px;
+    padding-left: 80px;
+    padding-right: 80px;
+    overflow: scroll;
+}
+
 }
