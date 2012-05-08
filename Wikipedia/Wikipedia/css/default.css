@@ -7,16 +7,6 @@ div#ui {
     height: 100%;
 }
 
-div#article {
-    height: 80%;
-    padding-top: 80px;
-    padding-bottom: 80px;
-    padding-left: 120px;
-    overflow: scroll;
-    column-count: 3;
-    column-gap: 50px;
-}
-
 /* Override some default wikipedia styling */
 .gallery {
     list-style-type: none;
@@ -127,12 +117,32 @@ a:visited {
 }
 
 @media screen and (-ms-view-state: fullscreen-landscape) {
+
+div#article {
+    height: 80%;
+    padding-top: 80px;
+    padding-bottom: 80px;
+    padding-left: 120px;
+    overflow: scroll;
+    column-count: 3;
+    column-gap: 50px;
+}
+
 }
 
 @media screen and (-ms-view-state: filled) {
 }
 
 @media screen and (-ms-view-state: snapped) {
+
+div#article {
+    height: 100%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    overflow: scroll;
+}
+
 }
 
 @media screen and (-ms-view-state: fullscreen-portrait) {
