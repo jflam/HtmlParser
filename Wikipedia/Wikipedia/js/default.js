@@ -181,16 +181,40 @@
                 var parser = new Tautologistics.NodeHtmlParser.Parser(app.handler);
                 parser.parseComplete(response);
 
+                // We need to rewrite all <a> elements to point to a navigation event in the page
                 var dom = app.handler.dom;
+                var anchors = SoupSelect.select(dom, "a");
+                for (var i = 0; i < anchors.length; i++) {
+                    var anchor = anchors[i];
+
+                    if (anchor.attribs.href) {
+                        var link = anchor.attribs.href.indexOf("/wiki/", 0);
+                        var href = null;
+                        if (link >= 0) {
+                            if (link == 0) {
+                                // relative link to wikipedia
+                                href = "http://en.wikipedia.org" + anchor.attribs.href;
+                            } else {
+                                // absolute link to wikipedia
+                                href = "http:" + anchor.attribs.href;
+                            }
+                            anchor.attribs.href = href;
+                        }
+                    }
+                }
+
                 var body = SoupSelect.select(dom, "div.mw-body")[0];
                 var html = app.inner_html(body);
+
                 var clean_html = window.toStaticHTML(html);
                 article.innerHTML = window.toStaticHTML(clean_html);
 
-                //// TODO: useful hack while we wait for a fix for this bug
-                //MSApp.execUnsafeLocalFunction(function () {
-                //    article.innerHTML = html;
-                //});
+                // TODO: navigation back stack!!
+                $('div.mw-body a').click(function (e) {
+                    e.preventDefault();
+                    var target = e.currentTarget.href;
+                    app.render_wikipedia(target);
+                });
             });
     }
 
