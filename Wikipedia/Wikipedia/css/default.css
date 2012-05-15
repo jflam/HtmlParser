@@ -2,11 +2,6 @@
     color: white;
 }
 
-div#ui {
-    width: 100%;
-    height: 100%;
-}
-
 /* Override some default wikipedia styling */
 .gallery {
     list-style-type: none;
@@ -117,54 +112,48 @@ a:visited {
 }
 
 @media screen and (-ms-view-state: fullscreen-landscape) {
-
-div#article {
-    height: 80%;
-    padding-top: 80px;
-    padding-bottom: 80px;
-    padding-left: 120px;
-    overflow: scroll;
-    column-count: 3;
-    column-gap: 50px;
-}
-
+    div#article {
+        height: calc(100% - 80px - 80px);
+        padding-top: 80px;
+        padding-bottom: 80px;
+        padding-left: 120px;
+        overflow: scroll;
+        column-count: 3;
+        column-gap: 50px;
+    }
 }
 
 @media screen and (-ms-view-state: filled) {
-
-div#article {
-    height: 80%;
-    padding-top: 80px;
-    padding-bottom: 80px;
-    padding-left: 120px;
-    overflow: scroll;
-    column-count: 2;
-    column-gap: 50px;
-}
-
+    div#article {
+        height: calc(100% - 80px - 80px);
+        padding-top: 80px;
+        padding-bottom: 80px;
+        padding-left: 120px;
+        overflow: scroll;
+        column-count: 2;
+        column-gap: 50px;
+    }
 }
 
 @media screen and (-ms-view-state: snapped) {
-
-div#article {
-    height: 100%;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    padding-left: 20px;
-    overflow: scroll;
-}
-
+    div#article {
+        height: calc(100% - 20px - 20px);
+        width: calc(100% - 20px);
+        padding-top: 20px;
+        padding-bottom: 20px;
+        padding-left: 20px;
+        overflow: scroll;
+    }
 }
 
 @media screen and (-ms-view-state: fullscreen-portrait) {
-
-div#article {
-    height: 100%;
-    padding-top: 80px;
-    padding-bottom: 80px;
-    padding-left: 80px;
-    padding-right: 80px;
-    overflow: scroll;
-}
-
+    div#article {
+        height: calc(100% - 80px - 80px);
+        width: calc(100% - 80px - 80px);
+        padding-top: 80px;
+        padding-bottom: 80px;
+        padding-left: 80px;
+        padding-right: 80px;
+        overflow: scroll;
+    }
 }
