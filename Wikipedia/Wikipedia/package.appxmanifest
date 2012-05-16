@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" StartPage="default.html">
-      <VisualElements DisplayName="Wikipedia" Logo="images\logo.png" SmallLogo="images\smalllogo.png" Description="Wikipedia" ForegroundText="light" BackgroundColor="#464646">
+      <VisualElements DisplayName="Wikipedia" Logo="images\logo.png" SmallLogo="images\smalllogo.png" Description="Wikipedia" ForegroundText="light" BackgroundColor="#ffffff">
         <DefaultTile ShowName="allLogos" />
         <SplashScreen Image="images\splashscreen.png" />
         <InitialRotationPreference>
