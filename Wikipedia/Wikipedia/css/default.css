@@ -101,16 +101,17 @@ span.comment {
     line-height: 90%; 
 }
 
-a:link {
-    color: #00ff21; 
+a {
     text-decoration: none;
     cursor: pointer;
 }
 
+a:link {
+    color: #00ff21; 
+}
+
 a:visited { 
     color: silver; 
-    text-decoration: none; 
-    cursor: pointer;
 }
 
 div#article {
