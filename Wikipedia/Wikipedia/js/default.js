@@ -209,7 +209,11 @@
                 var clean_html = window.toStaticHTML(html);
                 article.innerHTML = window.toStaticHTML(clean_html);
 
+                // Scroll back to the top
+                $("article").scrollTop(0);
+
                 // TODO: navigation back stack!!
+                // TODO: refactor this navigation code into a separate function vs. the current lambda
                 $('div.mw-body a').click(function (e) {
                     e.preventDefault();
                     var target = e.currentTarget.href;
@@ -259,11 +263,16 @@
 
         // Initialize our soupselect handler -- regardless of execution path -- this is a crappy error experience ... need to report this!!!
         app.handler = new Tautologistics.NodeHtmlParser.DefaultHandler(function (error, dom) {
+            // TODO: Error handling in the parser 
             //if (error)
             //    // error
             //else
             //    // parsing done ... do something
         });
+
+        // Initialize our share source handler
+        var dataTransferManager = Windows.ApplicationModel.DataTransfer.DataTransferManager.getForCurrentView();
+        dataTransferManager.addEventListener("datarequested", app.data_requested);
     };
 
     app.oncheckpoint = function (args) {
@@ -284,6 +293,26 @@
                 var x = 42;
             });
     };
+
+    // Callback that is called when the share contract is activated
+    app.data_requested = function (e) {
+        var request = e.request;
+        var range = document.createRange();
+        var element = document.getElementById("article");
+        range.selectNode(element);
+
+        // TODO: how can i tell if there is a selection here?
+        // TODO: uncomment this for the default no selection case
+        request.data = MSApp.createDataPackage(range);
+
+        // TODO: Hit this path if we have a selection
+        // request.data = MSApp.createDataPackageFromSelection();
+
+        // TODO: extract out my template for white background and inject an inline style sheet into this fragment
+        // TODO: extract the title of the wikipedia article
+        request.data.properties.title = "my first data package";
+        request.data.properties.description = "Wikipedia article";
+    }
 
     // Register for search 
     Windows.ApplicationModel.Search.SearchPane.getForCurrentView().onquerysubmitted = function (eventObject) {
