@@ -104,11 +104,13 @@ span.comment {
 a:link {
     color: #00ff21; 
     text-decoration: none;
+    cursor: pointer;
 }
 
 a:visited { 
     color: silver; 
     text-decoration: none; 
+    cursor: pointer;
 }
 
 @media screen and (-ms-view-state: fullscreen-landscape) {
