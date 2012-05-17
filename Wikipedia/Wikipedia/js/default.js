@@ -106,8 +106,10 @@
     app.onactivated = function (args) {
         if (args.detail.kind === activation.ActivationKind.launch) {
             if (args.detail.previousExecutionState !== activation.ApplicationExecutionState.terminated) {
-                // TODO: This application has been newly launched. Initialize
+                // This application has been newly launched. Initialize
                 // your application here.
+                var url = "http://en.wikipedia.org/wiki/Portsmouth";
+                app.render_wikipedia(url);
             } else {
                 // TODO: This application has been reactivated from suspension.
                 // Restore application state here.
@@ -115,7 +117,8 @@
 
             args.setPromise(WinJS.UI.processAll());
 
-            document.getElementById("render_wikipedia").addEventListener("click", function () {
+            document.getElementById("go_back").addEventListener("click", function () {
+                // TODO: This will be the go-back button
                 var url = "http://en.wikipedia.org/wiki/Portsmouth";
                 app.render_wikipedia(url);
             });
