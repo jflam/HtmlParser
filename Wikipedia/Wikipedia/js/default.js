@@ -103,13 +103,14 @@
             });
     }
 
+    var default_page = "http://en.wikipedia.org/wiki/Windows_8";
+
     app.onactivated = function (args) {
         if (args.detail.kind === activation.ActivationKind.launch) {
             if (args.detail.previousExecutionState !== activation.ApplicationExecutionState.terminated) {
                 // This application has been newly launched. Initialize
                 // your application here.
-                var url = "http://en.wikipedia.org/wiki/Portsmouth";
-                app.render_wikipedia(url);
+                app.render_wikipedia(default_page);
             } else {
                 // TODO: This application has been reactivated from suspension.
                 // Restore application state here.
@@ -119,8 +120,7 @@
 
             document.getElementById("go_back").addEventListener("click", function () {
                 // TODO: This will be the go-back button
-                var url = "http://en.wikipedia.org/wiki/Portsmouth";
-                app.render_wikipedia(url);
+                app.render_wikipedia(default_page);
             });
         } else if (eventObject.detail.kind === Windows.ApplicationModel.Activation.ActivationKind.search) {
                 // Use setPromise to indicate to the system that the splash screen must not be torn down
