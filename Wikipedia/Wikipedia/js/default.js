@@ -5,6 +5,8 @@
 
     var app = WinJS.Application;
     var activation = Windows.ApplicationModel.Activation;
+    var backstack = [];
+
     WinJS.strictProcessing();
 
     app.handler = null;
@@ -93,14 +95,12 @@
                 var clean_html = window.toStaticHTML(html);
                 article.innerHTML = window.toStaticHTML(clean_html);
 
-                // Scroll back to the top
-                $("article").scrollTop(0);
-
-                // TODO: navigation back stack!!
-                // TODO: refactor this navigation code into a separate function vs. the current lambda
                 $('div.mw-body a').click(function (e) {
                     e.preventDefault();
                     var target = e.currentTarget.href;
+
+                    // Push the current url (captured in this lambda) onto the back stack
+                    backstack.push(url);
                     app.render_wikipedia(target);
                 });
             });
@@ -121,9 +121,12 @@
 
             args.setPromise(WinJS.UI.processAll());
 
+            // Handle the go back button click
             document.getElementById("go_back").addEventListener("click", function () {
-                // TODO: This will be the go-back button
-                app.render_wikipedia(default_page);
+                if (backstack.length > 0) {
+                    var url = backstack.pop();
+                    app.render_wikipedia(url);
+                }
             });
         } else if (eventObject.detail.kind === Windows.ApplicationModel.Activation.ActivationKind.search) {
                 // Use setPromise to indicate to the system that the splash screen must not be torn down
