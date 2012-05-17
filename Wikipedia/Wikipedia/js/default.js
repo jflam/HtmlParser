@@ -151,6 +151,12 @@
             //    // parsing done ... do something
         });
 
+        // Initialize our settings page
+        WinJS.Application.onsettings = function (e) {
+            e.detail.applicationcommands = { "defaults": { title: "Defaults", href: "/settings.html" } };
+            WinJS.UI.SettingsFlyout.populateSettings(e);
+        };
+
         // Initialize our share source handler
         var dataTransferManager = Windows.ApplicationModel.DataTransfer.DataTransferManager.getForCurrentView();
         dataTransferManager.addEventListener("datarequested", app.data_requested);

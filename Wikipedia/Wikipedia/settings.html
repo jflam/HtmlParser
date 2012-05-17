@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <title>Wikipedia settings</title>
+    </head>
+    <body>
+        <div data-win-control="WinJS.UI.SettingsFlyout" aria-label="App Settings Flyout" data-win-options="{settingsCommandId:'defaults',width:'narrow'}">
+            <div class="win-ui-dark win-header" style="background-color:#fff"> 
+                <button type="button" onclick="WinJS.UI.SettingsFlyout.show()" class="win-ui-dark win-backbutton"></button>
+                <div class="win-label" style="color:#000">Wikipedia</div>
+                <img src="/images/smalllogo.png" style="position: absolute; right: 40px;"/>
+            </div>
+            <div class="win-content settings-body">
+                <div class="win-settings-section">
+                    <h3>Appearance</h3>
+                    <p>Choose the theme for Wikipedia.</p>
+                    <select aria-label="Color theme select control">
+                        <option value="Light">Light</option>
+                        <option value="Dark" selected>Dark</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
