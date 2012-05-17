@@ -49,8 +49,7 @@
             } else if (node.type == "tag") {
                 html += "<" + node.name + " " + attributes + ">";
             }
-
-
+            
             if (node.children != null) {
                 for (var i = 0; i < node.children.length; i++) {
                     var child = node.children[i];
@@ -134,49 +133,6 @@
             });
     }
 
-    // Function that provides search suggestions to the search charm. This
-    // code uses the OpenQuery AJAX API on MediaWiki to retrieve search
-    // suggestions.
-
-    var suggestionUri = "http://en.wikipedia.org/w/api.php?action=opensearch&search=";
-
-    function search_suggestions(eventObject) {
-        var queryText = eventObject.queryText, language = eventObject.language, suggestionRequest = eventObject.request;
-
-        // Indicate that we'll obtain suggestions asynchronously:
-        var deferral = suggestionRequest.getDeferral();
-
-        // Cancel the previous suggestion request if it is not finished.
-        if (xhrRequest && xhrRequest.cancel) {
-            xhrRequest.cancel();
-        }
-
-        // Create request to obtain suggestions from service and supply them to the Search Pane.
-        xhrRequest = WinJS.xhr({ url: suggestionUri + encodeURIComponent(queryText) });
-        xhrRequest.done(
-            function (request) {
-                if (request.responseText) {
-                    var parsedResponse = JSON.parse(request.responseText);
-                    if (parsedResponse && parsedResponse instanceof Array) {
-                        var suggestions = parsedResponse[1];
-                        if (suggestions) {
-                            suggestionRequest.searchSuggestionCollection.appendQuerySuggestions(suggestions);
-                            WinJS.log && WinJS.log("Suggestions provided for query: " + queryText, "sample", "status");
-                        } else {
-                            WinJS.log && WinJS.log("No suggestions provided for query: " + queryText, "sample", "status");
-                        }
-                    }
-                }
-
-                deferral.complete(); // Indicate we're done supplying suggestions.
-            },
-            function (error) {
-                WinJS.log && WinJS.log("Error retrieving suggestions for query: " + queryText, "sample", "status");
-                // Call complete on the deferral when there is an error.
-                deferral.complete();
-            });
-    }
-
     // Callback that is called when the share contract is activated
     function share(e) {
         var request = e.request;
@@ -216,6 +172,51 @@
         var article_url = "http://en.wikipedia.org/wiki/" + query.replace(' ', '_');
         wikipedia.render(article_url);
     };
+
+
+    // Function that provides search suggestions to the search charm. This
+    // code uses the OpenQuery AJAX API on MediaWiki to retrieve search
+    // suggestions. 
+    // TODO: make this function robust in the face of no network availability
+    
+    var suggestionUri = "http://en.wikipedia.org/w/api.php?action=opensearch&search=";
+
+    function search_suggestions(eventObject) {
+        var queryText = eventObject.queryText, language = eventObject.language, suggestionRequest = eventObject.request;
+
+        // Indicate that we'll obtain suggestions asynchronously:
+        var deferral = suggestionRequest.getDeferral();
+
+        // Cancel the previous suggestion request if it is not finished.
+        if (xhrRequest && xhrRequest.cancel) {
+            xhrRequest.cancel();
+        }
+
+        // Create request to obtain suggestions from service and supply them to the Search Pane.
+        xhrRequest = WinJS.xhr({ url: suggestionUri + encodeURIComponent(queryText) });
+        xhrRequest.done(
+            function (request) {
+                if (request.responseText) {
+                    var parsedResponse = JSON.parse(request.responseText);
+                    if (parsedResponse && parsedResponse instanceof Array) {
+                        var suggestions = parsedResponse[1];
+                        if (suggestions) {
+                            suggestionRequest.searchSuggestionCollection.appendQuerySuggestions(suggestions);
+                            WinJS.log && WinJS.log("Suggestions provided for query: " + queryText, "sample", "status");
+                        } else {
+                            WinJS.log && WinJS.log("No suggestions provided for query: " + queryText, "sample", "status");
+                        }
+                    }
+                }
+
+                deferral.complete(); // Indicate we're done supplying suggestions.
+            },
+            function (error) {
+                WinJS.log && WinJS.log("Error retrieving suggestions for query: " + queryText, "sample", "status");
+                // Call complete on the deferral when there is an error.
+                deferral.complete();
+            });
+    }
 
     // Navigate backwards
 

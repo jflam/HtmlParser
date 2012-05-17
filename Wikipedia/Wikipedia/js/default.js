@@ -7,35 +7,8 @@
 
     WinJS.strictProcessing();
 
-    app.onactivated = function (args) {
-        if (args.detail.kind === activation.ActivationKind.launch) {
-            if (args.detail.previousExecutionState !== activation.ApplicationExecutionState.terminated) {
-                // This application has been newly launched. Initialize
-                // your application here.
-                wikipedia.render(default_page);
-            } else {
-                // TODO: This application has been reactivated from suspension.
-                // Restore application state here.
-            }
-
-            args.setPromise(WinJS.UI.processAll());
-
-            // Bind the go back button click event to our navigation event handler
-            document.getElementById("go_back").addEventListener("click", wikipedia.go_back);
-
-        } else if (args.detail.kind === Windows.ApplicationModel.Activation.ActivationKind.search) {
-            args.setPromise(WinJS.UI.processAll().then(function () {
-                if (args.detail.queryText === "") {
-                    // Navigate to your landing page since the user is pre-scoping to your app.
-                } else {
-                    // Display results in UI for eventObject.detail.queryText and eventObject.detail.language.
-                    // eventObject.detail.language represents user's locale.
-                    var query = args.detail.queryText;
-                    var article_url = "http://en.wikipedia.org/wiki/" + query.replace(' ', '_');
-                    wikipedia.render(article_url);
-                }
-            }));
-        }
+    app.newly_launched = function (args) {
+        wikipedia.render(default_page);
     };
 
     app.oncheckpoint = function (args) {
@@ -45,6 +18,41 @@
         // saved and restored across suspension. If you need to complete an
         // asynchronous operation before your application is suspended, call
         // args.setPromise().
+    };
+
+    app.reactivated_from_suspension = function (args) {
+    };
+
+    app.search_activation = function (args) {
+        args.setPromise(WinJS.UI.processAll().then(function () {
+            if (args.detail.queryText === "") {
+                // Navigate to your landing page since the user is pre-scoping to your app.
+            } else {
+                // Display results in UI for eventObject.detail.queryText and eventObject.detail.language.
+                // eventObject.detail.language represents user's locale.
+                var query = args.detail.queryText;
+                var article_url = "http://en.wikipedia.org/wiki/" + query.replace(' ', '_');
+                wikipedia.render(article_url);
+            }
+        }));
+    };
+
+    app.onactivated = function (args) {
+        if (args.detail.kind === activation.ActivationKind.launch) {
+            if (args.detail.previousExecutionState !== activation.ApplicationExecutionState.terminated) {
+                app.newly_launched();
+            } else {
+                app.reactivated_from_suspension();
+            }
+
+            args.setPromise(WinJS.UI.processAll());
+
+            // Bind the go back button click event to our navigation event handler
+            document.getElementById("go_back").addEventListener("click", wikipedia.go_back);
+
+        } else if (args.detail.kind === Windows.ApplicationModel.Activation.ActivationKind.search) {
+            app.search_activation(args);
+        }
     };
 
     // Register our application settings page
