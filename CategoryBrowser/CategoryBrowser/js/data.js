@@ -14,7 +14,7 @@
     // Each of these sample groups must have a unique key to be displayed
     // separately.
     var sampleGroups = [
-        { key: "group1", title: "Articles", subtitle: "Articles", backgroundImage: darkGray, description: groupDescription },
+        { key: "Articles", title: "Articles", subtitle: "Articles", backgroundImage: darkGray, description: groupDescription },
         { key: "group2", title: "Sub Categories", subtitle: "Sub Categories", backgroundImage: lightGray, description: groupDescription },
         { key: "group3", title: "Related Categories", subtitle: "Related Categories", backgroundImage: mediumGray, description: groupDescription },
     ];
@@ -23,10 +23,6 @@
     // group.
     var sampleItems = [
         { group: sampleGroups[0], title: "Item Title: 1", subtitle: "Item Subtitle: 1", description: itemDescription, content: itemContent, backgroundImage: lightGray },
-        { group: sampleGroups[0], title: "Item Title: 2", subtitle: "Item Subtitle: 2", description: itemDescription, content: itemContent, backgroundImage: darkGray },
-        { group: sampleGroups[0], title: "Item Title: 3", subtitle: "Item Subtitle: 3", description: itemDescription, content: itemContent, backgroundImage: mediumGray },
-        { group: sampleGroups[0], title: "Item Title: 4", subtitle: "Item Subtitle: 4", description: itemDescription, content: itemContent, backgroundImage: darkGray },
-        { group: sampleGroups[0], title: "Item Title: 5", subtitle: "Item Subtitle: 5", description: itemDescription, content: itemContent, backgroundImage: mediumGray },
 
         { group: sampleGroups[1], title: "Item Title: 1", subtitle: "Item Subtitle: 1", description: itemDescription, content: itemContent, backgroundImage: darkGray },
         { group: sampleGroups[1], title: "Item Title: 2", subtitle: "Item Subtitle: 2", description: itemDescription, content: itemContent, backgroundImage: mediumGray },

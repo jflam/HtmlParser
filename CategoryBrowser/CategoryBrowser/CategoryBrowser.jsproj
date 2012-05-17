@@ -32,7 +32,7 @@
     <ProjectConfiguration Include="Release|x86">
       <Configuration>Release</Configuration>
       <Platform>x86</Platform>
-    </ProjectConfiguration>  
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>dd9bfeae-9a55-4ea2-9c80-1bae2d4ec3b3</ProjectGuid>
@@ -57,7 +57,10 @@
     <Content Include="images\storelogo.png" />
     <Content Include="js\data.js" />
     <Content Include="js\default.js" />
+    <Content Include="js\htmlparser.js" />
+    <Content Include="js\jquery-1.7.2.js" />
     <Content Include="js\navigator.js" />
+    <Content Include="js\soupselect.js" />
     <Content Include="pages\itemDetail\itemDetail.css" />
     <Content Include="pages\itemDetail\itemDetail.html" />
     <Content Include="pages\itemDetail\itemDetail.js" />
