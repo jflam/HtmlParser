@@ -6,6 +6,7 @@
     var app = WinJS.Application;
     var activation = Windows.ApplicationModel.Activation;
     var backstack = [];
+    var default_page = "http://en.wikipedia.org/wiki/Windows_8";
 
     WinJS.strictProcessing();
 
@@ -106,8 +107,6 @@
             });
     }
 
-    var default_page = "http://en.wikipedia.org/wiki/Windows_8";
-
     app.onactivated = function (args) {
         if (args.detail.kind === activation.ActivationKind.launch) {
             if (args.detail.previousExecutionState !== activation.ApplicationExecutionState.terminated) {
@@ -121,31 +120,28 @@
 
             args.setPromise(WinJS.UI.processAll());
 
-            // Handle the go back button click
+            // Bind the go back button click event to our navigation event handler
             document.getElementById("go_back").addEventListener("click", function () {
                 if (backstack.length > 0) {
                     var url = backstack.pop();
                     app.render_wikipedia(url);
                 }
             });
-        } else if (eventObject.detail.kind === Windows.ApplicationModel.Activation.ActivationKind.search) {
-                // Use setPromise to indicate to the system that the splash screen must not be torn down
-                // until after processAll and navigate complete asynchronously.
-            eventObject.setPromise(WinJS.UI.processAll().then(function () {
-                if (eventObject.detail.queryText === "") {
+
+        } else if (args.detail.kind === Windows.ApplicationModel.Activation.ActivationKind.search) {
+            args.setPromise(WinJS.UI.processAll().then(function () {
+                if (args.detail.queryText === "") {
                     // Navigate to your landing page since the user is pre-scoping to your app.
                 } else {
                     // Display results in UI for eventObject.detail.queryText and eventObject.detail.language.
                     // eventObject.detail.language represents user's locale.
+                    var query = args.detail.queryText;
+                    var article_url = "http://en.wikipedia.org/wiki/" + query.replace(' ', '_');
+                    app.render_wikipedia(article_url);
                 }
-
-                // Navigate to the first scenario since it handles search activation.
-                var url = scenarios[0].url;
-                return WinJS.Navigation.navigate(url, { searchDetails: eventObject.detail });
             }));
         }
 
-        // Initialize our soupselect handler -- regardless of execution path -- this is a crappy error experience ... need to report this!!!
         app.handler = new Tautologistics.NodeHtmlParser.DefaultHandler(function (error, dom) {
             // TODO: Error handling in the parser 
             //if (error)
