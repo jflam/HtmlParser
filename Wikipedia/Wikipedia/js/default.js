@@ -94,7 +94,8 @@
                 var html = app.inner_html(body);
 
                 var clean_html = window.toStaticHTML(html);
-                article.innerHTML = window.toStaticHTML(clean_html);
+
+                article.innerHTML = clean_html; 
 
                 $('div.mw-body a').click(function (e) {
                     e.preventDefault();
@@ -177,15 +178,14 @@
     // Callback that is called when the share contract is activated
     app.data_requested = function (e) {
         var request = e.request;
-        var html = null;
         var selection = window.getSelection();
         if (selection.focusNode != null) {
             request.data = MSApp.createDataPackageFromSelection();
         } else {
-            var range = document.createRange();
-            var element = document.getElementById("article");
-            range.selectNode(element);
-            request.data = MSApp.createDataPackage(range);
+            var html = document.getElementById("article").innerHTML;
+            html = "<div><style> .editsection, .infobox, .mw-jump { visibility: hidden; display: none; }</style>" + html + "</div>";
+            html = Windows.ApplicationModel.DataTransfer.HtmlFormatHelper.createHtmlFormat(html);
+            request.data.setHtmlFormat(html);
         }
 
         var parser = new Tautologistics.NodeHtmlParser.Parser(app.handler);
@@ -197,6 +197,7 @@
         if (nodes.length > 0 && nodes[0].children.length > 0) {
             title = nodes[0].children[0].data;
         }
+
         request.data.properties.title = title;
         request.data.properties.description = "Wikipedia article";
     }

@@ -20,16 +20,7 @@ span.mw-headline {
 }
 
 /* Make some sections hidden for the time being - the infobox and the reflist */
-.infobox,
-.vertical-navbox,
-.toc,
-.reflist,
-.catlinks,
-.articlefeedback,
-.printfooter {
-    visibility: hidden;
-    display: none;
-}
+.infobox,.vertical-navbox,.toc,.reflist,.catlinks,.articlefeedback,.printfooter { visibility: hidden; display: none; }
 
 /* Make some UI elements invisible */
 .magnify,

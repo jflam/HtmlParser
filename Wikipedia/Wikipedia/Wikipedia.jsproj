@@ -64,9 +64,6 @@
     <Content Include="js\jquery-1.7.2.min.js" />
     <Content Include="js\soupselect.js" />
     <Content Include="js\wikipedia.js" />
-    <Content Include="searchResults.css" />
-    <Content Include="searchResults.html" />
-    <Content Include="searchResults.js" />
     <None Include="Wikipedia_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
