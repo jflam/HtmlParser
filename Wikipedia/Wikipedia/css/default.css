@@ -21,6 +21,7 @@ span.mw-headline {
 
 /* Make some sections hidden for the time being - the infobox and the reflist */
 .infobox,
+.vertical-navbox,
 .toc,
 .reflist,
 .catlinks,
@@ -79,6 +80,12 @@ div#article {
     overflow: auto;
     -ms-user-select: text;
     cursor: text;
+}
+
+.splash {
+    position: absolute;
+    left: calc((100% - 100px) / 2);
+    top: calc((100% - 50px) / 2);
 }
 
 @media screen and (-ms-view-state: fullscreen-landscape) {

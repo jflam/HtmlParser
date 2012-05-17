@@ -57,6 +57,9 @@
         // TODOO: This callback in a search handler is an example of a swallowing exception event. Doc this in the 
         // errors doc as a simple example of something that even 1st chance exceptions don't catch. Make
         // sure that I understand exactly why this happens.
+
+        // Display loading
+        article.innerHTML = "<img class='splash' src='/images/ajax-loader.gif'>";
         $.ajax(url).then(
             function (response) {
                 var parser = new Tautologistics.NodeHtmlParser.Parser(app.handler);
