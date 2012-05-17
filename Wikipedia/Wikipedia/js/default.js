@@ -181,20 +181,27 @@
     // Callback that is called when the share contract is activated
     app.data_requested = function (e) {
         var request = e.request;
-        var range = document.createRange();
-        var element = document.getElementById("article");
-        range.selectNode(element);
+        var html = null;
+        var selection = window.getSelection();
+        if (selection.focusNode != null) {
+            request.data = MSApp.createDataPackageFromSelection();
+        } else {
+            var range = document.createRange();
+            var element = document.getElementById("article");
+            range.selectNode(element);
+            request.data = MSApp.createDataPackage(range);
+        }
 
-        // TODO: how can i tell if there is a selection here?
-        // TODO: uncomment this for the default no selection case
-        request.data = MSApp.createDataPackage(range);
+        var parser = new Tautologistics.NodeHtmlParser.Parser(app.handler);
+        parser.parseComplete(document.getElementById("article").innerHTML);
 
-        // TODO: Hit this path if we have a selection
-        // request.data = MSApp.createDataPackageFromSelection();
-
-        // TODO: extract out my template for white background and inject an inline style sheet into this fragment
-        // TODO: extract the title of the wikipedia article
-        request.data.properties.title = "my first data package";
+        var dom = app.handler.dom;
+        var nodes = SoupSelect.select(dom, "h1.firstHeading span");
+        var title = "unknown title";
+        if (nodes.length > 0 && nodes[0].children.length > 0) {
+            title = nodes[0].children[0].data;
+        }
+        request.data.properties.title = title;
         request.data.properties.description = "Wikipedia article";
     }
 
@@ -252,7 +259,6 @@
                 deferral.complete();
             });
     };
-
 
     app.start();
 })();
