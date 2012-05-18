@@ -4,7 +4,7 @@
     "use strict";
 
     var default_page = "http://en.wikipedia.org/wiki/Windows_8";
-    var backstack = [];
+    var nav = WinJS.Navigation;
 
     function render(url) {
         articlePageTitle.innerHTML = "";
@@ -20,26 +20,21 @@
             $('div.mw-body a').click(function (e) {
                 e.preventDefault();
                 var target = e.currentTarget.href;
-
-                // Push the current url (captured in this lambda) onto the back stack
-                backstack.push(url);
-                render(target);
+                nav.navigate('/pages/article.html', { url: target });
             });
         });
     }
 
-    function go_back() {
-        if (backstack.length > 0) {
-            var url = backstack.pop();
-            render(url);
-        }
-    }
-
     WinJS.UI.Pages.define("/pages/article.html", {
-        // This function is called whenever a user navigates to this page. It
-        // populates the page elements with the app's data.
+
+        // Show default_page if there aren't any arguments passed
+
         ready: function (element, options) {
-            render(default_page);
+            var url = default_page;
+            if (options != null && options.url != null) {
+                url = options.url;
+            }
+            render(url);
         },
 
         updateLayout: function (element, viewState, lastViewState) {

@@ -48,7 +48,6 @@
 
             args.setPromise(WinJS.UI.processAll().then(function() {
                 // Bind the go back button click event to our navigation event handler
-                document.getElementById("go_back").addEventListener("click", wikipedia.go_back);
                 document.getElementById("go_home").addEventListener("click", function () {
                     nav.navigate("/pages/home.html");
                 });

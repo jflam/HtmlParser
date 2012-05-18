@@ -13,7 +13,6 @@
     });
     
     var activation = Windows.ApplicationModel.Activation;
-    var backstack = [];
     var default_page = "http://en.wikipedia.org/wiki/Windows_8";
     var xhrRequest = null;
 
@@ -125,73 +124,8 @@
         });
     }
 
-    // TODO: remove this function
-    // Render the Wikipedia content. This function rewrites the URLs that link
-    // back to Wikipedia so that we redirect back to the same page, and 
-    // we add the correct entries to our navigation history. 
-    // TODO: This should just return the HTML rather than
-    // side-effecting the world. 
-
-    function render(url) {
-        // TODOO: This callback in a search handler is an example of a swallowing exception event. Doc this in the 
-        // errors doc as a simple example of something that even 1st chance exceptions don't catch. Make
-        // sure that I understand exactly why this happens.
-
-        // Display loading
-        article.innerHTML = "<img class='splash' src='/images/ajax-loader.gif'>";
-        $.ajax(url).then(
-            function (response) {
-                var parser = new Tautologistics.NodeHtmlParser.Parser(handler);
-                parser.parseComplete(response);
-
-                // We need to rewrite all <a> elements to point to a navigation event in the page
-                var dom = handler.dom;
-                var anchors = SoupSelect.select(dom, "a");
-                for (var i = 0; i < anchors.length; i++) {
-                    var anchor = anchors[i];
-
-                    if (anchor.attribs.href) {
-                        var link = anchor.attribs.href.indexOf("/wiki/", 0);
-                        var href = null;
-                        if (link >= 0) {
-                            if (link == 0) {
-                                // relative link to wikipedia
-                                href = "http://en.wikipedia.org" + anchor.attribs.href;
-                            } else {
-                                // absolute link to wikipedia
-                                href = "http:" + anchor.attribs.href;
-                            }
-                            anchor.attribs.href = href;
-                        }
-                    }
-                }
-
-                var body = SoupSelect.select(dom, "div.mw-body")[0];
-                var html = inner_html(body);
-
-                var clean_html = window.toStaticHTML(html);
-
-                article.innerHTML = clean_html;
-
-                // Register the the callback function 
-                // that will handle events from <a> element. We prevent
-                // the default action from occurring (opening up the link
-                // using the http:// protocol handler) but instead redirect
-                // to our internal logic that will simply render the page
-                // using the logic above.
-
-                $('div.mw-body a').click(function (e) {
-                    e.preventDefault();
-                    var target = e.currentTarget.href;
-
-                    // Push the current url (captured in this lambda) onto the back stack
-                    backstack.push(url);
-                    render(target);
-                });
-            });
-    }
-
     // Callback that is called when the share contract is activated
+
     function share(e) {
         var request = e.request;
         var selection = window.getSelection();
@@ -276,15 +210,6 @@
             });
     }
 
-    // Navigate backwards
-
-    function go_back() {
-        if (backstack.length > 0) {
-            var url = backstack.pop();
-            render(url);
-        }
-    }
-
     // Publish functions as part of the wikipedia namespace
 
     WinJS.Namespace.define("wikipedia", {
@@ -292,7 +217,6 @@
         search_suggestions: search_suggestions,
         share: share,
         search: search,
-        go_back: go_back,
         parse: parse
     });
 })();
