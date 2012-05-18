@@ -12,7 +12,7 @@ div#article {
 
 @media screen and (-ms-view-state: fullscreen-landscape) {
     div#article {
-        height: 1000px; /*calc(100% - 80px - 80px);*/
+        height: calc(100vh - 80px - 80px);
         padding-top: 80px;
         padding-bottom: 80px;
         padding-left: 120px;
@@ -23,18 +23,19 @@ div#article {
 
 @media screen and (-ms-view-state: filled) {
     div#article {
-        height: calc(100% - 80px - 80px);
+        height: calc(100vh - 80px - 80px);
         padding-top: 80px;
         padding-bottom: 80px;
         padding-left: 120px;
         column-count: 2;
         column-gap: 50px;
+        overflow: auto; /* why is this needed? */
     }
 }
 
 @media screen and (-ms-view-state: snapped) {
     div#article {
-        height: calc(100% - 20px - 20px);
+        height: calc(100vh - 20px - 20px);
         width: calc(100% - 20px);
         padding-top: 20px;
         padding-bottom: 20px;
@@ -44,11 +45,84 @@ div#article {
 
 @media screen and (-ms-view-state: fullscreen-portrait) {
     div#article {
-        height: calc(100% - 80px - 80px);
-        width: calc(100% - 80px - 80px);
+        height: calc(100vh - 80px - 80px);
+        width: calc(100vw - 80px - 80px);
         padding-top: 80px;
         padding-bottom: 80px;
         padding-left: 80px;
         padding-right: 80px;
     }
+}
+
+/* Override some default wikipedia styling */
+.gallery {
+    list-style-type: none;
+}
+
+p {
+    font-size: 10.5pt;
+    line-height: 1.5em;
+}
+
+/* Column styling - column break before each section */
+span.mw-headline {
+    break-before: column; 
+    margin-top: 2em 
+}
+
+/* Make some sections hidden for the time being - the infobox and the reflist */
+.infobox,
+.vertical-navbox,
+.toc,
+.reflist,
+.catlinks,
+.articlefeedback,
+.printfooter 
+{ 
+    visibility: hidden; display: none; 
+}
+
+/* Make some UI elements invisible */
+.magnify,
+.portal,
+.editsection,
+#siteSub,
+.navbox,
+.dablink,
+#jump-to-nav,
+.metadata,
+#coordinates
+{
+    visibility: hidden;
+    display: none;
+}
+
+/* Make the end-notes invisible - but add this back as an element that can be toggled on/off */
+.reference {
+    visibility: hidden;
+    display: none;
+}
+
+/* General styling for the app */    
+h1.hn { 
+    font-size: 16pt; 
+    font-weight: 100; 
+}
+
+h2.hn {
+    font-size: 13pt; 
+    font-weight: 100; 
+}
+
+a {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a:link {
+    color: #00ff21; 
+}
+
+a:visited { 
+    color: silver; 
 }
