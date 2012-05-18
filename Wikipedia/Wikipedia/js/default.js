@@ -2,13 +2,13 @@
     "use strict";
 
     var app = WinJS.Application;
+    var nav = WinJS.Navigation;
     var activation = Windows.ApplicationModel.Activation;
-    var default_page = "http://en.wikipedia.org/wiki/Windows_8";
 
     WinJS.strictProcessing();
 
     app.newly_launched = function (args) {
-        wikipedia.render(default_page);
+        //wikipedia.render(default_page);
     };
 
     app.oncheckpoint = function (args) {
@@ -28,6 +28,7 @@
             if (args.detail.queryText === "") {
                 // Navigate to your landing page since the user is pre-scoping to your app.
             } else {
+                // TODO: make this navigate to the right UI component
                 // Display results in UI for eventObject.detail.queryText and eventObject.detail.language.
                 // eventObject.detail.language represents user's locale.
                 var query = args.detail.queryText;
@@ -45,11 +46,22 @@
                 app.reactivated_from_suspension();
             }
 
-            args.setPromise(WinJS.UI.processAll());
+            args.setPromise(WinJS.UI.processAll().then(function() {
+                // Bind the go back button click event to our navigation event handler
+                document.getElementById("go_back").addEventListener("click", wikipedia.go_back);
 
-            // Bind the go back button click event to our navigation event handler
-            document.getElementById("go_back").addEventListener("click", wikipedia.go_back);
+                // Initialize our navigation framework
+                if (app.sessionState.history) {
+                    nav.history = app.sessionState.history;
+                }
 
+                if (nav.location) {
+                    nav.history.current.initialPlaceholder = true;
+                    return nav.navigate(nav.location, nav.state);
+                } else {
+                    return nav.navigate(Application.navigator.home);
+                }
+            }));
         } else if (args.detail.kind === Windows.ApplicationModel.Activation.ActivationKind.search) {
             app.search_activation(args);
         }

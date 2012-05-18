@@ -62,8 +62,13 @@
     <Content Include="js\htmlparser.min.js" />
     <Content Include="js\jquery-1.7.2.js" />
     <Content Include="js\jquery-1.7.2.min.js" />
+    <Content Include="js\navigator.js" />
     <Content Include="js\soupselect.js" />
     <Content Include="js\wikipedia.js" />
+    <Content Include="main.html" />
+    <Content Include="pages\article.css" />
+    <Content Include="pages\article.html" />
+    <Content Include="pages\article.js" />
     <Content Include="settings.html" />
     <None Include="Wikipedia_TemporaryKey.pfx" />
   </ItemGroup>

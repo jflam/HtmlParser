@@ -14,7 +14,7 @@
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
-    <Application Id="App" StartPage="default.html">
+    <Application Id="App" StartPage="main.html">
       <VisualElements DisplayName="Wikipedia" Logo="images\logo.png" SmallLogo="images\smalllogo.png" Description="Wikipedia is a Metro style Wikipedia experience." ForegroundText="light" BackgroundColor="#ffffff">
         <DefaultTile ShowName="allLogos" />
         <SplashScreen Image="images\splashscreen.png" />

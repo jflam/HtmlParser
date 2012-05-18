@@ -72,7 +72,9 @@
 
     // Render the Wikipedia content. This function rewrites the URLs that link
     // back to Wikipedia so that we redirect back to the same page, and 
-    // we add the correct entries to our navigation history.
+    // we add the correct entries to our navigation history. 
+    // TODO: This should just return the HTML rather than
+    // side-effecting the world. 
 
     function render(url) {
         // TODOO: This callback in a search handler is an example of a swallowing exception event. Doc this in the 

@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Wikipedia</title>
+
+    <!-- WinJS references -->
+    <link href="//Microsoft.WinJS.1.0.RC/css/ui-dark.css" rel="stylesheet" />
+    <script src="//Microsoft.WinJS.1.0.RC/js/base.js"></script>
+    <script src="//Microsoft.WinJS.1.0.RC/js/ui.js"></script>
+
+    <!-- UI references -->
+    <link href="/css/default.css" rel="stylesheet" />
+
+    <!-- Library references -->
+    <script src="/js/jquery-1.7.2.js"></script>
+    <script src="/js/htmlparser.js"></script>
+    <script src="/js/soupselect.js"></script>
+
+    <!-- App code references -->
+    <script src="/js/wikipedia.js"></script>
+    <script src="/js/default.js"></script>
+    <script src="/js/navigator.js"></script>
+</head>
+<body>
+    <!-- Top Navigation AppBar -->
+	<div data-win-control="WinJS.UI.AppBar" data-win-options="{placement:'top', layout: 'custom'}" aria-label="Navigation Bar">
+        <h2>Content will go here</h2>
+    </div>
+
+    <div id="contenthost" data-win-control="Application.PageControlNavigator" data-win-options="{home: '/pages/article.html'}"></div>
+
+    <!-- Bottom Command AppBar -->
+	<div data-win-control="WinJS.UI.AppBar">
+  		<button data-win-control="WinJS.UI.AppBarCommand" data-win-options="{icon:'back', id:'go_back', label:'Back', section:'global', type:'button'}"></button>
+   	</div>
+</body>
+</html>
