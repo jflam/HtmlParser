@@ -8,7 +8,6 @@
     WinJS.strictProcessing();
 
     app.newly_launched = function (args) {
-        //wikipedia.render(default_page);
     };
 
     app.oncheckpoint = function (args) {
@@ -28,14 +27,22 @@
             if (args.detail.queryText === "") {
                 // Navigate to your landing page since the user is pre-scoping to your app.
             } else {
-                // TODO: make this navigate to the right UI component
                 // Display results in UI for eventObject.detail.queryText and eventObject.detail.language.
                 // eventObject.detail.language represents user's locale.
-                var query = args.detail.queryText;
-                var article_url = "http://en.wikipedia.org/wiki/" + query.replace(' ', '_');
-                wikipedia.render(article_url);
+                navigateToSearchTerm(args.detail.queryText);
             }
         }));
+    };
+
+    function navigateToSearchTerm(search_term) {
+        var article_url = "http://en.wikipedia.org/wiki/" + search_term.replace(' ', '_');
+        nav.navigate('pages/article.html', { url: article_url });
+    }
+
+    // TODO: actually implement this function - right now we just delegate based on the search term.
+
+    function search(eventObject) {
+        navigateToSearchTerm(eventObject.queryText);
     };
 
     app.onactivated = function (args) {

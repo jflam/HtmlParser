@@ -152,20 +152,6 @@
         request.data.properties.description = "Wikipedia article";
     }
 
-    // TODO: actually implement this function
-
-    function search(eventObject) {
-        // TODO: what is the heuristic for mapping to URL? Replace spaces with underscores?
-        // Do I do a search and return the first search result?
-        // TODO: navigate to the search results page ...?
-        // How do I do navigation using this framework?
-        var query = eventObject.queryText;
-        // app.search_wikipedia(query);
-        var article_url = "http://en.wikipedia.org/wiki/" + query.replace(' ', '_');
-        wikipedia.render(article_url);
-    };
-
-
     // Function that provides search suggestions to the search charm. This
     // code uses the OpenQuery AJAX API on MediaWiki to retrieve search
     // suggestions. 
@@ -215,7 +201,6 @@
     WinJS.Namespace.define("wikipedia", {
         search_suggestions: search_suggestions,
         share: share,
-        search: search,
         parse: parse
     });
 })();
