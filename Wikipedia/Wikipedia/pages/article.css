@@ -12,8 +12,7 @@ div#article {
 
 @media screen and (-ms-view-state: fullscreen-landscape) {
     div#article {
-        height: calc(100vh - 80px - 80px);
-        padding-top: 80px;
+        height: calc(100vh - 80px - 128px); /* clip 128px for header */
         padding-bottom: 80px;
         padding-left: 120px;
         column-count: 3;
@@ -23,21 +22,18 @@ div#article {
 
 @media screen and (-ms-view-state: filled) {
     div#article {
-        height: calc(100vh - 80px - 80px);
-        padding-top: 80px;
+        height: calc(100vh - 80px - 128px);
         padding-bottom: 80px;
         padding-left: 120px;
         column-count: 2;
         column-gap: 50px;
-        overflow: auto; /* why is this needed? */
     }
 }
 
 @media screen and (-ms-view-state: snapped) {
     div#article {
-        height: calc(100vh - 20px - 20px);
+        height: calc(100vh - 20px);
         width: calc(100% - 20px);
-        padding-top: 20px;
         padding-bottom: 20px;
         padding-left: 20px;
     }
@@ -45,9 +41,8 @@ div#article {
 
 @media screen and (-ms-view-state: fullscreen-portrait) {
     div#article {
-        height: calc(100vh - 80px - 80px);
+        height: calc(100vh - 80px - 128px);
         width: calc(100vw - 80px - 80px);
-        padding-top: 80px;
         padding-bottom: 80px;
         padding-left: 80px;
         padding-right: 80px;
@@ -91,7 +86,8 @@ span.mw-headline {
 .dablink,
 #jump-to-nav,
 .metadata,
-#coordinates
+#coordinates,
+h1.firstHeading
 {
     visibility: hidden;
     display: none;

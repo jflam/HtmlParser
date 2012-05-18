@@ -70,6 +70,62 @@
         return html;
     };
 
+    // Parse the Wikipedia URL given and return an object that contains some key pieces of information
+    // for the UI: title, tweaked HTML that can be used to inject directly into the UI. Note that this
+    // is an asynchronous function that takes a completion handler.
+
+    function parse(url) {
+        return new WinJS.Promise(function (complete) {
+            $.ajax(url).then(function (response) {
+                var parser = new Tautologistics.NodeHtmlParser.Parser(handler);
+                parser.parseComplete(response);
+
+                // We need to rewrite all <a> elements to point to a navigation event in the page
+
+                var dom = handler.dom;
+                var anchors = SoupSelect.select(dom, "a");
+                for (var i = 0; i < anchors.length; i++) {
+                    var anchor = anchors[i];
+
+                    if (anchor.attribs.href) {
+                        var link = anchor.attribs.href.indexOf("/wiki/", 0);
+                        var href = null;
+                        if (link >= 0) {
+                            if (link == 0) {
+                                // relative link to wikipedia
+                                href = "http://en.wikipedia.org" + anchor.attribs.href;
+                            } else {
+                                // absolute link to wikipedia
+                                href = "http:" + anchor.attribs.href;
+                            }
+                            anchor.attribs.href = href;
+                        }
+                    }
+                }
+
+                var body = SoupSelect.select(dom, "div.mw-body")[0];
+                var html = inner_html(body);
+                var safe_html = window.toStaticHTML(html);
+
+                // Extract the title from the page
+
+                var nodes = SoupSelect.select(dom, "h1.firstHeading span");
+                var title = "unknown title";
+                if (nodes.length > 0 && nodes[0].children.length > 0) {
+                    title = nodes[0].children[0].data;
+                }
+
+                // Invoke the completion handler with the JS object that contains the results
+
+                complete({
+                    title: title,
+                    html: safe_html
+                })
+            });
+        });
+    }
+
+    // TODO: remove this function
     // Render the Wikipedia content. This function rewrites the URLs that link
     // back to Wikipedia so that we redirect back to the same page, and 
     // we add the correct entries to our navigation history. 
@@ -230,11 +286,13 @@
     }
 
     // Publish functions as part of the wikipedia namespace
+
     WinJS.Namespace.define("wikipedia", {
         render: render,
         search_suggestions: search_suggestions,
         share: share,
         search: search,
-        go_back: go_back
+        go_back: go_back,
+        parse: parse
     });
 })();
