@@ -213,7 +213,6 @@
     // Publish functions as part of the wikipedia namespace
 
     WinJS.Namespace.define("wikipedia", {
-        render: render,
         search_suggestions: search_suggestions,
         share: share,
         search: search,
