@@ -1,10 +1,22 @@
-﻿// For an introduction to the Page Control template, see the following documentation:
-// http://go.microsoft.com/fwlink/?LinkId=232511
-(function () {
+﻿(function () {
     "use strict";
 
     var default_page = "http://en.wikipedia.org/wiki/Windows_8";
     var nav = WinJS.Navigation;
+
+    // Function that decides whether it is an internal link or an external link
+    // and navigates internally if it is an internal link
+
+    function navigate(e) {
+        var target = e.currentTarget.href;
+        if (target.search("wikipedia.org") >= 0) {
+
+            // This is an internal navigation event since the URL contains wikipedia.org
+
+            e.preventDefault(); 
+            nav.navigate("/pages/article.html", { url: target });
+        }
+    }
 
     function render(url) {
         articlePageTitle.innerHTML = "";
@@ -15,13 +27,8 @@
             article.innerHTML = obj.html;
 
             // Bind event handler to overload the click event on an <a> element
-            // TODO: does this have to be bound to the handler or can i let it bubble?
 
-            $('div.mw-body a').click(function (e) {
-                e.preventDefault();
-                var target = e.currentTarget.href;
-                nav.navigate('/pages/article.html', { url: target });
-            });
+            $('div.mw-body a').click(navigate);
         });
     }
 
