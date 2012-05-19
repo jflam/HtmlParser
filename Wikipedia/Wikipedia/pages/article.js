@@ -18,15 +18,25 @@
         }
     }
 
+    // Render the target url in the page
+
     function render(url) {
+
+        // Display our busy wait spinner
+
         articlePageTitle.innerHTML = "";
         article.innerHTML = "<img class='splash' src='/images/ajax-loader.gif'>";
+
+        // Retrieve the wikipedia page given the URL and render the results
+
         wikipedia.parse(url).then(function (obj) {
 
             articlePageTitle.innerHTML = obj.title;
             article.innerHTML = obj.html;
+            article.focus(); // ensure that keyboard focus is on the <div> element
 
-            // Bind event handler to overload the click event on an <a> element
+            // Bind event handler to <a> elements so that we can have correct
+            // internal / external navigation
 
             $('div.mw-body a').click(navigate);
         });
