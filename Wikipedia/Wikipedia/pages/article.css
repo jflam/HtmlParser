@@ -16,7 +16,24 @@ div#article {
         padding-bottom: 80px;
         padding-left: 120px;
         column-count: 3;
+        column-fill: auto;
         column-gap: 50px;
+    }
+    
+    /* These contain pictures - float them to the left or right only in full screen landscape */
+    
+    div.tleft {
+        float: left;
+        padding-right: 20px;
+        padding-bottom: 20px;
+        break-inside: avoid-column;
+    }
+
+    div.tright {
+        float: right;
+        padding-left: 20px;
+        padding-bottom: 20px;
+        break-inside: avoid-column;
     }
 }
 
@@ -32,10 +49,18 @@ div#article {
 
 @media screen and (-ms-view-state: snapped) {
     div#article {
-        height: calc(100vh - 20px);
+        height: calc(100vh - 20px - 68px);
         width: calc(100% - 20px);
         padding-bottom: 20px;
         padding-left: 20px;
+    }
+
+    /* Padding for the images to give them some breathing room */
+    
+    div.tleft,
+    div.tright {
+        padding-top: 20px;
+        padding-bottom: 20px;
     }
 }
 
@@ -57,6 +82,7 @@ div#article {
 p {
     font-size: 10.5pt;
     line-height: 1.5em;
+    margin-top: 0px;
 }
 
 /* Column styling - column break before each section */
@@ -121,4 +147,33 @@ a:link {
 
 a:visited { 
     color: silver; 
+}
+
+div.thumbcaption {
+    font-size: 8pt;
+}
+
+ul li {
+    line-height: 1.5em;
+    margin-left: -20px;
+    font-size: 10.5pt;
+}
+
+/* This is a link to a "Main / see article: foo". We want this text to be smaller. */
+
+div.mainarticle,
+div.seealso 
+{
+    font-size: 8pt;
+    margin-bottom: 20px;
+}
+
+h2 {
+    padding-bottom: 10px;
+}
+
+/* Don't display play buttons for ogg video since we don't support playing it */
+
+button[title="Play video"] {
+    display: none;
 }

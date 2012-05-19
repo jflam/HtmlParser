@@ -17,34 +17,40 @@
     width: 100%;
 }
 
-    .fragment header[role=banner] {
-        /* Define a grid with columns for the back button and page title. */
-        -ms-grid-columns: 120px 1fr;
-        -ms-grid-rows: 1fr;
-        display: -ms-grid;
-    }
+.fragment header[role=banner] {
+    /* Define a grid with columns for the back button and page title. */
+    -ms-grid-columns: 120px 1fr;
+    -ms-grid-rows: 1fr;
+    display: -ms-grid;
+}
 
-        .fragment header[role=banner] .win-backbutton {
-            margin-left: 39px;
-            margin-top: 59px;
-        }
+.fragment header[role=banner] .win-backbutton {
+    margin-left: 39px;
+    margin-top: 59px;
+}
 
-        .fragment header[role=banner] .titlearea {
-            -ms-grid-column: 2;
-            margin-top: 37px;
-        }
+.fragment header[role=banner] .titlearea {
+    -ms-grid-column: 2;
+    margin-top: 37px;
+}
 
-            .fragment header[role=banner] .titlearea .pagetitle {
-                width: calc(100% - 20px);
-            }
+.fragment header[role=banner] .titlearea .pagetitle {
+    width: calc(100% - 20px);
+}
 
-    .fragment section[role=main] {
-        -ms-grid-row: 2;
-        height: 100%;
-        width: 100%;
-    }
+.fragment section[role=main] {
+    -ms-grid-row: 2;
+    height: 100%;
+    width: 100%;
+}
 
 @media screen and (-ms-view-state: snapped) {
+    
+    /* Override the header height for snapped view since it looks stupid to have so much wasted vertical space in snapped view */
+    
+    .fragment {
+        -ms-grid-rows: 68px 1fr 0px;
+    }
     .fragment header[role=banner] {
         -ms-grid-columns: auto 1fr;
         margin-left: 20px;
@@ -63,7 +69,7 @@
         .fragment header[role=banner] .titlearea {
             -ms-grid-column: 2;
             margin-left: 0;
-            margin-top: 68px;
+            margin-top: 8px;
         }
 }
 

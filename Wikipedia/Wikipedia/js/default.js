@@ -83,7 +83,7 @@
     };
 
     // Register our search provider
-    Windows.ApplicationModel.Search.SearchPane.getForCurrentView().onquerysubmitted = wikipedia.search;
+    Windows.ApplicationModel.Search.SearchPane.getForCurrentView().onquerysubmitted = search;
 
     // Register our search suggestions provider
     Windows.ApplicationModel.Search.SearchPane.getForCurrentView().onsuggestionsrequested = wikipedia.search_suggestions;
