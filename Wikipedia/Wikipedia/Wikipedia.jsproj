@@ -50,6 +50,7 @@
     <AppxManifest Include="package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="css\navbar.css" />
     <Content Include="images\ajax-loader.gif" />
     <Content Include="images\logo.png" />
     <Content Include="images\smalllogo.png" />

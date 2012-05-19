@@ -1,0 +1,109 @@
+﻿.box {
+    display: -ms-flexbox;
+    -ms-flex-direction: row;
+    -ms-flex-wrap: wrap;
+    -ms-flex-pack: start;
+    -ms-flex-align: start;
+    padding: 4px;
+    height: 133px;
+    width: calc(100% - 8px);
+}
+
+    .box .navItem {
+        width: 126px;
+        height: 122px;
+        padding: 4px;
+        margin: 0px 4px 0px 4px;
+        display: -ms-grid;
+        -ms-grid-columns: 1fr;
+        -ms-grid-rows: auto auto;
+        background-color: #808080;
+        border-color: #808080;
+    }
+
+        .box .navItem:hover {
+            border-color: #909090;
+            background-color: #909090;
+        }
+
+            .box .navItem:hover:active {
+                border-color: #fff;
+                background-color: #fff;
+            }
+
+        .box .navItem .icon {
+            display: block;
+            -ms-grid-column: 1;
+            -ms-grid-row: 1;
+            -ms-grid-column-align: center;
+            -ms-grid-row-align: center;
+            font-family: 'Segoe UI Symbol';
+            padding: 10px 4px 4px 0px;
+        }
+
+        .box .navItem .label {
+            display: block;
+            -ms-grid-column: 1;
+            -ms-grid-row: 2;
+            -ms-grid-column-align: center;
+            -ms-grid-row-align: end;
+            padding: 4px 4px 4px 0px;
+        }
+
+@media (-ms-view-state: snapped) {
+
+    .box {
+        display: -ms-flexbox;
+        -ms-flex-direction: column;
+        -ms-flex-wrap: nowrap;
+        -ms-flex-pack: start;
+        -ms-flex-align: center;
+        padding: 4px;
+        height: auto;
+        width: calc(100% - 8px);
+    }
+
+        .box .navItem {
+            width: 280px;
+            height: 40px;
+            padding: 4px;
+            margin: 4px 8px 4px 8px;
+            display: -ms-grid;
+            -ms-grid-columns: auto auto;
+            -ms-grid-rows: 1fr;
+            background-color: #808080;
+            border-color: #808080;
+        }
+
+            .box .navItem:hover {
+                border-color: #909090;
+                background-color: #909090;
+            }
+
+                .box .navItem:hover:active {
+                    border-color: #fff;
+                    background-color: #fff;
+                }
+
+            .box .navItem .icon {
+                display: block;
+                -ms-grid-column: 1;
+                -ms-grid-row: 1;
+                -ms-grid-column-align: center;
+                -ms-grid-row-align: center;
+                font-family: 'Segoe UI Symbol';
+                font-weight: 300;
+                padding: 10px 4px 4px 0px;
+            }
+
+            .box .navItem .label {
+                display: block;
+                -ms-grid-column: 2;
+                -ms-grid-row: 1;
+                -ms-grid-column-align: center;
+                -ms-grid-row-align: center;
+                font-weight: 600;
+                font-size: 11pt;
+                padding: 4px 4px 4px 0px;
+            }
+}

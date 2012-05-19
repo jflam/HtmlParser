@@ -11,6 +11,7 @@
 
     <!-- UI references -->
     <link href="/css/default.css" rel="stylesheet" />
+    <link href="/css/navbar.css" rel="stylesheet" />
 
     <!-- Library references -->
     <script src="/js/jquery-1.7.2.js"></script>
@@ -24,15 +25,29 @@
 </head>
 <body>
     <!-- Top Navigation AppBar -->
-	<div data-win-control="WinJS.UI.AppBar" data-win-options="{placement:'top', layout: 'custom'}" aria-label="Navigation Bar">
-        <h2>Content will go here</h2>
+    <div id="customLayoutAppBar" class="navbar" data-win-control="WinJS.UI.AppBar" aria-label="Navigation Bar" data-win-options="{layout:'custom',placement:'top'}">
+        <div class="box">
+            <button id="go_home" class="navItem">
+                <span class="win-type-xx-large icon">&#xE10F</span>
+                <span class="win-type-xx-small win-type-ellipsis label">Home</span>
+            </button>
+            <button class="navItem">
+                <span class="win-type-xx-large icon">&#xE113</span>
+                <span class="win-type-xx-small win-type-ellipsis label">Favorites</span>
+            </button>
+            <button class="navItem">
+                <span class="win-type-xx-large icon">&#xE12B</span>
+                <span class="win-type-xx-small win-type-ellipsis label">The World</span>
+            </button>
+            <button class="navItem">
+                <span class="win-type-xx-large icon">&#xE138</span>
+                <span class="win-type-xx-small win-type-ellipsis label">Sources</span>
+            </button>
+        </div>
     </div>
 
+    <!-- Main content -->
     <div id="contenthost" data-win-control="Application.PageControlNavigator" data-win-options="{home: '/pages/article.html'}"></div>
 
-    <!-- Bottom Command AppBar -->
-	<div data-win-control="WinJS.UI.AppBar">
-  		<button data-win-control="WinJS.UI.AppBarCommand" data-win-options="{icon:'home', id:'go_home', label:'Home', section:'global', type:'button'}"></button>
-   	</div>
 </body>
 </html>
