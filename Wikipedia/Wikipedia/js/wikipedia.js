@@ -102,7 +102,7 @@
 
     // Regular expression to extract the URI of an image
 
-    var re = /File\:(.*?)\.png/
+    var re = /File\:(.*?)\.(png|jpg|jpeg|gif)/
 
     // Parse the Wikipedia URL given and return an object that contains some key pieces of information
     // for the UI: title, tweaked HTML that can be used to inject directly into the UI. Note that this
