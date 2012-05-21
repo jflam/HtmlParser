@@ -4,8 +4,46 @@
     var app = WinJS.Application;
     var nav = WinJS.Navigation;
     var activation = Windows.ApplicationModel.Activation;
+    var default_page = "http://en.wikipedia.org/wiki/Windows_8";
 
     WinJS.strictProcessing();
+
+    // Navigate to the wikipedia link specified by url. This is an app 
+    // scoped function that dispatches to the correct page fragment
+    // that contains the markup and code to render that url.
+
+    app.wikipedia_navigate = function (url) {
+
+        // Parse the target url's HTML and navigate to the correct 
+        // rendering HTML page.
+
+        wikipedia.parse(url).then(function (obj) {
+            if (obj.type == 'article') {
+                nav.navigate("/pages/article.html", obj);
+            } else if (obj.type == 'images') {
+                nav.navigate("/pages/image.html", obj);
+            }
+        });
+    }
+
+    // Navigate to the link specified by url. The function behaves
+    // differently based on whether it needs to cancel the default
+    // action of the anchor element which will open the target
+    // URL using Metro style IE. It uses the simple heuristic of
+    // looking to see whether the URL contains wikipedia.org in it.
+
+    app.navigate = function (e) {
+        var target = e.currentTarget.href;
+        
+        // We look for internal URLs based on whether we are going to either wikipedia.org
+        // or wikimedia.org (for images and other media). This is not a great heuristic
+        // and I will likely need to update this down the road. TODO
+
+        if (target.search("wikipedia.org") >= 0) {
+            e.preventDefault();
+            app.wikipedia_navigate(target);
+        }
+    }
 
     app.newly_launched = function (args) {
     };
@@ -53,8 +91,10 @@
                 app.reactivated_from_suspension();
             }
 
-            args.setPromise(WinJS.UI.processAll().then(function() {
+            args.setPromise(WinJS.UI.processAll().then(function () {
+
                 // Bind the go back button click event to our navigation event handler
+
                 document.getElementById("go_home").addEventListener("click", function () {
                     nav.navigate("/pages/home.html");
                 });
@@ -68,7 +108,10 @@
                     nav.history.current.initialPlaceholder = true;
                     return nav.navigate(nav.location, nav.state);
                 } else {
-                    return nav.navigate(Application.navigator.home);
+
+                    // We are freshly launched, navigate to the default page
+
+                    app.wikipedia_navigate(default_page);
                 }
             }));
         } else if (args.detail.kind === Windows.ApplicationModel.Activation.ActivationKind.search) {
