@@ -72,6 +72,9 @@
     <Content Include="pages\home.css" />
     <Content Include="pages\home.html" />
     <Content Include="pages\home.js" />
+    <Content Include="pages\image.css" />
+    <Content Include="pages\image.html" />
+    <Content Include="pages\image.js" />
     <Content Include="settings.html" />
     <None Include="Wikipedia_TemporaryKey.pfx" />
   </ItemGroup>

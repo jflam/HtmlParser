@@ -26,6 +26,37 @@
     // across each node in the tree. The lambda has the option
     // to mutate the underlying node's attributes.
 
+    // Given an image page, extract out an object that contains a list of the links to photos and their resolutions
+    
+    function parse_image_page(node) {
+        var images = [];
+
+        // Extract the full resolution image link
+
+        var fullImageDiv = SoupSelect.select(node, "div.fullImageLink");
+        if (fullImageDiv != null) {
+            var fullImageUrl = fullImageDiv[0].children[0].attribs.href;
+        }
+
+        // Extract the list of other resolutions
+
+        var anchors = SoupSelect.select(node, "a.mw-thumbnail-link");
+        for (var i = 0; i < anchors.length; i++) {
+            var url = anchors[i].attribs.href; // url
+            var size = anchors[i].children[0].data; // #text
+            images.push({
+                url: url,
+                size: size
+            });
+        }
+
+        return {
+            type: 'images',
+            url: fullImageUrl,
+            images: images
+        };
+    }
+
     function inner_html(node) {
         var html = "";
 
@@ -69,6 +100,10 @@
         return html;
     };
 
+    // Regular expression to extract the URI of an image
+
+    var re = /File\:(.*?)\.png/
+
     // Parse the Wikipedia URL given and return an object that contains some key pieces of information
     // for the UI: title, tweaked HTML that can be used to inject directly into the UI. Note that this
     // is an asynchronous function that takes a completion handler.
@@ -78,48 +113,57 @@
             $.ajax(url).then(function (response) {
                 var parser = new Tautologistics.NodeHtmlParser.Parser(handler);
                 parser.parseComplete(response);
-
-                // We need to rewrite all <a> elements to point to a navigation event in the page
-
                 var dom = handler.dom;
-                var anchors = SoupSelect.select(dom, "a");
-                for (var i = 0; i < anchors.length; i++) {
-                    var anchor = anchors[i];
 
-                    if (anchor.attribs.href) {
-                        var link = anchor.attribs.href.indexOf("/wiki/", 0);
-                        var href = null;
-                        if (link >= 0) {
-                            if (link == 0) {
-                                // relative link to wikipedia
-                                href = "http://en.wikipedia.org" + anchor.attribs.href;
-                            } else {
-                                // absolute link to wikipedia
-                                href = "http:" + anchor.attribs.href;
+                // See if this is a page with image information inside 
+
+                if (url.match(re) != null) {
+                    complete(parse_image_page(dom));
+                }
+                else {
+
+                    // We need to rewrite all <a> elements to point to a navigation event in the page
+
+                    var anchors = SoupSelect.select(dom, "a");
+                    for (var i = 0; i < anchors.length; i++) {
+                        var anchor = anchors[i];
+
+                        if (anchor.attribs.href) {
+                            var link = anchor.attribs.href.indexOf("/wiki/", 0);
+                            var href = null;
+                            if (link >= 0) {
+                                if (link == 0) {
+                                    // relative link to wikipedia
+                                    href = "http://en.wikipedia.org" + anchor.attribs.href;
+                                } else {
+                                    // absolute link to wikipedia
+                                    href = "http:" + anchor.attribs.href;
+                                }
+                                anchor.attribs.href = href;
                             }
-                            anchor.attribs.href = href;
                         }
                     }
+
+                    var body = SoupSelect.select(dom, "div.mw-body")[0];
+                    var html = inner_html(body);
+                    var safe_html = window.toStaticHTML(html);
+
+                    // Extract the title from the page
+
+                    var nodes = SoupSelect.select(dom, "h1.firstHeading span");
+                    var title = "unknown title";
+                    if (nodes.length > 0 && nodes[0].children.length > 0) {
+                        title = nodes[0].children[0].data;
+                    }
+
+                    // Invoke the completion handler with the JS object that contains the results
+
+                    complete({
+                        type: 'article',
+                        title: title,
+                        html: safe_html
+                    })
                 }
-
-                var body = SoupSelect.select(dom, "div.mw-body")[0];
-                var html = inner_html(body);
-                var safe_html = window.toStaticHTML(html);
-
-                // Extract the title from the page
-
-                var nodes = SoupSelect.select(dom, "h1.firstHeading span");
-                var title = "unknown title";
-                if (nodes.length > 0 && nodes[0].children.length > 0) {
-                    title = nodes[0].children[0].data;
-                }
-
-                // Invoke the completion handler with the JS object that contains the results
-
-                complete({
-                    title: title,
-                    html: safe_html
-                })
             });
         });
     }
@@ -195,6 +239,7 @@
                 deferral.complete();
             });
     }
+
 
     // Publish functions as part of the wikipedia namespace
 

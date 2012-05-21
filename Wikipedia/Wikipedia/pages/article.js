@@ -9,6 +9,12 @@
 
     function navigate(e) {
         var target = e.currentTarget.href;
+
+        // Parse enough of the target to understand where we need to go
+
+        // We should decide where to navigate here ...
+
+
         if (target.search("wikipedia.org") >= 0) {
 
             // This is an internal navigation event since the URL contains wikipedia.org
@@ -31,14 +37,20 @@
 
         wikipedia.parse(url).then(function (obj) {
 
-            articlePageTitle.innerHTML = obj.title;
-            article.innerHTML = obj.html;
-            article.focus(); // ensure that keyboard focus is on the <div> element
+            // This could be an article or an image URI ... we have different rendering code paths for each one
 
-            // Bind event handler to <a> elements so that we can have correct
-            // internal / external navigation
+            if (obj.type == 'article') {
+                articlePageTitle.innerHTML = obj.title;
+                article.innerHTML = obj.html;
+                article.focus(); // ensure that keyboard focus is on the <div> element
 
-            $('div.mw-body a').click(navigate);
+                // Bind event handler to <a> elements so that we can have correct
+                // internal / external navigation
+
+                $('div.mw-body a').click(navigate);
+            } else if (obj.type == 'images') {
+                nav.navigate("pages/image.html", obj);
+            }
         });
     }
 
