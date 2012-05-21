@@ -1,3 +1,10 @@
-﻿.image p {
-    margin-left: 120px;
+﻿.zoomElement {
+    width: 100dw;
+    height: 100dh;
+
+    overflow: auto;
+    -ms-content-zooming: zoom;
+    -ms-scroll-rails: none;
+    -ms-content-zoom-limit-min: 100%;
+    -ms-content-zoom-limit-max: 500%;
 }
