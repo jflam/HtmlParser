@@ -74,7 +74,7 @@
 
     function navigateToSearchTerm(search_term) {
         var article_url = "http://en.wikipedia.org/wiki/" + search_term.replace(' ', '_');
-        nav.navigate('pages/article.html', { url: article_url });
+        app.wikipedia_navigate(article_url);
     }
 
     // TODO: actually implement this function - right now we just delegate based on the search term.
