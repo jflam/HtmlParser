@@ -71,7 +71,10 @@
 
             var attributes = "";
             for (var key in node.attribs) {
-                attributes += key + "=\"" + node.attribs[key] + "\" ";
+                // Strip out any attributes called bgColor -- these are found all over the tables in wikipedia or style
+                if (key.toLowerCase() !== "bgcolor" && key.toLowerCase() !== "style") {
+                    attributes += key + "=\"" + node.attribs[key] + "\" ";
+                }
             }
 
             if (node.type == "text") {
