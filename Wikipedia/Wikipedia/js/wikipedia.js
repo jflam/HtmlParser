@@ -100,6 +100,25 @@
         return html;
     };
 
+    function inner_text(node) {
+        var text = "";
+
+        function walk(node) {
+            if (node.type == "text") {
+                text += node.data;
+            }
+
+            if (node.children != null) {
+                for (var i = 0; i < node.children.length; i++) {
+                    walk(node.children[i]);
+                }
+            }
+        }
+
+        walk(node);
+        return text;
+    }
+
     // Regular expression to extract the URI of an image
 
     var re = /File\:(.*?)\.(png|jpg|jpeg|gif)/
@@ -153,7 +172,7 @@
                     var nodes = SoupSelect.select(dom, "h1.firstHeading span");
                     var title = "unknown title";
                     if (nodes.length > 0 && nodes[0].children.length > 0) {
-                        title = nodes[0].children[0].data;
+                        title = inner_text(nodes[0]);
                     }
 
                     // Invoke the completion handler with the JS object that contains the results
