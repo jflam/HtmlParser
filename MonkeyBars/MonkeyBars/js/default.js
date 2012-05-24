@@ -85,7 +85,7 @@
             savePicker.suggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.documentsLibrary;
             savePicker.defaultFileExtension = ".js";
             savePicker.suggestedFileName = "my_code";
-            savePicker.fileTypeChoices.insert("Javascript", [".js"]);
+            savePicker.fileTypeChoices.insert("Javascript", [".js", ".zip"]);
 
             savePicker.pickSaveFileAsync().done(function (file) {
                 if (file) {
@@ -103,14 +103,11 @@
                 var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
                 openPicker.viewMode = Windows.Storage.Pickers.PickerViewMode.list;
                 openPicker.suggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.documentsLibrary;
-                openPicker.fileTypeFilter.replaceAll([".js"]);
+                openPicker.fileTypeFilter.replaceAll([".js", ".zip", ".gz"]);
 
                 openPicker.pickSingleFileAsync().done(function (file) {
-                    if (file) {
-                        Windows.Storage.FileIO.readTextAsync(file).done(complete);
-                    } else {
-                        // TODO: Error - when would we ever wind up here without a file?
-                    }
+                    var helper = MonkeyWrap.MsdnHelp();
+                    helper.open(file).then(complete);
                 });
             }
         });
