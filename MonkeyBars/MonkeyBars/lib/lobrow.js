@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Normalized name (extension ".js" is cut off)
  * - "../foo" = file foo in the directory above the current directory
  * - "foo" = a sibling of the current file

@@ -1,4 +1,4 @@
-var dom      = exports.dom = require("./jsdom/level3/index").dom,
+﻿var dom      = exports.dom = require("./jsdom/level3/index").dom,
     features = require('./jsdom/browser/documentfeatures'),
 // TODO: figure out what this would have done ... NOTENOTE deleted a req fs
 //    pkg      = JSON.parse(fs.readFileSync(__dirname + "/../package.json")),

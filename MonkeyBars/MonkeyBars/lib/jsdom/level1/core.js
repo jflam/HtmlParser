@@ -1,4 +1,4 @@
-/*
+﻿/*
   ServerJS Javascript DOM Level 1
 */
 

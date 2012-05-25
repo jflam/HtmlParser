@@ -1,4 +1,4 @@
-//List from node-htmlparser
+﻿//List from node-htmlparser
 var singleTags = {
   area: 1,
   base: 1,

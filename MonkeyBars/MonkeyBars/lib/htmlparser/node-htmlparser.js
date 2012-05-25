@@ -1,4 +1,4 @@
-var htmlparser = require("./htmlparser");
+﻿var htmlparser = require("./htmlparser");
 exports.Parser = htmlparser.Parser;
 exports.DefaultHandler = htmlparser.DefaultHandler;
 exports.RssHandler = htmlparser.RssHandler;

@@ -1,4 +1,4 @@
-/** Here is yet another implementation of XPath 1.0 in Javascript.
+﻿/** Here is yet another implementation of XPath 1.0 in Javascript.
  *
  * My goal was to make it relatively compact, but as I fixed all the axis bugs
  * the axes became more and more complicated. :-(.

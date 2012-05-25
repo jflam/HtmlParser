@@ -1,4 +1,4 @@
-var core                     = require("../level1/core").dom.level1.core;
+﻿var core                     = require("../level1/core").dom.level1.core;
 
 // modify cloned instance for more info check: https://github.com/tmpvar/jsdom/issues/325
 core = Object.create(core);

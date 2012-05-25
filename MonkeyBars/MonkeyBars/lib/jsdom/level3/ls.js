@@ -1,4 +1,4 @@
-// w3c Load/Save functionality: http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407/
+﻿// w3c Load/Save functionality: http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407/
 
 var core = require('./core').dom.level3.core;
 var events = require('./events').dom.level3.events;;

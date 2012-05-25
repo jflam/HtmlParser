@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   "use strict"
 
 // http://wiki.commonjs.org/wiki/Unit_Testing/1.0

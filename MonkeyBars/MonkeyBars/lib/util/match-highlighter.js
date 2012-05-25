@@ -1,4 +1,4 @@
-// Define match-highlighter commands. Depends on searchcursor.js
+﻿// Define match-highlighter commands. Depends on searchcursor.js
 // Use by attaching the following function call to the onCursorActivity event:
 	//myCodeMirror.matchHighlight(minChars);
 // And including a special span.CodeMirror-matchhighlight css class (also optionally a separate one for .CodeMirror-focused -- see demo matchhighlighter.html)

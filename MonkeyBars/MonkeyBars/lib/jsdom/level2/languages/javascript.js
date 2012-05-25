@@ -1,4 +1,4 @@
-exports.javascript = function(element, code, filename) {
+﻿exports.javascript = function(element, code, filename) {
   var doc = element.ownerDocument, window = doc && doc.parentWindow;
   if (window) {
     try {

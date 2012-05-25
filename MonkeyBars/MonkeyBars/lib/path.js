@@ -1,4 +1,4 @@
-var process = process || {};
+﻿var process = process || {};
 (function () {
   "use strict";
 
