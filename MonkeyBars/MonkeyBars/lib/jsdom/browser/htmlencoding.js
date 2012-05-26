@@ -1,4 +1,4 @@
-var charByEntityName = {
+﻿var charByEntityName = {
   'quot': '"',
   'amp': '&',
   'apos': '\'',

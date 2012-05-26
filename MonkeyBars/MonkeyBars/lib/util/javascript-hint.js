@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   function forEach(arr, f) {
     for (var i = 0, e = arr.length; i < e; ++i) f(arr[i]);
   }

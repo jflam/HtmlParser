@@ -1,4 +1,4 @@
-CodeMirror.runMode = function(string, modespec, callback, options) {
+﻿CodeMirror.runMode = function(string, modespec, callback, options) {
   var mode = CodeMirror.getMode(CodeMirror.defaults, modespec);
   var isNode = callback.nodeType == 1;
   var tabSize = (options && options.tabSize) || CodeMirror.defaults.tabSize;

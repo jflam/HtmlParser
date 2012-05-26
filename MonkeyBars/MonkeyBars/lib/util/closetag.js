@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Tag-closer extension for CodeMirror.
  *
  * This extension adds a "closeTag" utility function that can be used with key bindings to 

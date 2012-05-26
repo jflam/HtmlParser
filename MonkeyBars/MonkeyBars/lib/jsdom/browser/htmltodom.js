@@ -1,4 +1,4 @@
-var HTMLDecode = require('./htmlencoding').HTMLDecode;
+﻿var HTMLDecode = require('./htmlencoding').HTMLDecode;
 
 function HtmlToDom(parser) {
 

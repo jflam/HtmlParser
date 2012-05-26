@@ -1,4 +1,4 @@
-// ============== Formatting extensions ============================
+﻿// ============== Formatting extensions ============================
 // A common storage for all mode-specific formatting features
 if (!CodeMirror.modeExtensions) CodeMirror.modeExtensions = {};
 

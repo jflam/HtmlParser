@@ -1,4 +1,4 @@
-exports.availableDocumentFeatures = [
+﻿exports.availableDocumentFeatures = [
   'FetchExternalResources',
   'ProcessExternalResources',
   'MutationEvents',

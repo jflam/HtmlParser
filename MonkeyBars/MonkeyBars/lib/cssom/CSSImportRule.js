@@ -1,4 +1,4 @@
-//.CommonJS
+﻿//.CommonJS
 var CSSOM = {
 	CSSRule: require("./CSSRule").CSSRule,
 	CSSStyleSheet: require("./CSSStyleSheet").CSSStyleSheet,

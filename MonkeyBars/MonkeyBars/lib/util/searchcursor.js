@@ -1,4 +1,4 @@
-(function(){
+﻿(function(){
   function SearchCursor(cm, query, pos, caseFold) {
     this.atOccurrence = false; this.cm = cm;
     if (caseFold == null) caseFold = typeof query == "string" && query == query.toLowerCase();

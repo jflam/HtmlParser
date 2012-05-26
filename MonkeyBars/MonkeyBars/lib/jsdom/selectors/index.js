@@ -1,4 +1,4 @@
-var createSizzle = require("./sizzle");
+﻿var createSizzle = require("./sizzle");
 exports.applyQuerySelector = function(doc, dom) {
   var addSizzle = function(document) {
 

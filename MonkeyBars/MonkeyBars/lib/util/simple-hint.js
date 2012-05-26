@@ -1,4 +1,4 @@
-(function() {
+﻿(function() {
   CodeMirror.simpleHint = function(editor, getHints) {
     // We want a single cursor position.
     if (editor.somethingSelected()) return;

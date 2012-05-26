@@ -1,4 +1,4 @@
-/* DOM Level2 Events implemented as described here:
+﻿/* DOM Level2 Events implemented as described here:
  *
  * http://www.w3.org/TR/2000/REC-DOM-Level-2-Events-20001113/events.html
  *

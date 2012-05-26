@@ -1,4 +1,4 @@
-// Define search commands. Depends on dialog.js or another
+﻿// Define search commands. Depends on dialog.js or another
 // implementation of the openDialog method.
 
 // Replace works a little oddly -- it will do the replace on the next

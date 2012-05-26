@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Intercepts a method by replacing the prototype's implementation
  * with a wrapper that invokes the given interceptor instead.
  * 

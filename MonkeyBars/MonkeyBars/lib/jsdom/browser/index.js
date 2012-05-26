@@ -1,4 +1,4 @@
-var http          = require('/lib/shred'),
+﻿var http          = require('/lib/shred'),
     URL           = require('/lib/url'),
     HtmlToDom     = require('./htmltodom').HtmlToDom,
     domToHtml     = require('./domtohtml').domToHtml,

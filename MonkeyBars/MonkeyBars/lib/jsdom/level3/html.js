@@ -1,4 +1,4 @@
-var core = require("./core").dom.level3.core,
+﻿var core = require("./core").dom.level3.core,
     html = require("../level2/html").dom.level2.html
 
 exports.dom = {

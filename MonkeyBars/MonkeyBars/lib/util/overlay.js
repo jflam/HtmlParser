@@ -1,4 +1,4 @@
-// Utility function that allows modes to be combined. The mode given
+﻿// Utility function that allows modes to be combined. The mode given
 // as the base argument takes care of most of the normal mode
 // functionality, but a second (typically simple) mode is used, which
 // can override the style of text. Both modes get to parse all of the

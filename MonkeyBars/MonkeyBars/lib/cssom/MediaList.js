@@ -1,4 +1,4 @@
-//.CommonJS
+﻿//.CommonJS
 var CSSOM = {};
 ///CommonJS
 

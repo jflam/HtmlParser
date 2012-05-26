@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 exports.CSSStyleDeclaration = require('./CSSStyleDeclaration').CSSStyleDeclaration;
 exports.CSSRule = require('./CSSRule').CSSRule;

@@ -1,4 +1,4 @@
-var core = require("./core").dom.level2.core,
+﻿var core = require("./core").dom.level2.core,
     events = require("./core").dom.level2.events,
     applyDocumentFeatures = require('../browser/documentfeatures').applyDocumentFeatures,
     URL = require("/lib/url"),

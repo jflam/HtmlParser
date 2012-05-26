@@ -1,4 +1,4 @@
-/*
+﻿/*
 Copyright (C) 2011 by MarkLogic Corporation
 Author: Mike Brevoort <mike@brevoort.com>
 
