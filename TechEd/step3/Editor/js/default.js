@@ -23,11 +23,21 @@
     };
 
     app.onloaded = function (args) {
-        WinJS.Application.editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+        app.editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
             lineNumbers: true,
             indentUnit: 4,
-            theme: "lesser-dark"
+            theme: "lesser-dark",
+            keyMap: "html_editor"
         });
+
+        CodeMirror.keyMap.html_editor = {
+            'Ctrl-Enter': function (cm) {
+                // Eval the HTML here and drop it into the <div>
+                var html = app.editor.getValue();
+                preview.innerHTML = html;
+            },
+            fallthrough: ["default"],
+        };
     };
 
     app.oncheckpoint = function (args) {
