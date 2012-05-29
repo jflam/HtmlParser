@@ -1,6 +1,15 @@
 ﻿body {
 }
 
+.CodeMirror {
+    background-color: #000;
+    width: 50%;
+}
+
+.CodeMirror-scroll {
+    height: 100vh;
+}
+
 @media screen and (-ms-view-state: fullscreen-landscape) {
 }
 

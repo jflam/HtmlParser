@@ -50,19 +50,19 @@
     <AppxManifest Include="package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="css\codemirror.css" />
+    <Content Include="css\lesser-dark.css" />
     <Content Include="default.html" />
     <Content Include="images\logo.png" />
     <Content Include="images\smalllogo.png" />
     <Content Include="images\splashscreen.png" />
     <Content Include="images\storelogo.png" />
-    <Content Include="js\codemirror.css" />
     <Content Include="js\codemirror.js" />
     <Content Include="js\css.js" />
     <Content Include="js\default.js" />
     <Content Include="css\default.css" />
     <Content Include="js\htmlmixed.js" />
     <Content Include="js\javascript.js" />
-    <Content Include="js\lesser-dark.css" />
     <Content Include="js\xml.js" />
     <None Include="Editor_TemporaryKey.pfx" />
   </ItemGroup>
