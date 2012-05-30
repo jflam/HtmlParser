@@ -28,3 +28,6 @@ TechEd/step2/Editor/bin/**
 TechEd/step2/Editor/bld/**
 TechEd/step3/Editor/bin/**
 TechEd/step3/Editor/bld/**
+TechEd/step3/Editor/AppPackages/**
+TechEd/step3/ZipHelper/bin/**
+TechEd/step3/ZipHelper/obj/**
