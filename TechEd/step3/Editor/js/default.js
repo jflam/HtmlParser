@@ -19,6 +19,7 @@
                 // Restore application state here.
             }
             args.setPromise(WinJS.UI.processAll());
+            document.getElementById('cmdOpen').addEventListener('click', app.open_file);
         }
     };
 
@@ -34,10 +35,36 @@
             'Ctrl-Enter': function (cm) {
                 // Eval the HTML here and drop it into the <div>
                 var html = app.editor.getValue();
-                preview.innerHTML = html;
+                try {
+                    preview.innerHTML = html;
+                }
+                catch (e) {
+                    console.log(e.message);
+                }
             },
             fallthrough: ["default"],
         };
+    };
+
+    app.open_file = function (args) {
+        var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
+        openPicker.viewMode = Windows.Storage.Pickers.PickerViewMode.list;
+        openPicker.suggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.documentsLibrary;
+        openPicker.fileTypeFilter.replaceAll([".htm"]);
+
+        openPicker.pickSingleFileAsync().done(function (file) {
+            Windows.Storage.FileIO.readTextAsync(file).done(function (html) {
+                var regex = /\"\/\/(.*?)\"/ig;
+                var result = html.replace(regex, "\"http://$1\"");
+                var clean_html = window.toStaticHTML(result);
+                try {
+                    app.editor.setValue(clean_html);
+                }
+                catch (e) {
+                    console.log(e.message);
+                }
+            });
+        });
     };
 
     app.oncheckpoint = function (args) {
