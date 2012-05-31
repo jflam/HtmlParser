@@ -45,29 +45,33 @@
     <TargetPlatformVersion>8.0</TargetPlatformVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
     <PackageCertificateKeyFile>Editor_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
   </PropertyGroup>
   <ItemGroup>
     <AppxManifest Include="package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="css\codemirror.css" />
+    <Content Include="css\lesser-dark.css" />
     <Content Include="default.html" />
     <Content Include="images\logo.png" />
     <Content Include="images\smalllogo.png" />
     <Content Include="images\splashscreen.png" />
     <Content Include="images\storelogo.png" />
-    <Content Include="js\codemirror.css" />
     <Content Include="js\codemirror.js" />
     <Content Include="js\css.js" />
     <Content Include="js\default.js" />
     <Content Include="css\default.css" />
     <Content Include="js\htmlmixed.js" />
     <Content Include="js\javascript.js" />
-    <Content Include="js\lesser-dark.css" />
     <Content Include="js\xml.js" />
     <None Include="Editor_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="Microsoft.WinJS.1.0.RC, Version=1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ZipHelper\ZipHelper.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\$(WMSJSProjectDirectory)\Microsoft.VisualStudio.$(WMSJSProject).targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

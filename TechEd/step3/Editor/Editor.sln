@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2012 for Windows 8
 Project("{262852C6-CD72-467D-83FE-5EEB1973A190}") = "Editor", "Editor.jsproj", "{570CD23E-BFB7-46C3-A768-1976CB30EA89}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZipHelper", "..\ZipHelper\ZipHelper.csproj", "{E97829FE-D99A-4960-AB48-86C3D287BBB7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -39,6 +41,22 @@ Global
 		{570CD23E-BFB7-46C3-A768-1976CB30EA89}.Release|x86.ActiveCfg = Release|x86
 		{570CD23E-BFB7-46C3-A768-1976CB30EA89}.Release|x86.Build.0 = Release|x86
 		{570CD23E-BFB7-46C3-A768-1976CB30EA89}.Release|x86.Deploy.0 = Release|x86
+		{E97829FE-D99A-4960-AB48-86C3D287BBB7}.Debug|ARM.ActiveCfg = Debug|ARM
+		{E97829FE-D99A-4960-AB48-86C3D287BBB7}.Debug|ARM.Build.0 = Debug|ARM
+		{E97829FE-D99A-4960-AB48-86C3D287BBB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E97829FE-D99A-4960-AB48-86C3D287BBB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E97829FE-D99A-4960-AB48-86C3D287BBB7}.Debug|x64.ActiveCfg = Debug|x64
+		{E97829FE-D99A-4960-AB48-86C3D287BBB7}.Debug|x64.Build.0 = Debug|x64
+		{E97829FE-D99A-4960-AB48-86C3D287BBB7}.Debug|x86.ActiveCfg = Debug|x86
+		{E97829FE-D99A-4960-AB48-86C3D287BBB7}.Debug|x86.Build.0 = Debug|x86
+		{E97829FE-D99A-4960-AB48-86C3D287BBB7}.Release|ARM.ActiveCfg = Release|ARM
+		{E97829FE-D99A-4960-AB48-86C3D287BBB7}.Release|ARM.Build.0 = Release|ARM
+		{E97829FE-D99A-4960-AB48-86C3D287BBB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E97829FE-D99A-4960-AB48-86C3D287BBB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E97829FE-D99A-4960-AB48-86C3D287BBB7}.Release|x64.ActiveCfg = Release|x64
+		{E97829FE-D99A-4960-AB48-86C3D287BBB7}.Release|x64.Build.0 = Release|x64
+		{E97829FE-D99A-4960-AB48-86C3D287BBB7}.Release|x86.ActiveCfg = Release|x86
+		{E97829FE-D99A-4960-AB48-86C3D287BBB7}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
