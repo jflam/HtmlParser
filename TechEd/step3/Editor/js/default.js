@@ -26,7 +26,9 @@
     };
 
     app.onloaded = function (args) {
-        app.editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+        var editor = document.getElementById("editor");
+
+        app.editor = CodeMirror.fromTextArea(editor, {
             lineNumbers: true,
             indentUnit: 4,
             theme: "lesser-dark",
@@ -47,7 +49,6 @@
             'Ctrl-S': function (cm) {
                 app.save_file(null);
             },
-            fallthrough: ["default"],
         };
 
         var xhrRequest = null;
