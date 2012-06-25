@@ -17,7 +17,7 @@
     <Application Id="App" StartPage="main.html">
       <VisualElements DisplayName="Wikipedia" Logo="images\logo.png" SmallLogo="images\smalllogo.png" Description="Wikipedia is a Metro style Wikipedia experience." ForegroundText="light" BackgroundColor="#ffffff">
         <DefaultTile ShowName="allLogos" />
-        <SplashScreen Image="images\splashscreen.png" />
+        <SplashScreen Image="images\splashscreen.png" BackgroundColor="#ffffff" />
         <InitialRotationPreference>
           <Rotation Preference="portrait" />
           <Rotation Preference="landscape" />
